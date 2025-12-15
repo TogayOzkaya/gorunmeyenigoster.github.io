@@ -1,1 +1,0 @@
-# togayozkaya.github.io
