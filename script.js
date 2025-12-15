@@ -1,95 +1,98 @@
-// 1. Haritayı Başlat (Konum: İzmir Alsancak civarı)
-var map = L.map('map').setView([38.4237, 27.1428], 13);
+// 1. Haritayı Başlat (İzmir Merkezi)
+var map = L.map('map').setView([38.4237, 27.1428], 12);
 
-// 2. Harita Katmanını Ekle (OpenStreetMap kullanıyoruz - Ücretsiz)
+// 2. Harita Kaplamasını Ekle
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// 3. Örnek Bir İşaretçi Ekle (Alsancak İskelesi)
-var marker = L.marker([38.4381, 27.1418]).addTo(map);
-
-// İşaretçiye tıklayınca çıkacak baloncuğu ayarla
-marker.bindPopup("<b>Alsancak İskelesi</b><br>Erişilebilir Rampa: Var<br>Engelli WC: Var").openPopup();
-
-// 4. Modal (Pop-up) Kontrolü
-const modal = document.getElementById('addModal');
-
-// Modalı Açan Fonksiyon
-function openModal() {
-    modal.style.display = 'flex';
-}
-
-// Modalı Kapatan Fonksiyon
-function closeModal() {
-    modal.style.display = 'none';
-}
-
-// Modalın dışına tıklanırsa kapat
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Form gönderildiğinde (Şimdilik sadece uyarı verelim)
-document.getElementById('placeForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert("Teşekkürler! Mekan önerisi sisteme kaydedildi (Demo).");
-    closeModal();
-});
-// Metro İstasyonları İçin Özel İkon Tasarımı
-var metroIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // Örnek Metro ikonu (Kırmızı M)
-    iconSize: [30, 30], // İkon boyutu
-    iconAnchor: [15, 30], // İkonun haritaya batacağı nokta
-    popupAnchor: [0, -30] // Baloncuğun açılacağı nokta
-});
-// --- İZMİR METRO HATTI VERİLERİ ---
+// --- VERİLER: İZMİR METRO HATTI ---
 const metroStations = [
-    { name: "Evka-3", coords: [38.4650, 27.2286] },
-    { name: "Ege Üniversitesi", coords: [38.4615, 27.2210] },
-    { name: "Bornova", coords: [38.4590, 27.2130] },
-    { name: "Bölge", coords: [38.4547, 27.2011] },
-    { name: "Sanayi", coords: [38.4490, 27.1890] },
-    { name: "Stadyum", coords: [38.4420, 27.1800] },
-    { name: "Halkapınar", coords: [38.4344, 27.1686] }, // Aktarma Merkezi
-    { name: "Hilal", coords: [38.4280, 27.1550] },
-    { name: "Basmane", coords: [38.4240, 27.1450] },
-    { name: "Çankaya", coords: [38.4224, 27.1360] },
-    { name: "Konak", coords: [38.4169, 27.1280] }, // Konak Meydanı
-    { name: "Üçyol", coords: [38.4050, 27.1150] },
-    { name: "İzmirspor", coords: [38.4000, 27.1050] },
-    { name: "Hatay", coords: [38.3980, 27.0950] },
-    { name: "Göztepe", coords: [38.3960, 27.0850] },
-    { name: "Poligon", coords: [38.3950, 27.0780] },
-    { name: "Fahrettin Altay", coords: [38.3971, 27.0700] },
-    { name: "Balçova", coords: [38.3955, 27.0580] },
-    { name: "Çağdaş", coords: [38.3950, 27.0450] },
-    { name: "DEÜ Hastanesi", coords: [38.3945, 27.0320] },
-    { name: "Güzel Sanatlar", coords: [38.3940, 27.0200] },
-    { name: "Narlıdere", coords: [38.3935, 27.0050] },
-    { name: "Şehitlik", coords: [38.3940, 26.9980] },
-    { name: "Kaymakamlık", coords: [38.3950, 26.9914] }
+    { name: "Evka-3", coords: [38.4650, 27.2286], status: "active", desc: "Bornova - Üniversite Hattı" },
+    { name: "Ege Üniversitesi", coords: [38.4615, 27.2210], status: "active", desc: "Kampüs Girişi" },
+    { name: "Bornova", coords: [38.4590, 27.2130], status: "active", desc: "Meydan Çıkışı" },
+    { name: "Bölge", coords: [38.4547, 27.2011], status: "active", desc: "Sanayi Bölgesi" },
+    { name: "Sanayi", coords: [38.4490, 27.1890], status: "active", desc: "2. Sanayi Sitesi" },
+    { name: "Stadyum", coords: [38.4420, 27.1800], status: "active", desc: "Halkapınar Spor Salonu" },
+    { name: "Halkapınar", coords: [38.4344, 27.1686], status: "active", desc: "İZBAN Aktarma Merkezi" },
+    { name: "Hilal", coords: [38.4280, 27.1550], status: "active", desc: "İZBAN Aktarma" },
+    { name: "Basmane", coords: [38.4240, 27.1450], status: "inactive", desc: "Asansör Bakımda (Gar)" }, // Örnek kırmızı
+    { name: "Çankaya", coords: [38.4224, 27.1360], status: "active", desc: "Kemeraltı Girişi" },
+    { name: "Konak", coords: [38.4169, 27.1280], status: "active", desc: "Valilik ve Saat Kulesi" },
+    { name: "Üçyol", coords: [38.4050, 27.1150], status: "active", desc: "Hatay Başlangıcı" },
+    { name: "İzmirspor", coords: [38.4000, 27.1050], status: "active", desc: "Spor Tesisleri" },
+    { name: "Hatay", coords: [38.3980, 27.0950], status: "active", desc: "Renkli Durağı" },
+    { name: "Göztepe", coords: [38.3960, 27.0850], status: "active", desc: "Sahil Yolu Bağlantısı" },
+    { name: "Poligon", coords: [38.3950, 27.0780], status: "active", desc: "Denizmen Parkı" },
+    { name: "Fahrettin Altay", coords: [38.3971, 27.0700], status: "active", desc: "Son Durak (Eski)" },
+    { name: "Balçova", coords: [38.3955, 27.0580], status: "active", desc: "AVM Bölgesi" },
+    { name: "Çağdaş", coords: [38.3950, 27.0450], status: "active", desc: "Kültür Merkezi" },
+    { name: "DEÜ Hastanesi", coords: [38.3945, 27.0320], status: "active", desc: "Üniversite Hastanesi" },
+    { name: "Güzel Sanatlar", coords: [38.3940, 27.0200], status: "active", desc: "GSF Kampüsü" },
+    { name: "Narlıdere", coords: [38.3935, 27.0050], status: "active", desc: "Merkez" },
+    { name: "Şehitlik", coords: [38.3940, 26.9980], status: "active", desc: "Şehitlik Ziyaret Alanı" },
+    { name: "Kaymakamlık", coords: [38.3950, 26.9914], status: "active", desc: "Yeni Son Durak" }
 ];
 
-// İstasyon Koordinatlarını Sadece Çizgi İçin Ayır (Polyline)
+// --- 3. METRO HATTINI ÇİZ (Kırmızı Çizgi) ---
+// Sadece koordinatları alıp bir dizi yapıyoruz
 var latlngs = metroStations.map(station => station.coords);
 
-// 1. Metro Hattını Çiz (Kırmızı Çizgi)
+// Polyline ile çiziyoruz
 var polyline = L.polyline(latlngs, {
-    color: 'red',       // Çizgi rengi
-    weight: 5,          // Kalınlık
-    opacity: 0.7,       // Şeffaflık
-    dashArray: '10, 10' // Kesik çizgi efekti (Opsiyonel, düz çizgi için sil)
+    color: '#e74c3c', // Metro kırmızısı
+    weight: 6,
+    opacity: 0.8,
+    lineCap: 'round'
 }).addTo(map);
 
-// 2. İstasyonları İşaretle
-metroStations.forEach(station => {
-    L.marker(station.coords, {icon: metroIcon}) // Özel ikon kullanıyorsan buraya ekle
-     .bindPopup(`<b>${station.name}</b><br>Metro İstasyonu`)
-     .addTo(map);
-});
-
-// Haritayı hatta odakla (Tüm istasyonları içine alacak şekilde zoom yapar)
+// Haritayı bu çizgiye odakla
 map.fitBounds(polyline.getBounds());
+
+
+// --- 4. SOL PANELDE LİSTELEME VE MARKER EKLEME ---
+const listContainer = document.getElementById('station-list');
+const countLabel = document.getElementById('result-count');
+
+// Toplam sayıyı güncelle
+countLabel.innerText = `${metroStations.length} istasyon bulundu`;
+
+metroStations.forEach(station => {
+    // A. Haritaya Marker Ekle
+    L.circleMarker(station.coords, {
+        color: station.status === 'active' ? '#27ae60' : '#c0392b',
+        radius: 8,
+        fillOpacity: 1
+    }).bindPopup(`<b>${station.name}</b><br>${station.desc}`).addTo(map);
+
+    // B. Sol Panele Kart Ekle (HTML Oluşturma)
+    const card = document.createElement('div');
+    card.className = 'station-card';
+    
+    // Duruma göre yeşil/kırmızı nokta ve metin
+    const statusColor = station.status === 'active' ? 'dot-green' : 'dot-red';
+    const statusText = station.status === 'active' ? 'Çalışıyor' : 'Çalışmıyor / Bakımda';
+
+    card.innerHTML = `
+        <div class="card-header">
+            <i class="fas fa-subway card-icon"></i>
+            <span class="status-dot ${statusColor}"></span>
+            <span style="font-size:0.9rem; color:#555;">${statusText}</span>
+        </div>
+        <div class="card-title">${station.name} Metro İstasyonu</div>
+        <div class="card-info">
+            Metro Hattı<br>
+            <span style="font-size:0.8rem; color:#888;">Güncelleme: Şimdi</span>
+        </div>
+    `;
+
+    // Karta tıklayınca haritada o istasyona git
+    card.addEventListener('click', () => {
+        map.flyTo(station.coords, 16, {
+            animate: true,
+            duration: 1.5
+        });
+    });
+
+    listContainer.appendChild(card);
+});
