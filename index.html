@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Görünmeyeni Göster - İzmir Metro</title>
+    <title>Görünmeyeni Göster - İzmir Metro Erişilebilirlik</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,31 +14,31 @@
         <aside class="sidebar">
             
             <div class="filter-header">
-                <h3><i class="fas fa-filter"></i> Filtrele</h3>
+                <h3><i class="fas fa-filter"></i> İstasyon Filtrele</h3>
                 
-                <label>Tesis Tipi</label>
+                <label>Hat Seçimi</label>
                 <div class="select-wrapper">
-                    <select id="type-select">
-                        <option value="all">Tümü</option>
-                        <option value="metro">Metro İstasyonu</option>
+                    <select id="line-select">
+                        <option value="all">Tüm Hatlar</option>
+                        <option value="metro" selected>İzmir Metrosu</option>
                         <option value="tram">Tramvay</option>
                     </select>
                     <i class="fas fa-chevron-down"></i>
                 </div>
 
-                <label>Durum</label>
+                <label>Erişilebilirlik Durumu</label>
                 <div class="select-wrapper">
                     <select id="status-select">
-                        <option value="all">Tümü</option>
-                        <option value="active">Çalışıyor</option>
-                        <option value="inactive">Çalışmıyor</option>
+                        <option value="all">Hepsi</option>
+                        <option value="active">Asansör Çalışıyor</option>
+                        <option value="inactive">Arızalı / Bakımda</option>
                     </select>
                     <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
 
             <div class="divider">
-                <span id="result-count">0 istasyon bulundu</span>
+                <span id="result-count">Yükleniyor...</span>
             </div>
 
             <div class="results-list" id="station-list">
@@ -49,6 +49,50 @@
         <main class="map-container">
             <div id="map"></div>
         </main>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeReportModal()">&times;</span>
+            
+            <div class="modal-header">
+                <h3 id="modal-station-name">İstasyon Adı</h3>
+                <span class="modal-subtitle">Detaylı Durum Bildirimi</span>
+            </div>
+
+            <div class="modal-body">
+                <div class="station-visual">
+                    <div class="visual-placeholder">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Subway_station_floor_plan_diagram.svg/1200px-Subway_station_floor_plan_diagram.svg.png" alt="İstasyon Planı">
+                        <div class="visual-note"><i class="fas fa-info-circle"></i> Sorunlu çıkışı yan taraftan seçiniz</div>
+                    </div>
+                </div>
+
+                <form id="reportForm">
+                    <label>Sorunlu Konum (Çıkış/Turnike)</label>
+                    <select id="sub-location-select">
+                        </select>
+
+                    <label>Sorun Tipi</label>
+                    <div class="issue-types">
+                        <button type="button" class="issue-btn" onclick="selectIssue(this, 'elevator')">
+                            <i class="fas fa-elevator"></i> Asansör
+                        </button>
+                        <button type="button" class="issue-btn" onclick="selectIssue(this, 'ramp')">
+                            <i class="fas fa-wheelchair"></i> Rampa
+                        </button>
+                        <button type="button" class="issue-btn" onclick="selectIssue(this, 'wc')">
+                            <i class="fas fa-restroom"></i> WC
+                        </button>
+                    </div>
+
+                    <label>Ek Açıklama</label>
+                    <textarea placeholder="Örn: Asansör düğmesi çalışmıyor..."></textarea>
+
+                    <button type="submit" class="btn-submit">Bildirimi Kaydet</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
