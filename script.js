@@ -1,258 +1,172 @@
-// --- 1. HARİTA AYARLARI ---
-// İzmir merkezli haritayı başlat
-var map = L.map('map').setView([38.4237, 27.1428], 12);
-
-// OpenStreetMap katmanını ekle
+// 1. HARİTA BAŞLATMA
+var map = L.map('map').setView([38.4100, 27.1000], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+    attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-// --- 2. İSTASYON VERİ TABANI ---
-// (Burada senin için 'subLocations' yani çıkış noktalarını ekledim)
+// 2. İSTASYON VERİLERİ (GÜNCEL & DOĞRU KOORDİNATLAR)
+// "zones" kısmı görsel üzerinde çıkacak butonların konumlarını (top/left yüzdeleri) belirler.
 const metroStations = [
     { 
-        name: "Fahrettin Altay", 
-        coords: [38.3971, 27.0700], 
-        status: "active", 
-        desc: "İstinyePark & Otobüs Aktarma",
-        subLocations: ["AVM Çıkışı", "Otobüs Aktarma Tarafı", "Mithatpaşa Cd.", "Asansör 1 (Meydan)"] 
+        name: "Kaymakamlık", coords: [38.3950, 26.9914], status: "active",
+        zones: [ {name: "Meydan Çıkışı", t: 40, l: 30}, {name: "Kaymakamlık Yönü", t: 60, l: 70} ]
     },
     { 
-        name: "Poligon", 
-        coords: [38.3950, 27.0780], 
-        status: "active", 
-        desc: "Denizmen Parkı",
-        subLocations: ["Park Çıkışı", "Cadde Tarafı Asansör"] 
+        name: "Şehitlik", coords: [38.3940, 26.9980], status: "active",
+        zones: [ {name: "Müze Tarafı", t: 50, l: 50} ]
     },
     { 
-        name: "Göztepe", 
-        coords: [38.3960, 27.0850], 
-        status: "active", 
-        desc: "Sahil Bağlantısı",
-        subLocations: ["Sahil Yönü", "Cadde Yönü"] 
+        name: "Narlıdere", coords: [38.3935, 27.0050], status: "active",
+        zones: [ {name: "Çarşı Çıkışı", t: 30, l: 40}, {name: "Otobüs Durakları", t: 70, l: 60} ]
     },
     { 
-        name: "Hatay", 
-        coords: [38.3980, 27.0950], 
-        status: "active", 
-        desc: "Renkli Durağı",
-        subLocations: ["Renkli Çıkışı", "Pazar Yeri"] 
+        name: "Fahrettin Altay", coords: [38.3971, 27.0700], status: "active",
+        zones: [ {name: "AVM Çıkışı (İstinye)", t: 20, l: 20}, {name: "Pazar Yeri", t: 80, l: 80}, {name: "Aktarma Merkezi", t: 50, l: 50} ]
     },
     { 
-        name: "İzmirspor", 
-        coords: [38.4000, 27.1050], 
-        status: "active", 
-        desc: "Devlet Hastanesi Yakını",
-        subLocations: ["Hastane Yönü", "Spor Salonu Yönü"] 
+        name: "Poligon", coords: [38.3950, 27.0780], status: "active",
+        zones: [ {name: "Park Çıkışı", t: 40, l: 60} ]
     },
     { 
-        name: "Üçyol", 
-        coords: [38.4050, 27.1150], 
-        status: "active", 
-        desc: "Betonyol & Karabağlar Bağlantısı",
-        subLocations: ["Betonyol Çıkışı", "Meydan Çıkışı", "Yürüyen Merdivenler"] 
+        name: "Göztepe", coords: [38.3960, 27.0850], status: "active",
+        zones: [ {name: "Sahil Yönü", t: 30, l: 30}, {name: "Cadde Yönü", t: 70, l: 70} ]
     },
     { 
-        name: "Konak", 
-        coords: [38.4169, 27.1280], 
-        status: "active", 
-        desc: "Valilik, Saat Kulesi & Vapur",
-        subLocations: ["Valilik Çıkışı", "Vapur İskelesi Tarafı", "Kemeraltı Girişi"]
+        name: "Hatay", coords: [38.3980, 27.0950], status: "active",
+        zones: [ {name: "Renkli Durağı", t: 45, l: 45} ]
     },
     { 
-        name: "Çankaya", 
-        coords: [38.4224, 27.1360], 
-        status: "inactive", // Örnek arızalı
-        desc: "Bit Pazarı & Oteller",
-        subLocations: ["Fevzipaşa Bulvarı", "Mezarlıkbaşı"]
+        name: "İzmirspor", coords: [38.4000, 27.1050], status: "active",
+        zones: [ {name: "Hastane Yönü", t: 30, l: 80} ]
     },
     { 
-        name: "Basmane", 
-        coords: [38.4240, 27.1450], 
-        status: "active", 
-        desc: "Gar & Fuar Girişi",
-        subLocations: ["Gar Meydanı", "Fuar 9 Eylül Kapısı"]
+        name: "Üçyol", coords: [38.4050, 27.1150], status: "active",
+        zones: [ {name: "Betonyol Çıkışı", t: 20, l: 30}, {name: "Meydan Çıkışı", t: 80, l: 50} ]
     },
     { 
-        name: "Hilal", 
-        coords: [38.4280, 27.1550], 
-        status: "active", 
-        desc: "İZBAN Aktarma",
-        subLocations: ["İZBAN Platformu", "Kemer Yönü"]
+        name: "Konak", coords: [38.4169, 27.1280], status: "active",
+        zones: [ {name: "Vapur İskelesi", t: 20, l: 20}, {name: "Kemeraltı Girişi", t: 60, l: 80}, {name: "Valilik Önü", t: 40, l: 50} ]
     },
     { 
-        name: "Halkapınar", 
-        coords: [38.4344, 27.1686], 
-        status: "active", 
-        desc: "Ana Aktarma Merkezi",
-        subLocations: ["İZBAN Aktarma", "Tramvay Durağı", "Otobüs Durakları"]
+        name: "Çankaya", coords: [38.4224, 27.1360], status: "active",
+        zones: [ {name: "Bit Pazarı", t: 30, l: 30}, {name: "Otel Tarafı", t: 70, l: 70} ]
     },
     { 
-        name: "Stadyum", 
-        coords: [38.4420, 27.1800], 
-        status: "active", 
-        desc: "Atatürk Stadı",
-        subLocations: ["Stadyum Girişi", "Sanayi Tarafı"]
+        name: "Basmane", coords: [38.4240, 27.1450], status: "active",
+        zones: [ {name: "Gar Meydanı", t: 50, l: 40}, {name: "Fuar Kapısı", t: 30, l: 80} ]
     },
     { 
-        name: "Sanayi", 
-        coords: [38.4490, 27.1890], 
-        status: "active", 
-        desc: "2. Sanayi Sitesi",
-        subLocations: ["Sanayi Girişi"]
+        name: "Hilal", coords: [38.4280, 27.1550], status: "active",
+        zones: [ {name: "İZBAN Aktarma", t: 50, l: 50} ]
     },
     { 
-        name: "Bölge", 
-        coords: [38.4547, 27.2011], 
-        status: "active", 
-        desc: "Yaşar Üni. & Adliye",
-        subLocations: ["Üniversite Kapısı", "Ağaçlı Yol"]
+        name: "Halkapınar", coords: [38.4344, 27.1686], status: "active",
+        zones: [ {name: "İZBAN Aktarma", t: 30, l: 30}, {name: "Tramvay", t: 70, l: 70}, {name: "Otobüsler", t: 20, l: 80} ]
     },
     { 
-        name: "Bornova", 
-        coords: [38.4590, 27.2130], 
-        status: "active", 
-        desc: "Meydan & Hastane",
-        subLocations: ["Hastane Tarafı", "Küçük Park Çıkışı", "Kampüs Girişi"]
+        name: "Bornova", coords: [38.4590, 27.2130], status: "active",
+        zones: [ {name: "Hastane", t: 20, l: 20}, {name: "Küçük Park", t: 80, l: 80} ]
     },
     { 
-        name: "Ege Üniversitesi", 
-        coords: [38.4615, 27.2210], 
-        status: "active", 
-        desc: "Kampüs İçi",
-        subLocations: ["Kampüs Ana Giriş"]
-    },
-    { 
-        name: "Evka-3", 
-        coords: [38.4650, 27.2286], 
-        status: "active", 
-        desc: "Son Durak",
-        subLocations: ["Otobüs Aktarma", "Semt Garajı"]
+        name: "Evka-3", coords: [38.4650, 27.2286], status: "active",
+        zones: [ {name: "Aktarma Merkezi", t: 50, l: 50} ]
     }
 ];
 
-// --- 3. METRO HATTINI ÇİZME ---
-var lineCoords = metroStations.map(station => station.coords);
-var polyline = L.polyline(lineCoords, {
-    color: '#e74c3c', // Kırmızı renk
-    weight: 6,        // Kalınlık
-    opacity: 0.8,
-    lineCap: 'round'
-}).addTo(map);
-
-// Haritayı çizgiye sığdır
+// 3. HAT ÇİZİMİ
+var polyline = L.polyline(metroStations.map(s => s.coords), { color: 'red', weight: 5 }).addTo(map);
 map.fitBounds(polyline.getBounds());
 
-// --- 4. ARAYÜZ OLUŞTURMA (LİSTE & MARKERLAR) ---
-const listContainer = document.getElementById('station-list');
-const countLabel = document.getElementById('result-count');
+// 4. LİSTE VE HARİTA İŞARETÇİLERİ
+const listDiv = document.getElementById('station-list');
+document.getElementById('result-count').innerText = `${metroStations.length} istasyon listelendi`;
 
-function initApp() {
-    // Sayacı güncelle
-    countLabel.innerText = `${metroStations.length} istasyon listelendi`;
-    listContainer.innerHTML = ""; // Listeyi temizle
+metroStations.forEach(station => {
+    // Haritaya Pin Ekle
+    L.circleMarker(station.coords, { color: '#e74c3c', radius: 8, fillOpacity: 1 })
+     .bindPopup(`<b>${station.name}</b>`)
+     .addTo(map);
 
-    metroStations.forEach(station => {
-        // A. Haritaya Nokta Ekle
-        const markerColor = station.status === 'active' ? '#2ecc71' : '#e74c3c';
-        
-        L.circleMarker(station.coords, {
-            color: markerColor,
-            radius: 8,
-            fillOpacity: 1
-        }).bindPopup(`<b>${station.name}</b><br>${station.desc}`).addTo(map);
+    // Listeye Kart Ekle
+    const card = document.createElement('div');
+    card.className = 'station-card';
+    card.innerHTML = `
+        <div class="card-title">${station.name}</div>
+        <div class="status-badge status-ok">Erişime Açık</div>
+        <button class="btn-report" onclick="openModal('${station.name}')">
+            <i class="fas fa-exclamation-triangle"></i> Durum Bildir
+        </button>
+    `;
+    listDiv.appendChild(card);
+});
 
-        // B. Sol Panele Kart Ekle
-        const card = document.createElement('div');
-        card.className = 'station-card';
-        
-        const statusClass = station.status === 'active' ? 'dot-green' : 'dot-red';
-        const statusText = station.status === 'active' ? 'Çalışıyor' : 'Arıza/Bakım Var';
-
-        card.innerHTML = `
-            <div class="card-header">
-                <i class="fas fa-subway card-icon"></i>
-                <span class="status-dot ${statusClass}"></span>
-                <span style="font-size:0.85rem; color:#7f8c8d;">${statusText}</span>
-            </div>
-            <div class="card-title">${station.name} İstasyonu</div>
-            <div class="card-info">
-                ${station.desc}
-            </div>
-            <div style="margin-top:10px; font-size:0.8rem; color:#3498db; text-align:right;">
-                <i class="fas fa-arrow-right"></i> Bildirim Yap
-            </div>
-        `;
-
-        // Karta tıklama olayı
-        card.addEventListener('click', () => {
-            // 1. Haritada oraya git
-            map.flyTo(station.coords, 16, { duration: 1.5 });
-            
-            // 2. Modalı aç (biraz gecikmeli ki kullanıcı haritayı görsün)
-            setTimeout(() => {
-                openReportModal(station.name);
-            }, 800);
-        });
-
-        listContainer.appendChild(card);
-    });
-}
-
-// Uygulamayı Başlat
-initApp();
-
-
-// --- 5. MODAL (POP-UP) İŞLEMLERİ ---
+// 5. GELİŞMİŞ MODAL İŞLEMLERİ
 const modal = document.getElementById('reportModal');
+const zoneLayer = document.getElementById('click-zones');
+const alertBox = document.getElementById('selected-zone-info');
+let selectedZoneName = null;
 
-function openReportModal(stationName) {
+// Modalı Açan Fonksiyon
+window.openModal = function(stationName) {
     const station = metroStations.find(s => s.name === stationName);
     if (!station) return;
 
-    // Başlık ve Verileri Doldur
+    // Başlığı ayarla
     document.getElementById('modal-station-name').innerText = station.name + " İstasyonu";
     
-    // Select (Dropdown) Doldurma
-    const select = document.getElementById('sub-location-select');
-    select.innerHTML = ""; // Temizle
+    // Eski butonları temizle
+    zoneLayer.innerHTML = "";
+    selectedZoneName = null;
+    alertBox.className = "selection-alert";
+    alertBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> Henüz bir nokta seçilmedi.';
 
-    if (station.subLocations && station.subLocations.length > 0) {
-        station.subLocations.forEach(loc => {
-            const opt = document.createElement('option');
-            opt.value = loc;
-            opt.innerText = loc;
-            select.appendChild(opt);
-        });
-    } else {
-        const opt = document.createElement('option');
-        opt.innerText = "Genel Alan";
-        select.appendChild(opt);
-    }
+    // Görsel üzerine "Tıklanabilir Alanlar" (Hotspots) ekle
+    // Eğer istasyonun özel zone'ları varsa onları kullan, yoksa varsayılan koy
+    const zones = station.zones || [{name: "Genel Çıkış", t: 50, l: 50}];
+
+    zones.forEach(zone => {
+        const btn = document.createElement('div');
+        btn.className = 'zone-btn';
+        btn.innerText = zone.name;
+        // Konumlandırma (Yüzde bazlı)
+        btn.style.top = zone.t + "%";
+        btn.style.left = zone.l + "%";
+        
+        // Tıklama Olayı
+        btn.onclick = function() {
+            // Önceki kırmızılığı kaldır
+            document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+            // Buna kırmızılık ekle
+            btn.classList.add('active');
+            
+            // Seçimi kaydet
+            selectedZoneName = zone.name;
+            alertBox.className = "selection-alert selected";
+            alertBox.innerHTML = `<i class="fas fa-check-circle"></i> Seçilen Nokta: <b>${zone.name}</b>`;
+        };
+
+        zoneLayer.appendChild(btn);
+    });
 
     modal.style.display = 'flex';
 }
 
-function closeReportModal() {
+window.closeReportModal = function() {
     modal.style.display = 'none';
 }
 
-// Modal dışına tıklayınca kapatma
-window.onclick = function(event) {
-    if (event.target == modal) {
-        closeReportModal();
-    }
-}
-
-// Sorun Tipi Butonları (Görsel Seçim)
-function selectIssue(btn, type) {
-    document.querySelectorAll('.issue-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-}
-
-// Form Gönderimi (Demo)
+// Form Gönderimi
 document.getElementById('reportForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    alert("Bildiriminiz başarıyla iletildi! Teşekkürler.");
+    if (!selectedZoneName) {
+        alert("Lütfen önce görsel üzerinden sorunlu bölgeyi seçiniz!");
+        return;
+    }
+    alert(`Bildirim Alındı!\nKonum: ${selectedZoneName}\nDurum yetkililere iletildi.`);
     closeReportModal();
 });
+
+// Dışarı tıklayınca kapat
+window.onclick = function(e) {
+    if (e.target == modal) closeReportModal();
+}
