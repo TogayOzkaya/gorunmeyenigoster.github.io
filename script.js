@@ -1,12 +1,16 @@
-// 1. HARİTAYI BAŞLAT (OpenStreetMap - Ücretsiz)
+// 1. HARİTAYI BAŞLAT
 var map = L.map('map').setView([38.4100, 27.0900], 13);
 
-// Harita Katmanını Ekle (Görünüm)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// 2. İSTASYON VERİLERİ (Hassas Koordinatlar - Leaflet Formatı)
+// Markerları (Pinleri) tutacak bir katman grubu oluşturuyoruz.
+// Bu sayede "Temizle ve Yeniden Çiz" yapabileceğiz.
+var markersLayer = L.layerGroup().addTo(map);
+
+// 2. İSTASYON VERİLERİ
+// (Durumu sonradan değiştireceğimiz için 'const' yerine 'let' veya içeriği değiştirilebilir obje kullanıyoruz)
 const metroStations = [
     { 
         name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active",
@@ -106,7 +110,7 @@ const metroStations = [
     }
 ];
 
-// 3. METRO HATTINI ÇİZ (Kırmızı Çizgi)
+// 3. HAT ÇİZİMİ
 var polyline = L.polyline(metroStations.map(s => s.coords), { 
     color: '#e74c3c', 
     weight: 6,
@@ -116,60 +120,76 @@ var polyline = L.polyline(metroStations.map(s => s.coords), {
 
 map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
 
-// 4. İŞARETÇİLER VE LİSTE
-const listDiv = document.getElementById('station-list');
-document.getElementById('result-count').innerText = `${metroStations.length} istasyon listelendi`;
 
-metroStations.forEach(station => {
-    // A. Haritaya Nokta Ekle
-    const color = station.status === 'active' ? '#27ae60' : '#c0392b';
-    const marker = L.circleMarker(station.coords, { 
-        color: color, 
-        radius: 8, 
-        fillOpacity: 1,
-        fillColor: color 
-    }).addTo(map);
-
-    marker.bindPopup(`<b>${station.name}</b>`);
+// 4. İSTASYONLARI EKRANA ÇİZEN FONKSİYON
+// (Bunu fonksiyon yaptık çünkü güncelleme olunca silip tekrar çizmemiz gerekecek)
+function renderStations() {
+    // A. Önce Haritadaki eski pinleri temizle
+    markersLayer.clearLayers();
     
-    // Noktaya tıklayınca modal açılsın
-    marker.on('click', () => {
-        openModal(station.name);
+    // B. Listedeki eski kartları temizle
+    const listDiv = document.getElementById('station-list');
+    listDiv.innerHTML = "";
+    document.getElementById('result-count').innerText = `${metroStations.length} istasyon listelendi`;
+
+    // C. Yeniden oluştur
+    metroStations.forEach(station => {
+        // Harita Pin Rengi (Duruma göre)
+        const color = station.status === 'active' ? '#27ae60' : '#c0392b';
+        
+        const marker = L.circleMarker(station.coords, { 
+            color: color, 
+            radius: 8, 
+            fillOpacity: 1,
+            fillColor: color 
+        });
+        
+        // Markeri katmana ekle
+        markersLayer.addLayer(marker);
+
+        marker.bindPopup(`<b>${station.name}</b>`);
+        marker.on('click', () => { openModal(station.name); });
+
+        // Liste Kartı
+        const card = document.createElement('div');
+        card.className = 'station-card';
+        const statusBadge = station.status === 'active' 
+            ? '<span class="status-badge status-ok">Sorun Yok</span>' 
+            : '<span class="status-badge status-err">Arıza Bildirimi Var</span>';
+
+        card.innerHTML = `
+            <div class="card-title">${station.name}</div>
+            ${statusBadge}
+            <button class="btn-report" onclick="triggerListClick('${station.name}')">
+                <i class="fas fa-map-pin"></i> Durum Bildir
+            </button>
+        `;
+        listDiv.appendChild(card);
     });
+}
 
-    // B. Listeye Kart Ekle
-    const card = document.createElement('div');
-    card.className = 'station-card';
-    const statusBadge = station.status === 'active' 
-        ? '<span class="status-badge status-ok">Sorun Yok</span>' 
-        : '<span class="status-badge status-err">Arıza Bildirimi Var</span>';
+// İlk açılışta istasyonları çiz
+renderStations();
 
-    card.innerHTML = `
-        <div class="card-title">${station.name}</div>
-        ${statusBadge}
-        <button class="btn-report" onclick="triggerListClick('${station.name}')">
-            <i class="fas fa-map-pin"></i> Durum Bildir
-        </button>
-    `;
-    listDiv.appendChild(card);
-});
 
-// Listeden tıklayınca çalışacak fonksiyon
+// Listeden tıklama fonksiyonu
 window.triggerListClick = function(stationName) {
     const station = metroStations.find(s => s.name === stationName);
     if(station) {
         map.flyTo(station.coords, 15, { duration: 1.5 });
-        setTimeout(() => openModal(stationName), 1000); // 1sn sonra aç
+        setTimeout(() => openModal(stationName), 1000);
     }
 }
 
-// --- MODAL İŞLEMLERİ ---
+// --- MODAL VE BİLDİRİM İŞLEMLERİ ---
 const modal = document.getElementById('reportModal');
 const zoneLayer = document.getElementById('click-zones');
 const alertBox = document.getElementById('selected-zone-info');
 let selectedZoneName = null;
+let currentStationName = null; // Şu an hangi istasyona bildirim yapıyoruz?
 
 window.openModal = function(stationName) {
+    currentStationName = stationName; // İstasyon adını kaydet
     const station = metroStations.find(s => s.name === stationName);
     if (!station) return;
 
@@ -205,13 +225,34 @@ window.closeReportModal = function() {
     modal.style.display = 'none';
 }
 
+// --- FORMU GÖNDERİNCE ÇALIŞACAK KISIM ---
 document.getElementById('reportForm').addEventListener('submit', function(e) {
     e.preventDefault();
+
+    // 1. Kontrol: Yer seçildi mi?
     if (!selectedZoneName) {
         alert("Lütfen önce soldaki görselden (krokiden) sorunlu bölgeyi seçiniz!");
         return;
     }
-    alert(`Bildirim Alındı!\nKonum: ${selectedZoneName}`);
+
+    // 2. PUAN MESAJI VE TEŞEKKÜR
+    // SweetAlert gibi kütüphaneler yoksa standart alert kullanalım:
+    alert(`🎉 TEBRİKLER! 🎉\n\nBildiriminiz başarıyla alındı.\nBu katkınızla engelleri kaldırdınız!\n\n🏆 KAZANILAN PUAN: 50`);
+
+    // 3. İSTASYON RENGİNİ DEĞİŞTİRME (KIRMIZI YAPMA)
+    // Bildirim yapıldığına göre bir sorun var demektir, istasyonu 'inactive' yapıyoruz.
+    if (currentStationName) {
+        const stationIndex = metroStations.findIndex(s => s.name === currentStationName);
+        if (stationIndex !== -1) {
+            // İstasyon durumunu güncelle
+            metroStations[stationIndex].status = 'inactive'; 
+            
+            // 4. EKRANI YENİLE
+            // Haritayı ve listeyi yeni renkle tekrar çiz
+            renderStations();
+        }
+    }
+
     closeReportModal();
 });
 
