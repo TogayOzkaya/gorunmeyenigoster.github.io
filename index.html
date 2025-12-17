@@ -109,15 +109,18 @@
             <span class="close-btn" onclick="closeReportModal()">&times;</span>
             <div class="modal-header">
                 <h2 id="modal-station-name">İstasyon</h2>
-                <p>Görsel üzerinden sorunlu bölgeyi seçiniz.</p>
+                <p>Harita üzerinden sorunlu asansörü/girişi seçiniz.</p>
             </div>
             <div class="modal-body">
                 <div class="visual-container">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2311/2311531.png" class="station-3d-img">
-                    <div id="click-zones" class="zones-layer"></div>
+                    <div id="mini-map"></div>
+                    <div class="mini-map-overlay">
+                        <i class="fas fa-mouse-pointer"></i> İşaretlemek için bir noktaya tıklayın
+                    </div>
                 </div>
+                
                 <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    <div id="selected-zone-info" class="selection-alert">Lütfen haritadan seçim yapın</div>
                     <form id="reportForm">
                         <label>Sorun Tipi</label>
                         <div class="issue-types">
