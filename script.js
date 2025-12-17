@@ -265,3 +265,47 @@ document.getElementById('reportForm').addEventListener('submit', function(e) {
 window.onclick = function(e) {
     if (e.target == modal) closeReportModal();
 }
+// --- MEVCUT KODLARIN ÜZERİNE EKLE/GÜNCELLE ---
+
+let userPoints = 150; // Başlangıç puanı (Örn: 150)
+
+// 1. Profil Modalı Aç/Kapa
+const profileModal = document.getElementById('profileModal');
+
+function openProfileModal() {
+    // Modalı açmadan önce güncel puanı yaz
+    document.getElementById('modal-total-points').innerText = userPoints;
+    profileModal.style.display = 'flex';
+}
+
+function closeProfileModal() {
+    profileModal.style.display = 'none';
+}
+
+// 2. Puan Güncelleme Fonksiyonu (Geliştirilmiş)
+function updateProfilePoints(pointsToAdd) {
+    userPoints += pointsToAdd;
+    
+    // Sağ üstteki küçük kartı güncelle
+    document.getElementById('display-points').innerText = userPoints;
+    
+    // Profil Modalındaki büyük sayıyı güncelle
+    document.getElementById('modal-total-points').innerText = userPoints;
+
+    // Küçük kartta animasyon yap
+    const card = document.querySelector('.profile-card');
+    card.style.transform = "scale(1.1)";
+    setTimeout(() => { card.style.transform = "scale(1)"; }, 200);
+}
+
+// 3. Modal Dışına Tıklama Kontrolü (Her iki modal için)
+window.onclick = function(e) {
+    const reportModal = document.getElementById('reportModal');
+    
+    if (e.target == reportModal) {
+        closeReportModal();
+    }
+    if (e.target == profileModal) {
+        closeProfileModal();
+    }
+}
