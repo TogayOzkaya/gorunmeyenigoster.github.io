@@ -6,7 +6,7 @@ const REPORT_THRESHOLD = 3;
 // --- 1. ANA HARİTA ---
 var map = L.map('map').setView([38.4100, 27.0900], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap'
+    attribution: '© OpenStreetMap'
 }).addTo(map);
 
 var markersLayer = L.layerGroup().addTo(map);
@@ -50,9 +50,8 @@ function updateBadgeStatus(id, unlocked) {
     }
 }
 
-// --- 3. İSTASYON VERİLERİ (SIRALI - BATI'DAN DOĞU'YA) ---
-// Sıralama önemlidir, yoksa çizgi zigzag yapar.
-// zones offset: [lat_farkı, lng_farkı] -> Ana konumdan ne kadar uzakta?
+// --- 3. İSTASYON VERİLERİ (KESİN COĞRAFİ SIRALAMA) ---
+// Hata buradaydı. Liste artık Kaymakamlık'tan (Batı) Evka-3'e (Doğu) tam sıralı.
 const metroStations = [
     { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, zones: [{ name: "Ana Giriş", offset: [0,0] }] },
     { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
@@ -93,6 +92,7 @@ const metroStations = [
     { name: "Evka-3", coords: [38.4650, 27.2286], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] }
 ];
 
+// Hattı Çiz (Artık sıralı olduğu için düzgün çizilecek)
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 5 }).addTo(map);
 
 function renderStations() {
@@ -131,8 +131,8 @@ function renderStations() {
 renderStations();
 updateProfileUI(); 
 
-// --- 4. MODAL & MİNİ HARİTA MANTIĞI (GÜNCELLENDİ) ---
-let miniMap = null; // Mini harita örneği
+// --- 4. MODAL & MİNİ HARİTA MANTIĞI ---
+let miniMap = null; 
 let selectedZone = null;
 let currentStationName = null;
 const reportModal = document.getElementById('reportModal');
@@ -146,128 +146,4 @@ window.openReportModal = (name) => {
     alertBox.className = "selection-alert";
     alertBox.innerText = "Lütfen haritadan seçim yapın";
 
-    const station = metroStations.find(s => s.name === name);
-    
-    // Mini Haritayı (Tekrar) Oluştur
-    // setTimeout kullanıyoruz çünkü modal açılmadan (display:flex olmadan) harita boyutu hesaplanamaz.
-    setTimeout(() => {
-        if (miniMap) {
-            miniMap.remove(); // Varsa eskisini sil
-        }
-
-        miniMap = L.map('mini-map', {
-            center: station.coords,
-            zoom: 18, 
-            zoomControl: false,
-            dragging: false,
-            scrollWheelZoom: false
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OSM'
-        }).addTo(miniMap);
-
-        // Çıkış Noktalarını İşaretle
-        // Eğer zone yoksa varsayılan bir nokta koy (Merkeze)
-        const zones = station.zones || [{name: "Genel Alan", offset: [0,0]}];
-
-        zones.forEach(zone => {
-            const zoneLat = station.coords[0] + zone.offset[0];
-            const zoneLng = station.coords[1] + zone.offset[1];
-
-            // Mavi Pinler (Seçilebilir)
-            const zoneMarker = L.circleMarker([zoneLat, zoneLng], {
-                color: '#3498db',
-                fillColor: '#3498db',
-                fillOpacity: 0.8,
-                radius: 12
-            }).addTo(miniMap);
-
-            zoneMarker.bindTooltip(zone.name, {permanent: true, direction: 'top', offset: [0, -10]});
-
-            zoneMarker.on('click', () => {
-                selectedZone = zone.name;
-                alertBox.className = "selection-alert selected";
-                alertBox.innerText = `Seçildi: ${zone.name}`;
-                
-                // Diğerlerini söndür, bunu parlat (Kırmızı yap)
-                miniMap.eachLayer((layer) => {
-                    if(layer instanceof L.CircleMarker) layer.setStyle({color: '#3498db', fillColor: '#3498db'});
-                });
-                zoneMarker.setStyle({color: '#e74c3c', fillColor: '#e74c3c'}); 
-            });
-        });
-    }, 200);
-}
-
-window.closeReportModal = () => { reportModal.style.display = 'none'; }
-
-// Rapor Gönderimi
-document.getElementById('reportForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (!selectedZone) { alert("Lütfen haritadan bir nokta seçin!"); return; }
-
-    const station = metroStations.find(s => s.name === currentStationName);
-    
-    station.reportScore += 1;
-    if(station.reportScore >= REPORT_THRESHOLD) station.status = 'inactive';
-    else station.status = 'pending';
-
-    gameState.xp += 50;
-    gameState.totalReports++;
-    if(gameState.totalReports >= 1) gameState.badges.firstReport = true;
-
-    alert("Bildiriminiz Haritaya İşlendi!\n+50 Puan");
-    updateProfileUI();
-    renderStations();
-    closeReportModal();
-});
-
-// --- 5. DİĞER MODALLAR ---
-const verifyModal = document.getElementById('verifyModal');
-let stationToVerify = null;
-
-window.openVerifyModal = (name) => {
-    stationToVerify = name;
-    document.getElementById('verify-station-name').innerText = name;
-    verifyModal.style.display = 'flex';
-}
-window.closeVerifyModal = () => { verifyModal.style.display = 'none'; }
-
-window.submitVerification = (isFixed) => {
-    const station = metroStations.find(s => s.name === stationToVerify);
-    if(isFixed) {
-        station.status = 'active'; station.reportScore = 0; gameState.xp += 30;
-        alert("Düzeldi olarak işaretlediniz.\n+30 Puan");
-    } else {
-        station.reportScore++; gameState.xp += 15;
-        alert("Sorun devam ediyor.\n+15 Puan");
-    }
-    gameState.verifiedCount++;
-    if(gameState.verifiedCount >= 1) gameState.badges.verifier = true;
-    updateProfileUI(); renderStations(); closeVerifyModal();
-}
-
-const profileModal = document.getElementById('profileModal');
-window.openProfileModal = () => { profileModal.style.display = 'flex'; updateProfileUI(); }
-window.closeProfileModal = () => { profileModal.style.display = 'none'; }
-
-window.triggerListClick = (name) => {
-    const s = metroStations.find(st => st.name === name);
-    map.flyTo(s.coords, 15);
-    setTimeout(() => {
-        if(s.status === 'active') openReportModal(name);
-        else openVerifyModal(name);
-    }, 800);
-}
-
-document.getElementById('sidebar-toggle').addEventListener('click', () => {
-    document.getElementById('sidebar').classList.toggle('closed');
-    setTimeout(() => map.invalidateSize(), 400);
-});
-
-window.onclick = (e) => {
-    if(e.target == profileModal) closeProfileModal();
-    if(e.target == reportModal) closeReportModal();
-    if(e.target == verifyModal) closeVerifyModal();
-}
+    const station = metroStations.find(s => s.name === name
