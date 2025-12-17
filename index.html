@@ -11,7 +11,7 @@
 <body>
 
     <div class="container">
-        <aside class="sidebar" id="sidebar" aria-label="İstasyon Listesi ve Filtreler">
+        <aside class="sidebar" id="sidebar" aria-label="İstasyon Listesi">
             <div class="sidebar-header">
                 <div class="brand">
                     <i class="fas fa-metro fa-lg"></i>
@@ -25,7 +25,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="station-search" placeholder="İstasyon ara..." aria-label="İstasyon ara">
                 </div>
-                <div class="news-ticker" role="marquee" aria-label="Son Aktiviteler">
+                <div class="news-ticker" role="marquee">
                     <i class="fas fa-broadcast-tower"></i>
                     <div class="ticker-wrapper">
                         <div class="ticker-content" id="ticker-text">Sistem aktif... Veriler yükleniyor...</div>
@@ -38,28 +38,25 @@
                 <span id="result-count" class="count-badge">24</span>
             </div>
 
-            <div class="results-list" id="station-list" role="list">
-                </div>
+            <div class="results-list" id="station-list" role="list"></div>
         </aside>
 
         <main class="map-container" aria-label="Metro Haritası">
-            <button id="sidebar-toggle" class="btn-toggle" aria-label="Menüyü Aç/Kapa">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button id="sidebar-toggle" class="btn-toggle"><i class="fas fa-bars"></i></button>
 
-            <div class="profile-card" id="top-profile-card" onclick="handleProfileClick()" role="button" tabindex="0" aria-label="Profil ve Puan Durumu">
+            <div class="profile-card" id="top-profile-card" onclick="handleProfileClick()" role="button">
                 <div class="profile-info">
                     <span class="user-name" id="top-user-name">Misafir</span>
                     <span class="user-points" id="top-user-desc">Giriş Yapın <i class="fas fa-chevron-right" style="font-size: 0.8em;"></i></span>
                 </div>
                 <div class="profile-img">
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img" alt="Profil Resmi">
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img" alt="Profil">
                 </div>
             </div>
 
-            <div id="map" role="application" aria-label="İzmir Metro Haritası Görünümü"></div>
+            <div id="map"></div>
 
-            <div class="map-legend" aria-label="Harita Renk Açıklamaları">
+            <div class="map-legend">
                 <h4>Durum Göstergesi</h4>
                 <ul>
                     <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
@@ -70,7 +67,7 @@
         </main>
     </div>
 
-    <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
             <div class="lm-left">
                 <div class="lm-welcome-text">
@@ -80,28 +77,23 @@
                 </div>
             </div>
             <div class="lm-right">
-                <span class="close-icon-dark" onclick="closeLoginModal()" aria-label="Kapat">&times;</span>
-                <h3 id="login-title">Giriş Yap</h3>
-                <p class="lm-subtext">Bildirim yapmak, puan kazanmak ve seviye atlamak için oturum açmalısın.</p>
-                
-                <button class="btn-google-login" onclick="performLogin()" aria-label="Google ile Giriş Yap">
+                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
+                <h3>Giriş Yap</h3>
+                <p class="lm-subtext">Bildirim yapmak ve puan kazanmak için oturum açmalısın.</p>
+                <button class="btn-google-login" onclick="performLogin()">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="">
                     <span>Google ile Devam Et</span>
                 </button>
-                
-                <div class="lm-footer">
-                    <p><i class="fas fa-shield-alt"></i> Tamamen ücretsiz ve güvenlidir. Kişisel verileriniz paylaşılmaz.</p>
-                </div>
             </div>
         </div>
     </div>
 
-    <div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+    <div id="profileModal" class="modal">
         <div class="modal-content profile-modal-design">
             <div class="pm-header">
-                <span class="close-icon-light" onclick="closeProfileModal()" aria-label="Kapat">&times;</span>
+                <span class="close-icon-light" onclick="closeProfileModal()">&times;</span>
                 <div class="pm-user-info">
-                    <img src="" class="pm-avatar" id="modal-avatar" alt="Profil Resmi">
+                    <img src="" class="pm-avatar" id="modal-avatar">
                     <div class="pm-text">
                         <h2 id="modal-username">Kullanıcı Adı</h2>
                         <p><i class="fas fa-star"></i> Seviye <span id="modal-level">1</span></p>
@@ -110,160 +102,72 @@
             </div>
             <div class="pm-body">
                 <div class="pm-stats-row">
-                    <div class="pm-stat-box">
-                        <i class="fas fa-trophy" style="color: #f1c40f;"></i>
-                        <h3 id="stat-points">0</h3>
-                        <p>Toplam Puan</p>
-                    </div>
-                    <div class="pm-stat-box">
-                        <i class="fas fa-map-marker-alt" style="color: #e74c3c;"></i>
-                        <h3 id="stat-reports">0</h3>
-                        <p>Raporlar</p>
-                    </div>
-                    <div class="pm-stat-box">
-                        <i class="fas fa-medal" style="color: #3498db;"></i>
-                        <h3 id="stat-badges">0</h3>
-                        <p>Rozetler</p>
-                    </div>
+                    <div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div>
+                    <div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div>
+                    <div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div>
                 </div>
-                
-                <div class="pm-section-title">Seviye İlerlemesi</div>
                 <div class="pm-progress-area">
-                    <div class="pm-prog-labels">
-                        <span>Seviye <span id="current-level-txt">1</span></span>
-                        <span id="xp-text">0/100 XP</span>
-                        <span>Seviye <span id="next-level-txt">2</span></span>
-                    </div>
-                    <div class="pm-prog-bg">
-                        <div class="pm-prog-fill" id="xp-bar" style="width: 0%;"></div>
-                    </div>
+                    <div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100 XP</span><span>Seviye <span id="next-level-txt">2</span></span></div>
+                    <div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width: 0%;"></div></div>
                 </div>
-                
-                <div class="pm-section-title">Kazanılan Rozetler</div>
                 <div class="pm-badges-grid">
-                    <div class="pm-badge-card locked" id="badge-first-login">
-                        <div class="badge-icon"><i class="fas fa-user-check"></i></div>
-                        <div class="badge-info"><h5>Aramıza Hoşgeldin</h5><p>İlk girişini yap.</p></div>
-                        <i class="fas fa-lock badge-status"></i>
-                    </div>
-                    <div class="pm-badge-card locked" id="badge-first-report">
-                        <div class="badge-icon"><i class="fas fa-bullhorn"></i></div>
-                        <div class="badge-info"><h5>İlk Ses</h5><p>İlk arıza bildirimini yap.</p></div>
-                        <i class="fas fa-lock badge-status"></i>
-                    </div>
-                     <div class="pm-badge-card locked" id="badge-verifier">
-                        <div class="badge-icon"><i class="fas fa-clipboard-check"></i></div>
-                        <div class="badge-info"><h5>Müfettiş</h5><p>Bir durumu doğrula.</p></div>
-                        <i class="fas fa-lock badge-status"></i>
-                    </div>
+                    <div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div>
+                    <div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div>
+                    <div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="reportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="report-title">
+    <div id="reportModal" class="modal">
         <div class="modal-content report-modal-design">
-            <div class="modal-header">
-                <h2 id="modal-station-name">İstasyon Adı</h2>
-                <span class="close-btn" onclick="closeReportModal()" aria-label="Kapat">&times;</span>
-            </div>
-            
+            <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
             <div id="alternative-route-box" class="suggestion-box" style="display: none;">
                 <i class="fas fa-exclamation-triangle"></i>
-                <div>
-                    <strong>Bu istasyonda sorun olabilir.</strong>
-                    <span id="suggestion-text">En yakın alternatif: ...</span>
-                </div>
+                <div><strong>Bu istasyonda sorun olabilir.</strong> <span id="suggestion-text"></span></div>
             </div>
-
             <div class="modal-body">
-                <div class="visual-container">
-                    <div id="mini-map" aria-label="İstasyon Çıkışları Haritası"></div>
-                    <div class="mini-map-overlay">
-                        <i class="fas fa-hand-pointer"></i> Arızalı çıkışı/asansörü haritadan seçin.
-                    </div>
-                </div>
-                
+                <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Arızalı çıkışı haritadan seçin.</div></div>
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Lütfen haritadan bir nokta seçin.</div>
-                    
                     <form id="reportForm">
                         <div class="form-group">
                             <label class="form-label">Sorun Tipi</label>
                             <div class="issue-types-grid">
-                                <label class="issue-option">
-                                    <input type="radio" name="issue" value="elevator" checked>
-                                    <span class="issue-box"><i class="fas fa-elevator"></i> Asansör</span>
-                                </label>
-                                <label class="issue-option">
-                                    <input type="radio" name="issue" value="ramp">
-                                    <span class="issue-box"><i class="fas fa-wheelchair"></i> Rampa/Erişim</span>
-                                </label>
-                                <label class="issue-option">
-                                    <input type="radio" name="issue" value="escalator">
-                                    <span class="issue-box"><i class="fas fa-people-carry"></i> Yürüyen Merdiven</span>
-                                </label>
+                                <label class="issue-option"><input type="radio" name="issue" value="elevator" checked><span class="issue-box"><i class="fas fa-elevator"></i> Asansör</span></label>
+                                <label class="issue-option"><input type="radio" name="issue" value="ramp"><span class="issue-box"><i class="fas fa-wheelchair"></i> Rampa</span></label>
+                                <label class="issue-option"><input type="radio" name="issue" value="escalator"><span class="issue-box"><i class="fas fa-people-carry"></i> Y. Merdiven</span></label>
                             </div>
                         </div>
-                        
                         <div class="form-group">
-                            <label class="form-label">Fotoğraf Kanıtı <span class="bonus-badge">+20 Puan</span></label>
-                            <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()" role="button" tabindex="0" aria-label="Fotoğraf Yükle">
+                            <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()">
                                 <input type="file" id="file-input" hidden accept="image/*">
-                                <i class="fas fa-camera fa-2x"></i>
-                                <span id="file-label">Fotoğraf Ekle (İsteğe Bağlı)</span>
+                                <i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20 Puan)</span>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Açıklama (Opsiyonel)</label>
-                            <textarea placeholder="Örn: Asansör düğmesi çalışmıyor, kapı kapanmıyor..." rows="3"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">
-                            <i class="fas fa-paper-plane"></i> Bildirimi Gönder
-                        </button>
+                        <div class="form-group"><textarea placeholder="Açıklama (Opsiyonel)..." rows="2"></textarea></div>
+                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="verifyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="verify-title">
+    <div id="verifyModal" class="modal">
         <div class="modal-content verify-modal-design">
-            <div class="vm-header">
-                <h3 id="verify-title">Durum Doğrulama</h3>
-                <span class="close-icon-dark" onclick="closeVerifyModal()" aria-label="Kapat">&times;</span>
-            </div>
+            <div class="vm-header"><h3>Durum Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
             <div class="vm-body">
-                <div class="vm-station-info">
-                    <div class="vm-icon-area"><i class="fas fa-question-circle"></i></div>
-                    <h2 id="verify-station-name">İstasyon Adı</h2>
-                    <p>Bu istasyonda daha önce bir arıza bildirilmiş. Güncel durumu nedir?</p>
-                </div>
-                
+                <div class="vm-station-info"><h2 id="verify-station-name">İstasyon</h2><p>Güncel durum nedir?</p></div>
                 <div class="vm-actions">
-                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)" aria-label="Sorun Devam Ediyor">
+                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)">
                         <div class="icon-box"><i class="fas fa-times"></i></div>
-                        <div class="action-text">
-                            <strong>Sorun Devam Ediyor</strong>
-                            <span>Arıza henüz giderilmemiş.</span>
-                        </div>
-                        <div class="points-badge">+15 Puan</div>
+                        <div class="action-text"><strong>Sorun Devam Ediyor</strong><span>+15 Puan</span></div>
                     </button>
-
-                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)" aria-label="Sorun Çözülmüş">
+                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)">
                         <div class="icon-box"><i class="fas fa-check"></i></div>
-                        <div class="action-text">
-                            <strong>Sorun Çözülmüş</strong>
-                            <span>Artık çalışıyor, erişilebilir.</span>
-                        </div>
-                        <div class="points-badge success">+30 Puan</div>
+                        <div class="action-text"><strong>Sorun Çözülmüş</strong><span>+30 Puan</span></div>
                     </button>
                 </div>
-            </div>
-            <div class="vm-footer">
-                <p><i class="fas fa-info-circle"></i> Doğru beyan topluluk için önemlidir.</p>
             </div>
         </div>
     </div>
