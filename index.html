@@ -1,299 +1,177 @@
-// --- AYARLAR ---
-const TEST_MODE = true; 
-const GPS_LIMIT_METERS = 1000; 
-const REPORT_THRESHOLD = 3; // 3 ve üzeri puanda KIRMIZI olur
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erişilebilir İzmir Metro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
-// --- 1. HARİTA ---
-var map = L.map('map').setView([38.4100, 27.0900], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
-var markersLayer = L.layerGroup().addTo(map);
-
-// --- 2. OYUN STATE ---
-let gameState = {
-    isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0,
-    badges: { firstLogin: false, firstReport: false, verifier: false }
-};
-
-// --- YARDIMCI FONKSİYONLAR ---
-function calculateLevel() { return Math.floor(gameState.xp / 100) + 1; }
-function getNextLevelXp() { return gameState.level * 100; }
-function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&background=1e69de&color=fff&rounded=true&bold=true`; }
-
-// --- 3. İSTASYON VERİLERİ (SIRALI) ---
-const metroStations = [
-    { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, zones: [{ name: "Ana Giriş", offset: [0,0] }] },
-    { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Narlıdere (İtfaiye)", coords: [38.3936, 27.0150], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Güzel Sanatlar", coords: [38.3925, 27.0236], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "DEÜ Hastanesi", coords: [38.3944, 27.0386], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Çağdaş", coords: [38.3944, 27.0453], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Balçova", coords: [38.3958, 27.0569], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { 
-        name: "Fahrettin Altay", coords: [38.3969, 27.0700], status: "active", reportScore: 0,
-        zones: [ { name: "AVM Çıkışı (Asansör)", offset: [0.0003, -0.0003] }, { name: "Pazar Yeri Çıkışı", offset: [-0.0003, 0.0003] }, { name: "Aktarma Merkezi", offset: [0, 0] } ]
-    },
-    { 
-        name: "Poligon", coords: [38.3933, 27.0850], status: "active", reportScore: 0,
-        zones: [ { name: "Park Çıkışı", offset: [0.0002, -0.0002] }, { name: "Okul Tarafı", offset: [-0.0002, 0.0002] } ]
-    },
-    { name: "Göztepe", coords: [38.3961, 27.0944], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "İzmirspor", coords: [38.4017, 27.1106], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Üçyol", coords: [38.4058, 27.1211], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Konak", coords: [38.4169, 27.1281], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Çankaya", coords: [38.4225, 27.1361], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Basmane", coords: [38.4228, 27.1447], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Hilal", coords: [38.4269, 27.1550], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Halkapınar", coords: [38.4344, 27.1686], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Stadyum", coords: [38.4425, 27.1806], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Sanayi", coords: [38.4483, 27.1903], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Bölge", coords: [38.4547, 27.2011], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Bornova", coords: [38.4583, 27.2125], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Ege Üniversitesi", coords: [38.4615, 27.2210], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Evka-3", coords: [38.4650, 27.2286], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] }
-];
-
-L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 5 }).addTo(map);
-
-function renderStations(searchTerm = "") {
-    markersLayer.clearLayers();
-    const listDiv = document.getElementById('station-list');
-    listDiv.innerHTML = "";
-
-    const filtered = metroStations.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    document.getElementById('result-count').innerText = filtered.length;
-
-    filtered.forEach(station => {
-        let color = '#27ae60'; let icon = '<i class="fas fa-check-circle"></i>'; let statusText = 'Sorun Yok'; let statusClass = 'status-ok';
-        
-        // Mantık: Eğer 'inactive' ise KIRMIZI, 'pending' ise SARI
-        if (station.status === 'pending') { 
-            color = '#f39c12'; icon = '<i class="fas fa-exclamation-circle"></i>'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending';
-        } else if (station.status === 'inactive') { 
-            color = '#c0392b'; icon = '<i class="fas fa-times-circle"></i>'; statusText = 'Arıza Var'; statusClass = 'status-err';
-        }
-
-        const marker = L.circleMarker(station.coords, { color: 'white', weight: 2, fillColor: color, fillOpacity: 1, radius: 9 }).addTo(markersLayer);
-        marker.bindTooltip(`<b>${station.name}</b><br>${statusText}`);
-        marker.on('click', () => triggerAction(station));
-
-        const card = document.createElement('div');
-        card.className = 'station-card';
-        card.onclick = () => triggerListClick(station.name);
-        
-        let actionButtons = `
-            <button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction(this.closest('.station-card').dataset.stationName, 'report')" title="Durum Bildir">
-                <i class="fas fa-bullhorn"></i>
-            </button>`;
-        if (station.status !== 'active') {
-            actionButtons += `
-                <button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction(this.closest('.station-card').dataset.stationName, 'verify')" title="Doğrula">
-                    <i class="fas fa-check"></i>
-                </button>`;
-        }
-        
-        card.dataset.stationName = station.name;
-        card.innerHTML = `
-            <div class="card-info">
-                <div class="card-header"><i class="fas fa-subway station-icon"></i><div class="card-title">${station.name}</div></div>
-                <span class="status-badge ${statusClass}">${icon} ${statusText}</span>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i class="fas fa-metro"></i>
+                    <h2>Erişilebilir İzmir</h2>
+                </div>
+                <p>Engelsiz ulaşım haritası</p>
             </div>
-            <div class="card-actions">${actionButtons}</div>
-        `;
-        listDiv.appendChild(card);
-    });
-}
-renderStations();
 
-document.getElementById('station-search').addEventListener('input', (e) => { renderStations(e.target.value); });
+            <div class="search-ticker-area">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="station-search" placeholder="İstasyon ara...">
+                </div>
+                <div class="news-ticker">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <div class="ticker-wrapper">
+                        <div class="ticker-content" id="ticker-text">Sistem aktif. Veriler yükleniyor...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list-header">
+                <h3>İstasyonlar</h3>
+                <span id="result-count" class="count-badge">24</span>
+            </div>
 
-// --- 5. LOGIN ---
-const loginModal = document.getElementById('loginModal');
-const demoNames = ["Ahmet Yılmaz", "Zeynep Kaya", "Mehmet Demir", "Ayşe Çelik", "Can Yıldız"];
+            <div class="results-list" id="station-list"></div>
+        </aside>
 
-function checkLogin() {
-    if (gameState.isLoggedIn) return true;
-    loginModal.style.display = 'flex'; return false;
-}
-window.closeLoginModal = () => { loginModal.style.display = 'none'; }
+        <main class="map-container">
+            <button id="sidebar-toggle" class="btn-toggle"><i class="fas fa-bars"></i></button>
 
-window.performLogin = () => {
-    const btn = document.querySelector('.btn-google-login');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> <span>Bağlanılıyor...</span>';
-    btn.disabled = true;
+            <div class="profile-card" onclick="handleProfileClick()">
+                <div class="profile-info">
+                    <span class="user-name" id="top-user-name">Misafir</span>
+                    <span class="user-points" id="top-user-desc">Giriş Yapın</span>
+                </div>
+                <div class="profile-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img">
+                </div>
+            </div>
 
-    setTimeout(() => {
-        const randomFullName = demoNames[Math.floor(Math.random() * demoNames.length)];
-        const parts = randomFullName.split(' ');
-        const privacyName = `${parts[0]} ${parts[1][0]}.`;
+            <div id="map"></div>
 
-        gameState.isLoggedIn = true;
-        gameState.username = privacyName;
-        gameState.badges.firstLogin = true;
+            <div class="map-legend">
+                <h4>Durumlar</h4>
+                <ul>
+                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
+                    <li><span class="legend-dot status-err"></span> Arıza Var</li>
+                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
+                </ul>
+            </div>
+        </main>
+    </div>
 
-        updateProfileUI();
-        closeLoginModal();
-        btn.innerHTML = originalHtml;
-        btn.disabled = false;
-        alert(`🎉 Hoşgeldin, ${parts[0]}!\nOturum açıldı.`);
-    }, 1500);
-};
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-modal-design">
+            <div class="lm-left">
+                <div class="lm-welcome-text">
+                    <h2>Topluluğa Katıl</h2>
+                    <p>İzmir'i herkes için erişilebilir kıl.</p>
+                </div>
+            </div>
+            <div class="lm-right">
+                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
+                <h3>Giriş Yap</h3>
+                <p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p>
+                <button class="btn-google-login" onclick="performLogin()">
+                    <i class="fab fa-google"></i> Google ile Devam Et
+                </button>
+            </div>
+        </div>
+    </div>
 
-// --- 6. PROFIL UI ---
-function updateProfileUI() {
-    document.getElementById('top-user-name').innerText = gameState.username;
-    document.getElementById('top-user-desc').innerHTML = `<i class="fas fa-star" style="color:#f1c40f;"></i> Seviye ${gameState.level}`;
-    const avatarUrl = getAvatarUrl(gameState.username);
-    document.getElementById('top-user-img').src = avatarUrl;
-    document.getElementById('modal-username').innerText = gameState.username;
-    document.getElementById('modal-avatar').src = avatarUrl;
-    
-    if (calculateLevel() > gameState.level) {
-        alert(`🎉 TEBRİKLER! Seviye ${calculateLevel()} oldunuz!`);
-        gameState.level = calculateLevel();
-    }
-    const nextXp = getNextLevelXp();
-    const progressPercent = ((gameState.xp - ((gameState.level - 1) * 100)) / 100) * 100;
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-modal-design">
+            <div class="pm-header">
+                <span class="close-icon-light" onclick="closeProfileModal()">&times;</span>
+                <div class="pm-user-info">
+                    <img src="" class="pm-avatar" id="modal-avatar">
+                    <div class="pm-text">
+                        <h2 id="modal-username">Kullanıcı</h2>
+                        <p>Seviye <span id="modal-level">1</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="pm-body">
+                <div class="pm-stats-row">
+                    <div class="pm-stat-box"><h3><span id="stat-points">0</span></h3><p>Puan</p></div>
+                    <div class="pm-stat-box"><h3><span id="stat-reports">0</span></h3><p>Rapor</p></div>
+                    <div class="pm-stat-box"><h3><span id="stat-badges">0</span></h3><p>Rozet</p></div>
+                </div>
+                <div class="pm-progress-area">
+                    <div class="pm-prog-labels"><span>İlerleme</span><span id="xp-text">0/100</span></div>
+                    <div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width: 0%;"></div></div>
+                </div>
+                <div class="pm-badges-grid">
+                    <div class="pm-badge-card" id="badge-first-login"><h5>Başlangıç</h5><i class="fas fa-check-circle badge-status"></i></div>
+                    <div class="pm-badge-card locked" id="badge-first-report"><h5>İlk Rapor</h5><i class="fas fa-lock badge-status"></i></div>
+                    <div class="pm-badge-card locked" id="badge-verifier"><h5>Müfettiş</h5><i class="fas fa-lock badge-status"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    document.getElementById('modal-level').innerText = gameState.level;
-    document.getElementById('stat-points').innerText = gameState.xp;
-    document.getElementById('stat-reports').innerText = gameState.totalReports;
-    document.getElementById('stat-badges').innerText = Object.values(gameState.badges).filter(b => b).length;
-    document.getElementById('current-level-txt').innerText = gameState.level;
-    document.getElementById('next-level-txt').innerText = gameState.level + 1;
-    document.getElementById('xp-text').innerText = `${gameState.xp}/${nextXp} XP`;
-    document.getElementById('xp-bar').style.width = `${progressPercent}%`;
-    
-    updateBadgeStatus('badge-first-login', gameState.badges.firstLogin);
-    updateBadgeStatus('badge-first-report', gameState.badges.firstReport);
-    updateBadgeStatus('badge-verifier', gameState.badges.verifier);
-}
+    <div id="reportModal" class="modal">
+        <div class="modal-content report-modal-design">
+            <div class="modal-header">
+                <h2 id="modal-station-name">İstasyon</h2>
+                <span class="close-btn" onclick="closeReportModal()">&times;</span>
+            </div>
+            <div id="alternative-route-box" class="suggestion-box" style="display:none;">
+                <i class="fas fa-info-circle"></i> <span id="suggestion-text"></span>
+            </div>
+            <div class="modal-body">
+                <div class="visual-container">
+                    <div id="mini-map"></div>
+                    <div class="mini-map-overlay">Haritadan seçim yapın</div>
+                </div>
+                <div class="form-container">
+                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    <form id="reportForm">
+                        <div class="issue-types-grid">
+                            <label class="issue-box"><input type="radio" name="issue" value="elevator" checked> Asansör</label>
+                            <label class="issue-box"><input type="radio" name="issue" value="ramp"> Rampa</label>
+                        </div>
+                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()">
+                            <input type="file" id="file-input" hidden>
+                            <span id="file-label"><i class="fas fa-camera"></i> Fotoğraf Ekle (+20 Puan)</span>
+                        </div>
+                        <textarea placeholder="Açıklama..."></textarea>
+                        <button type="submit" class="btn-submit" id="btn-submit-report" disabled>Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-function updateBadgeStatus(id, unlocked) {
-    if (unlocked) {
-        const el = document.getElementById(id);
-        el.classList.remove('locked');
-        const icon = el.querySelector('.badge-status');
-        icon.classList.replace('fa-lock', 'fa-check-circle');
-        icon.classList.add('active');
-    }
-}
+    <div id="verifyModal" class="modal">
+        <div class="modal-content verify-modal-design">
+            <div class="vm-header">
+                <h3>Durum Doğrulama</h3>
+                <span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span>
+            </div>
+            <div class="vm-body">
+                <h2 id="verify-station-name">İstasyon</h2>
+                <p>Bu istasyondaki güncel durum nedir?</p>
+                <div class="vm-actions">
+                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)">
+                        <strong>Sorun Devam Ediyor</strong> <span>+15 Puan</span>
+                    </button>
+                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)">
+                        <strong>Sorun Çözülmüş</strong> <span>+30 Puan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// --- 7. RAPOR & DOĞRULAMA (BUG DÜZELTİLDİ) ---
-const reportModal = document.getElementById('reportModal');
-const verifyModal = document.getElementById('verifyModal');
-let currentStationName = null; let selectedZone = null; let hasPhoto = false; let stationToVerify = null; let miniMap = null;
-
-function triggerAction(stationOrName, actionType = null) {
-    const stationName = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
-    const station = metroStations.find(s => s.name === stationName);
-    if (!actionType) actionType = station.status === 'active' ? 'report' : 'verify';
-    if (!gameState.isLoggedIn) { openLoginModal(); return; }
-    if (actionType === 'report') openReportModal(stationName);
-    else openVerifyModal(stationName);
-}
-
-window.openReportModal = (name) => {
-    currentStationName = name;
-    document.getElementById('modal-station-name').innerText = name;
-    reportModal.style.display = 'flex';
-    selectedZone = null; hasPhoto = false;
-    document.getElementById('selected-zone-info').className = "selection-alert";
-    document.getElementById('selected-zone-info').innerText = "Lütfen haritadan seçim yapın";
-    document.getElementById('btn-submit-report').disabled = true;
-    document.getElementById('file-label').innerText = "Fotoğraf Ekle (İsteğe Bağlı)";
-
-    const station = metroStations.find(s => s.name === name);
-    const altBox = document.getElementById('alternative-route-box');
-    if(station.status !== 'active') {
-        altBox.style.display = 'flex';
-        document.getElementById('suggestion-text').innerText = `Alternatif: ${getAlternativeRoute(name)}`;
-    } else altBox.style.display = 'none';
-
-    setTimeout(() => {
-        if (miniMap) miniMap.remove();
-        miniMap = L.map('mini-map', { center: station.coords, zoom: 18, zoomControl: false, dragging: false, scrollWheelZoom: false });
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '' }).addTo(miniMap);
-        const zones = station.zones || [{name: "Genel Giriş", offset: [0,0]}];
-        zones.forEach(zone => {
-            const zm = L.circleMarker([station.coords[0]+zone.offset[0], station.coords[1]+zone.offset[1]], { color: '#3498db', fillColor: '#3498db', fillOpacity: 0.8, radius: 12 }).addTo(miniMap);
-            zm.bindTooltip(zone.name, {permanent: true, direction: 'top', offset: [0, -10]});
-            zm.on('click', () => {
-                selectedZone = zone.name;
-                document.getElementById('selected-zone-info').className = "selection-alert selected";
-                document.getElementById('selected-zone-info').innerText = `Seçildi: ${zone.name}`;
-                document.getElementById('btn-submit-report').disabled = false;
-                miniMap.eachLayer(l => { if(l instanceof L.CircleMarker) l.setStyle({fillColor:'#3498db'}) });
-                zm.setStyle({fillColor:'#e74c3c'});
-            });
-        });
-    }, 200);
-}
-
-document.getElementById('reportForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const station = metroStations.find(s => s.name === currentStationName);
-    
-    // Raporlama Mantığı
-    station.reportScore += 1;
-    if(station.reportScore >= REPORT_THRESHOLD) station.status = 'inactive'; else station.status = 'pending';
-    
-    let points = 50 + (hasPhoto ? 20 : 0);
-    gameState.xp += points; gameState.totalReports++;
-    if(gameState.totalReports >= 1) gameState.badges.firstReport = true;
-    
-    alert(`✅ Bildirim Alındı!\n+${points} Puan`);
-    updateProfileUI(); renderStations(); closeReportModal();
-});
-
-// DOĞRULAMA (BUG BURADAYDI VE DÜZELTİLDİ)
-window.openVerifyModal = (name) => {
-    stationToVerify = name;
-    document.getElementById('verify-station-name').innerText = name;
-    verifyModal.style.display = 'flex';
-}
-
-window.submitVerification = (isFixed) => {
-    const s = metroStations.find(st => st.name === stationToVerify);
-    if(isFixed) {
-        s.status = 'active'; s.reportScore = 0; gameState.xp += 30;
-        alert("👏 Düzeldiğini bildirdin.\n+30 Puan");
-    } else {
-        s.reportScore++;
-        // DÜZELTME: Eşik kontrolü buraya eklendi!
-        if (s.reportScore >= REPORT_THRESHOLD) {
-            s.status = 'inactive'; // Artık kırmızı olacak
-        }
-        gameState.xp += 15;
-        alert("👍 Sorun devam ediyor.\n+15 Puan");
-    }
-    gameState.verifiedCount++; 
-    if(gameState.verifiedCount >= 1) gameState.badges.verifier = true;
-    updateProfileUI(); renderStations(); closeVerifyModal();
-}
-
-// Diğer Olaylar
-document.getElementById('file-input').addEventListener('change', function() { if(this.files[0]) { hasPhoto=true; document.getElementById('file-label').innerText="✅ Eklendi"; } });
-window.closeReportModal = () => { reportModal.style.display = 'none'; }
-window.closeVerifyModal = () => { verifyModal.style.display = 'none'; }
-const profileModal = document.getElementById('profileModal');
-window.handleProfileClick = () => { if(gameState.isLoggedIn) { profileModal.style.display = 'flex'; updateProfileUI(); } else openLoginModal(); }
-window.closeProfileModal = () => { profileModal.style.display = 'none'; }
-window.triggerListClick = (name) => { const s = metroStations.find(st => st.name === name); map.flyTo(s.coords, 15); setTimeout(() => triggerAction(s), 800); }
-document.getElementById('sidebar-toggle').addEventListener('click', () => { document.getElementById('sidebar').classList.toggle('closed'); setTimeout(() => map.invalidateSize(), 400); });
-window.onclick = (e) => { if(e.target==profileModal) closeProfileModal(); if(e.target==reportModal) closeReportModal(); if(e.target==verifyModal) closeVerifyModal(); if(e.target==loginModal) closeLoginModal(); }
-
-// Ticker & Rota
-function getAlternativeRoute(name) {
-    const idx = metroStations.findIndex(s => s.name === name);
-    if(idx > 0 && metroStations[idx-1].status === 'active') return metroStations[idx-1].name;
-    if(idx < metroStations.length-1 && metroStations[idx+1].status === 'active') return metroStations[idx+1].name;
-    return "Otobüs/Eshot";
-}
-const activities = ["Sistem: Hatay asansör bakımı.", "Ali K. Konak doğruladı.", "Zeynep T. Üçyol raporladı."];
-setInterval(() => {
-    const t = document.getElementById('ticker-text');
-    t.style.opacity = 0;
-    setTimeout(() => { t.innerText = activities[Math.floor(Math.random()*activities.length)]; t.style.opacity = 1; }, 500);
-}, 4000);
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
