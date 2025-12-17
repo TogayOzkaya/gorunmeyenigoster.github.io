@@ -14,7 +14,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="filter-header">
                 <h3><i class="fas fa-map-marked-alt"></i> İstasyonlar</h3>
-                <p style="font-size:0.85rem; color:#666; margin-top:5px;">Listeden seçim yapın.</p>
+                <p style="font-size:0.85rem; color:#666; margin-top:5px;">Arıza bildirin veya mevcutları doğrulayın.</p>
             </div>
             <div class="divider"><span id="result-count">Yükleniyor...</span></div>
             <div class="results-list" id="station-list"></div>
@@ -26,7 +26,10 @@
             <div class="profile-card" onclick="openProfileModal()">
                 <div class="profile-info">
                     <span class="user-name">Gönüllü Katılımcı</span>
-                    <span class="user-points"><i class="fas fa-star"></i> <span id="display-points">150</span> Puan</span>
+                    <span class="user-points">
+                        <i class="fas fa-star" style="color:#f1c40f;"></i> 
+                        Seviye <span id="mini-level">1</span>
+                    </span>
                 </div>
                 <div class="profile-img">
                     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profil">
@@ -38,67 +41,73 @@
     </div>
 
     <div id="profileModal" class="modal">
-        <div class="modal-content profile-modal-content">
-            <div class="profile-header">
-                <span class="close-btn-white" onclick="closeProfileModal()">&times;</span>
-                <div class="header-user">
-                    <div class="big-avatar">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
-                    </div>
-                    <div class="header-text">
-                        <h2>Gönüllü Katılımcı</h2>
-                        <p><i class="fas fa-star"></i> Seviye 2</p>
+        <div class="modal-content profile-modal-design">
+            
+            <div class="pm-header">
+                <span class="close-icon" onclick="closeProfileModal()">&times;</span>
+                <div class="pm-user-info">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="pm-avatar">
+                    <div class="pm-text">
+                        <h2 id="modal-username">Gönüllü Katılımcı</h2>
+                        <p><i class="fas fa-star"></i> Seviye <span id="modal-level">1</span></p>
                     </div>
                 </div>
             </div>
 
-            <div class="stats-container">
-                <div class="stat-box">
+            <div class="pm-stats-row">
+                <div class="pm-stat-box">
                     <i class="fas fa-trophy"></i>
-                    <h3 id="modal-total-points">150</h3>
+                    <h3 id="stat-points">0</h3>
                     <p>Toplam Puan</p>
                 </div>
-                <div class="stat-box">
+                <div class="pm-stat-box">
                     <i class="fas fa-stairs"></i>
-                    <h3>14</h3>
+                    <h3 id="stat-reports">0</h3>
                     <p>Toplam Rapor</p>
                 </div>
-                <div class="stat-box">
+                <div class="pm-stat-box">
                     <i class="fas fa-certificate"></i>
-                    <h3>2</h3>
+                    <h3 id="stat-badges">0</h3>
                     <p>Rozetler</p>
                 </div>
             </div>
 
-            <div class="progress-section">
-                <div class="progress-labels">
+            <div class="pm-progress-area">
+                <div class="pm-prog-labels">
                     <span>Sonraki Seviye İlerlemesi</span>
-                    <span>70/100</span>
+                    <span id="xp-text">0/100</span>
                 </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: 70%;"></div>
+                <div class="pm-prog-bg">
+                    <div class="pm-prog-fill" id="xp-bar" style="width: 0%;"></div>
                 </div>
-                <p class="next-level-text">Seviye 3 olmak için 30 puan daha kazan!</p>
+                <p class="pm-next-level-msg" id="xp-message">Seviye 2 olmak için 100 puan daha kazan!</p>
             </div>
 
-            <div class="badges-section">
+            <div class="pm-badges-area">
                 <h4><i class="fas fa-medal"></i> Rozetler</h4>
-                <div class="badge-list">
-                    <div class="badge-item">
-                        <div class="badge-icon"><i class="fas fa-user-check"></i></div>
-                        <div class="badge-info">
+                <div class="pm-badge-grid">
+                    <div class="pm-badge-card" id="badge-first-login">
+                        <div class="badge-icon-circle"><i class="fas fa-user-check"></i></div>
+                        <div class="badge-meta">
                             <h5>Yeni Başlayan</h5>
                             <p>İlk giriş yapıldı</p>
                         </div>
-                        <i class="fas fa-check check-icon"></i>
+                        <i class="fas fa-check-circle badge-check active"></i>
                     </div>
-                    <div class="badge-item">
-                        <div class="badge-icon"><i class="fas fa-pen-nib"></i></div>
-                        <div class="badge-info">
+                    <div class="pm-badge-card locked" id="badge-first-report">
+                        <div class="badge-icon-circle"><i class="fas fa-pen"></i></div>
+                        <div class="badge-meta">
                             <h5>İlk Rapor</h5>
                             <p>1 rapor oluşturuldu</p>
                         </div>
-                        <i class="fas fa-check check-icon"></i>
+                        <i class="fas fa-lock badge-check"></i> </div>
+                     <div class="pm-badge-card locked" id="badge-verifier">
+                        <div class="badge-icon-circle"><i class="fas fa-check-double"></i></div>
+                        <div class="badge-meta">
+                            <h5>Müfettiş</h5>
+                            <p>1 doğrulama yapıldı</p>
+                        </div>
+                        <i class="fas fa-lock badge-check"></i>
                     </div>
                 </div>
             </div>
@@ -126,7 +135,7 @@
                             <div class="radio-option"><input type="radio" name="issue"> <label>Rampa</label></div>
                         </div>
                         <textarea placeholder="Açıklama..."></textarea>
-                        <button type="submit" class="btn-submit">Bildirimi Gönder</button>
+                        <button type="submit" class="btn-submit">Bildirimi Gönder (+50 Puan)</button>
                     </form>
                 </div>
             </div>
