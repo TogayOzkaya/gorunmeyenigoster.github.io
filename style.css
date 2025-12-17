@@ -25,9 +25,11 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
     flex-direction: column; 
     box-shadow: 2px 0 15px rgba(0,0,0,0.05); 
     z-index: 1000; 
-    transition: transform 0.3s ease; 
+    transition: margin-left 0.3s ease; /* Kapanma efekti için */
 }
-.sidebar.closed { transform: translateX(-100%); position: absolute; height: 100%; }
+/* Sidebar kapanınca sola çıkması için margin kullanıyoruz, böylece yanındaki harita alanı genişler */
+.sidebar.closed { margin-left: calc(var(--sidebar-width) * -1); position: absolute; height: 100%; }
+
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 5px; }
 .brand h2 { font-size: 1.4rem; font-weight: 700; }
@@ -60,13 +62,13 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .btn-icon-action { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; transition: 0.2s; }
 .btn-report { background: var(--primary-color); } .btn-verify { background: var(--success-color); }
 
-/* HARİTA & BUTONLAR */
+/* HARİTA ALANI */
 .map-container { flex: 1; position: relative; }
 #map { width: 100%; height: 100%; z-index: 1; }
 
 .btn-toggle { position: absolute; top: 20px; left: 20px; z-index: 1500; background: white; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; }
 
-/* GPS BUTONU (Mobilde sağ altta) */
+/* GPS BUTONU */
 .btn-gps {
     position: absolute; bottom: 30px; right: 20px; z-index: 1001;
     background: white; width: 45px; height: 45px; border-radius: 50%;
@@ -83,23 +85,27 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .user-points { font-size: 0.8rem; color: var(--text-muted); }
 .profile-img img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border-color); }
 
-/* --- LEJANT (SIDEBAR İÇİNE TAŞINDI) --- */
+/* LEJANT (DURUM GÖSTERGESİ) */
 .map-legend {
-    /* Artık position absolute değil, sidebar'ın parçası */
-    background: white;
-    padding: 20px;
-    border-top: 1px solid var(--border-color);
-    flex-shrink: 0; /* Küçülmesini engelle */
+    position: absolute; 
+    bottom: 30px; /* Aşağıdan 30px yukarıda */
+    left: 20px; /* Soldan 20px içeride */
+    z-index: 1001; 
+    background: white; 
+    padding: 15px 20px; 
+    border-radius: 12px; 
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
+    /* Map Container flex olduğu için sidebar kapanınca container genişler, bu da sola kayar */
 }
-.map-legend h4 { font-size: 0.95rem; margin-bottom: 12px; color: var(--text-dark); font-weight: 700; }
-.map-legend ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.map-legend li { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--text-muted); }
-.legend-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.map-legend h4 { font-size: 0.9rem; margin-bottom: 10px; }
+.map-legend ul { list-style: none; }
+.map-legend li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-muted); }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 .legend-dot.status-ok { background: var(--success-color); }
 .legend-dot.status-err { background: var(--danger-color); }
 .legend-dot.status-pending { background: var(--warning-color); }
 
-/* MODALLAR */
+/* MODAL STİLLERİ */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
 .modal-content { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: modalFadeIn 0.3s ease; }
 @keyframes modalFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -155,7 +161,11 @@ textarea { width: 100%; padding: 15px; border: 2px solid var(--border-color); bo
 @media (max-width: 768px) {
     .sidebar { position: absolute; height: 100%; }
     .btn-toggle { display: flex; }
-    /* Mobilde Lejant sidebar'ın içinde olduğu için ekstra ayara gerek yok */
+    /* Mobilde Lejant'ı sağ üstte veya sidebar kapanınca sol altta görmek için */
+    .map-legend { bottom: 90px; right: 10px; left: auto; }
+    /* Sidebar açılınca lejantı gizle ki üstüne binmesin */
+    body:has(.sidebar:not(.closed)) .map-legend { display: none; }
+    
     .profile-card { top: 10px; right: 10px; padding: 5px 10px; }
     .user-name, .user-points { display: none; }
     .profile-img img { width: 35px; height: 35px; }
