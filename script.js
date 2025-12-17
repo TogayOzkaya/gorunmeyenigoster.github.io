@@ -2,15 +2,19 @@
 const TEST_MODE = true;
 const REPORT_THRESHOLD = 3; 
 
-/* --- GÜVENLİK KONTROLÜ: LEAFLET YÜKLÜ MÜ? --- */
+/* --- GÜVENLİK KONTROLÜ --- */
+// Eğer Leaflet kütüphanesi yüklenmediyse uyarı ver
 if (typeof L === 'undefined') {
-    alert("HATA: Harita yüklenemedi! İnternet bağlantınızı kontrol edin veya sayfayı yenileyin.");
-    throw new Error("Leaflet kütüphanesi eksik.");
+    alert("Harita kütüphanesi yüklenemedi. Lütfen internet bağlantınızı kontrol edip sayfayı yenileyin.");
 }
 
-/* --- 1. HARİTA BAŞLATMA --- */
+/* --- 1. HARİTA KURULUMU --- */
 var map = L.map('map', {zoomControl: false}).setView([38.4189, 27.1287], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+    attribution: '© OSM' 
+}).addTo(map);
+
 L.control.zoom({position: 'bottomright'}).addTo(map);
 var markersLayer = L.layerGroup().addTo(map);
 
@@ -57,18 +61,19 @@ const metroStations = [
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
 /* --- 4. YARDIMCI FONKSİYONLAR --- */
-// Bu fonksiyon, puanı kontrol edip rengi zorla düzeltir
-function refreshStationStatus(station) {
-    // Puanı sayıya çevir (String hatasını önle)
+
+// PUAN ve RENK KONTROLÜ (BU FONKSİYON HATAYI DÜZELTİR)
+function checkAndFixStatus(station) {
+    // Puanı sayıya çevir
     let score = parseInt(station.reportScore) || 0;
-    station.reportScore = score;
-    
+    station.reportScore = score; // Düzeltilmiş puanı kaydet
+
     if (score >= REPORT_THRESHOLD) {
-        station.status = 'inactive'; // KIRMIZI
+        station.status = 'inactive'; // 3 veya daha fazlaysa KIRMIZI
     } else if (score > 0) {
-        station.status = 'pending'; // SARI
+        station.status = 'pending'; // 0 ile 3 arasındaysa SARI
     } else {
-        station.status = 'active'; // YEŞİL
+        station.status = 'active'; // 0 ise YEŞİL
     }
 }
 
@@ -82,9 +87,7 @@ function saveData() {
         localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
         const stationData = metroStations.map(s => ({ name: s.name, reportScore: s.reportScore }));
         localStorage.setItem('izmirMetro_stations', JSON.stringify(stationData));
-    } catch (e) {
-        console.error("Kaydetme hatası:", e);
-    }
+    } catch (e) { console.error("Kayıt hatası:", e); }
 }
 
 function loadData() {
@@ -93,10 +96,8 @@ function loadData() {
         const savedStations = localStorage.getItem('izmirMetro_stations');
 
         if (savedState) { 
-            const parsedState = JSON.parse(savedState);
-            // Veri bütünlüğü kontrolü (Eski sürümden kalma bozuk veri varsa temizle)
-            if (!parsedState.badges) throw new Error("Eski veri formatı");
-            gameState = parsedState; 
+            const parsed = JSON.parse(savedState);
+            if (parsed && parsed.badges) gameState = parsed; // Veri doğrulama
         }
 
         if (savedStations) {
@@ -105,20 +106,21 @@ function loadData() {
                 const originalS = metroStations.find(s => s.name === savedS.name);
                 if (originalS) {
                     originalS.reportScore = savedS.reportScore;
-                    refreshStationStatus(originalS); // Yüklerken durumu onar
+                    // YÜKLERKEN DURUMU ONAR
+                    checkAndFixStatus(originalS);
                 }
             });
         }
     } catch (e) {
-        console.warn("Eski veya bozuk veri tespit edildi. Sistem sıfırlanıyor...", e);
-        localStorage.clear(); // Hata varsa temizle
+        console.warn("Bozuk veri tespit edildi, sıfırlanıyor...");
+        localStorage.clear();
     }
     
     if(gameState.isLoggedIn) updateUI();
     renderStations();
 }
 
-/* --- 6. RENDER (ÇİZİM) --- */
+/* --- 6. RENDER (EKRANA ÇİZME) --- */
 function renderStations(searchTerm = "") {
     markersLayer.clearLayers();
     const listDiv = document.getElementById('station-list');
@@ -129,8 +131,8 @@ function renderStations(searchTerm = "") {
     if(countSpan) countSpan.innerText = filtered.length;
 
     filtered.forEach(station => {
-        // Her çizimde durumu kontrol et (Garanti Yöntem)
-        refreshStationStatus(station);
+        // HER ÇİZİMDE DURUMU KONTROL ET
+        checkAndFixStatus(station);
 
         let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok', icon = '<i class="fas fa-check-circle"></i>';
         
@@ -140,12 +142,10 @@ function renderStations(searchTerm = "") {
             color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; icon = '<i class="fas fa-exclamation-circle"></i>';
         }
 
-        // Harita Markeri
         const marker = L.circleMarker(station.coords, {color: 'white', weight: 2, fillColor: color, fillOpacity: 1, radius: 9}).addTo(markersLayer);
         marker.bindTooltip(`<b>${station.name}</b><br>${statusText}`);
         marker.on('click', () => triggerAction(station));
 
-        // Liste Kartı
         const card = document.createElement('div');
         card.className = 'station-card';
         card.onclick = () => triggerListClick(station.name);
@@ -157,11 +157,6 @@ function renderStations(searchTerm = "") {
         listDiv.appendChild(card);
     });
 }
-
-// BAŞLANGIÇ: Önce verileri yükle, sonra dinleyicileri ekle
-loadData();
-const searchInput = document.getElementById('station-search');
-if(searchInput) searchInput.addEventListener('input', (e) => renderStations(e.target.value));
 
 /* --- 7. ETKİLEŞİM --- */
 function triggerAction(stationOrName, type) {
@@ -181,7 +176,7 @@ const loginModal = document.getElementById('loginModal');
 const profileModal = document.getElementById('profileModal');
 let currentStationName, selectedZone, hasPhoto, stationToVerify, miniMap;
 
-// Rapor Modalını Aç
+// Rapor Modal
 function openReportModal(name) {
     currentStationName = name;
     document.getElementById('modal-station-name').innerText = name;
@@ -217,12 +212,14 @@ function openReportModal(name) {
     }, 200);
 }
 
-// Rapor Gönder
+// Rapor Gönder Butonu
 document.getElementById('reportForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const s = metroStations.find(st => st.name === currentStationName);
     
     s.reportScore++;
+    checkAndFixStatus(s); // Durumu kontrol et
+    
     addXp(50 + (hasPhoto?20:0)); 
     gameState.totalReports++; 
     gameState.badges.firstReport=true;
@@ -232,14 +229,14 @@ document.getElementById('reportForm').addEventListener('submit', (e) => {
     alert("✅ Bildirim Alındı!");
 });
 
-// Doğrulama Modalını Aç
+// Doğrulama Modal
 function openVerifyModal(name) {
     stationToVerify = name;
     document.getElementById('verify-station-name').innerText = name;
     verifyModal.style.display = 'flex';
 }
 
-// Doğrulama Gönder
+// Doğrulama Gönder Butonu
 window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
     if(fixed) { 
@@ -249,6 +246,8 @@ window.submitVerification = (fixed) => {
         s.reportScore++; 
         addXp(15); 
     }
+    checkAndFixStatus(s); // Durumu kontrol et
+    
     gameState.verifiedCount++; 
     gameState.badges.verifier=true;
     
@@ -341,7 +340,11 @@ document.getElementById('file-input').addEventListener('change', function() {
 document.getElementById('sidebar-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('closed'));
 window.onclick = (e) => { if(e.target.classList.contains('modal')) closeAllModals(); };
 
-/* --- 10. DİĞERLERİ --- */
+// Arama
+const searchInput = document.getElementById('station-search');
+if(searchInput) searchInput.addEventListener('input', (e) => renderStations(e.target.value));
+
+/* --- 10. EKSTRALAR --- */
 function addXp(amount) { 
     gameState.xp += amount; 
     if(calculateLevel() > gameState.level) { 
@@ -368,3 +371,6 @@ setInterval(() => {
         }, 500);
     }
 }, 4000);
+
+// BAŞLAT
+loadData();
