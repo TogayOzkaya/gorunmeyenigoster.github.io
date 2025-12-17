@@ -3,18 +3,13 @@ const TEST_MODE = true;
 const REPORT_THRESHOLD = 3; 
 
 /* --- GÜVENLİK KONTROLÜ --- */
-// Eğer Leaflet kütüphanesi yüklenmediyse uyarı ver
 if (typeof L === 'undefined') {
     alert("Harita kütüphanesi yüklenemedi. Lütfen internet bağlantınızı kontrol edip sayfayı yenileyin.");
 }
 
-/* --- 1. HARİTA KURULUMU --- */
+/* --- 1. HARİTA BAŞLATMA --- */
 var map = L.map('map', {zoomControl: false}).setView([38.4189, 27.1287], 13);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-    attribution: '© OSM' 
-}).addTo(map);
-
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
 L.control.zoom({position: 'bottomright'}).addTo(map);
 var markersLayer = L.layerGroup().addTo(map);
 
@@ -61,27 +56,19 @@ const metroStations = [
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
 /* --- 4. YARDIMCI FONKSİYONLAR --- */
-
-// PUAN ve RENK KONTROLÜ (BU FONKSİYON HATAYI DÜZELTİR)
 function checkAndFixStatus(station) {
-    // Puanı sayıya çevir
     let score = parseInt(station.reportScore) || 0;
-    station.reportScore = score; // Düzeltilmiş puanı kaydet
-
-    if (score >= REPORT_THRESHOLD) {
-        station.status = 'inactive'; // 3 veya daha fazlaysa KIRMIZI
-    } else if (score > 0) {
-        station.status = 'pending'; // 0 ile 3 arasındaysa SARI
-    } else {
-        station.status = 'active'; // 0 ise YEŞİL
-    }
+    station.reportScore = score;
+    if (score >= REPORT_THRESHOLD) { station.status = 'inactive'; } 
+    else if (score > 0) { station.status = 'pending'; } 
+    else { station.status = 'active'; }
 }
 
 function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&background=1e69de&color=fff&rounded=true&bold=true`; }
 function calculateLevel() { return Math.floor(gameState.xp / 100) + 1; }
 function getNextLevelXp() { return calculateLevel() * 100; }
 
-/* --- 5. VERİ YÖNETİMİ (KENDİNİ ONARAN SİSTEM) --- */
+/* --- 5. VERİ YÖNETİMİ --- */
 function saveData() {
     try {
         localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
@@ -94,33 +81,28 @@ function loadData() {
     try {
         const savedState = localStorage.getItem('izmirMetro_gameState');
         const savedStations = localStorage.getItem('izmirMetro_stations');
-
         if (savedState) { 
             const parsed = JSON.parse(savedState);
-            if (parsed && parsed.badges) gameState = parsed; // Veri doğrulama
+            if (parsed && parsed.badges) gameState = parsed; 
         }
-
         if (savedStations) {
             const parsedStations = JSON.parse(savedStations);
             parsedStations.forEach(savedS => {
                 const originalS = metroStations.find(s => s.name === savedS.name);
                 if (originalS) {
                     originalS.reportScore = savedS.reportScore;
-                    // YÜKLERKEN DURUMU ONAR
-                    checkAndFixStatus(originalS);
+                    checkAndFixStatus(originalS); 
                 }
             });
         }
     } catch (e) {
-        console.warn("Bozuk veri tespit edildi, sıfırlanıyor...");
         localStorage.clear();
     }
-    
     if(gameState.isLoggedIn) updateUI();
     renderStations();
 }
 
-/* --- 6. RENDER (EKRANA ÇİZME) --- */
+/* --- 6. RENDER --- */
 function renderStations(searchTerm = "") {
     markersLayer.clearLayers();
     const listDiv = document.getElementById('station-list');
@@ -131,16 +113,10 @@ function renderStations(searchTerm = "") {
     if(countSpan) countSpan.innerText = filtered.length;
 
     filtered.forEach(station => {
-        // HER ÇİZİMDE DURUMU KONTROL ET
         checkAndFixStatus(station);
-
         let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok', icon = '<i class="fas fa-check-circle"></i>';
-        
-        if (station.status === 'inactive') { 
-            color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; icon = '<i class="fas fa-times-circle"></i>';
-        } else if (station.status === 'pending') { 
-            color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; icon = '<i class="fas fa-exclamation-circle"></i>';
-        }
+        if (station.status === 'inactive') { color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; icon = '<i class="fas fa-times-circle"></i>'; } 
+        else if (station.status === 'pending') { color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; icon = '<i class="fas fa-exclamation-circle"></i>'; }
 
         const marker = L.circleMarker(station.coords, {color: 'white', weight: 2, fillColor: color, fillOpacity: 1, radius: 9}).addTo(markersLayer);
         marker.bindTooltip(`<b>${station.name}</b><br>${statusText}`);
@@ -149,34 +125,35 @@ function renderStations(searchTerm = "") {
         const card = document.createElement('div');
         card.className = 'station-card';
         card.onclick = () => triggerListClick(station.name);
-        
         let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')" title="Durum Bildir"><i class="fas fa-bullhorn"></i></button>`;
         if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')" title="Doğrula"><i class="fas fa-check"></i></button>`;
-
         card.innerHTML = `<div class="card-info"><div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div><span class="status-badge ${statusClass}">${icon} ${statusText}</span></div><div class="card-actions">${btns}</div>`;
         listDiv.appendChild(card);
     });
 }
+
+// BAŞLAT
+loadData();
+const searchInput = document.getElementById('station-search');
+if(searchInput) searchInput.addEventListener('input', (e) => renderStations(e.target.value));
 
 /* --- 7. ETKİLEŞİM --- */
 function triggerAction(stationOrName, type) {
     const name = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
     const s = metroStations.find(st => st.name === name);
     if (!type) type = s.status === 'active' ? 'report' : 'verify';
-    
     if (!gameState.isLoggedIn) { openLoginModal(); return; }
     if (type === 'report') openReportModal(name);
     else openVerifyModal(name);
 }
 
-/* --- 8. MODAL İŞLEMLERİ --- */
+/* --- 8. MODAL --- */
 const reportModal = document.getElementById('reportModal');
 const verifyModal = document.getElementById('verifyModal');
 const loginModal = document.getElementById('loginModal');
 const profileModal = document.getElementById('profileModal');
 let currentStationName, selectedZone, hasPhoto, stationToVerify, miniMap;
 
-// Rapor Modal
 function openReportModal(name) {
     currentStationName = name;
     document.getElementById('modal-station-name').innerText = name;
@@ -212,46 +189,33 @@ function openReportModal(name) {
     }, 200);
 }
 
-// Rapor Gönder Butonu
 document.getElementById('reportForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const s = metroStations.find(st => st.name === currentStationName);
-    
     s.reportScore++;
-    checkAndFixStatus(s); // Durumu kontrol et
-    
+    checkAndFixStatus(s); 
     addXp(50 + (hasPhoto?20:0)); 
     gameState.totalReports++; 
     gameState.badges.firstReport=true;
-    
     saveData(); 
     updateUI(); renderStations(); closeAllModals(); 
     alert("✅ Bildirim Alındı!");
 });
 
-// Doğrulama Modal
 function openVerifyModal(name) {
     stationToVerify = name;
     document.getElementById('verify-station-name').innerText = name;
     verifyModal.style.display = 'flex';
 }
 
-// Doğrulama Gönder Butonu
 window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
-    if(fixed) { 
-        s.reportScore = 0; 
-        addXp(30); 
-    } else { 
-        s.reportScore++; 
-        addXp(15); 
-    }
-    checkAndFixStatus(s); // Durumu kontrol et
-    
+    if(fixed) { s.reportScore = 0; addXp(30); } 
+    else { s.reportScore++; addXp(15); }
+    checkAndFixStatus(s);
     gameState.verifiedCount++; 
     gameState.badges.verifier=true;
-    
-    saveData(); // Kaydet
+    saveData(); 
     updateUI(); renderStations(); closeAllModals(); 
     alert("✅ Teşekkürler!");
 }
@@ -264,17 +228,14 @@ function updateUI() {
     document.getElementById('top-user-img').src = avatarUrl;
     document.getElementById('modal-username').innerText = gameState.username;
     document.getElementById('modal-avatar').src = avatarUrl;
-    
     document.getElementById('modal-level').innerText = calculateLevel();
     document.getElementById('stat-points').innerText = gameState.xp;
     document.getElementById('stat-reports').innerText = gameState.totalReports;
     document.getElementById('stat-badges').innerText = Object.values(gameState.badges).filter(b => b).length;
-    
     const nextXp = getNextLevelXp();
     const progress = ((gameState.xp % 100) / 100) * 100;
     document.getElementById('xp-bar').style.width = `${progress}%`;
     document.getElementById('xp-text').innerText = `${gameState.xp}/${nextXp} XP`;
-    
     const updateBadge = (id, unlocked) => {
         const el = document.getElementById(id);
         if(unlocked && el) {
@@ -306,7 +267,6 @@ window.performLogin = () => {
     const originalHtml = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Bağlanılıyor...';
     btn.disabled = true;
-
     setTimeout(() => {
         const names = ["Ahmet Yılmaz", "Zeynep Kaya", "Mehmet Demir", "Ayşe Çelik"];
         const randomName = names[Math.floor(Math.random() * names.length)];
@@ -314,7 +274,6 @@ window.performLogin = () => {
         gameState.username = `${parts[0]} ${parts[1][0]}.`;
         gameState.isLoggedIn = true;
         gameState.badges.firstLogin = true;
-        
         saveData();
         updateUI(); 
         closeAllModals(); 
@@ -340,17 +299,26 @@ document.getElementById('file-input').addEventListener('change', function() {
 document.getElementById('sidebar-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('closed'));
 window.onclick = (e) => { if(e.target.classList.contains('modal')) closeAllModals(); };
 
-// Arama
-const searchInput = document.getElementById('station-search');
-if(searchInput) searchInput.addEventListener('input', (e) => renderStations(e.target.value));
+/* --- 10. GPS VE EKSTRALAR --- */
+window.locateUser = () => {
+    if (!navigator.geolocation) { alert("Konum desteklenmiyor."); return; }
+    const btn = document.getElementById('gps-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            map.flyTo([lat, lng], 15);
+            L.circleMarker([lat, lng], {radius: 8, fillColor: "#3498db", color: "#fff", weight: 2, fillOpacity: 0.8}).addTo(map).bindPopup("Konumunuz").openPopup();
+            btn.innerHTML = '<i class="fas fa-location-arrow"></i>';
+        },
+        () => { alert("Konum alınamadı."); btn.innerHTML = '<i class="fas fa-location-arrow"></i>'; }
+    );
+}
 
-/* --- 10. EKSTRALAR --- */
 function addXp(amount) { 
     gameState.xp += amount; 
-    if(calculateLevel() > gameState.level) { 
-        gameState.level++; 
-        alert(`🎉 TEBRİKLER! Seviye ${gameState.level} oldunuz!`); 
-    } 
+    if(calculateLevel() > gameState.level) { gameState.level++; alert(`🎉 TEBRİKLER! Seviye ${gameState.level} oldunuz!`); } 
 }
 
 function getAlternative(name) {
@@ -360,87 +328,18 @@ function getAlternative(name) {
     return "Otobüs kullanın";
 }
 
+window.resetData = function() {
+    if(confirm("Tüm veriler sıfırlanacak. Emin misiniz?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
 setInterval(() => {
     const t = document.getElementById('ticker-text');
     const msgs = ["Sistem: Hatay bakımda", "Ali K. Konak doğruladı", "Can B. Üçyol raporladı"];
     if(t) {
         t.style.opacity = 0;
-        setTimeout(() => { 
-            t.innerText = msgs[Math.floor(Math.random()*msgs.length)]; 
-            t.style.opacity = 1; 
-        }, 500);
+        setTimeout(() => { t.innerText = msgs[Math.floor(Math.random()*msgs.length)]; t.style.opacity = 1; }, 500);
     }
 }, 4000);
-
-// BAŞLAT
-loadData();
-// --- GPS VE KONUM ÖZELLİĞİ ---
-window.locateUser = () => {
-    if (!navigator.geolocation) {
-        alert("Tarayıcınız konum servisini desteklemiyor.");
-        return;
-    }
-
-    const btn = document.getElementById('gps-btn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Loading ikonu
-
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
-
-            // 1. Haritayı kullanıcıya odakla
-            map.flyTo([userLat, userLng], 15);
-
-            // 2. Kullanıcıyı göster (Mavi nokta)
-            L.circleMarker([userLat, userLng], {
-                radius: 8,
-                fillColor: "#3498db",
-                color: "#fff",
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).addTo(map).bindPopup("Konumunuz").openPopup();
-
-            // 3. En yakın istasyonu bul
-            let closestStation = null;
-            let minDistance = Infinity;
-
-            metroStations.forEach(station => {
-                const dist = getDistanceFromLatLonInKm(userLat, userLng, station.coords[0], station.coords[1]);
-                if (dist < minDistance) {
-                    minDistance = dist;
-                    closestStation = station;
-                }
-            });
-
-            if (closestStation) {
-                // Eğer çok yakınsa (örn: 1km altı) o istasyonun kartını açabiliriz veya bilgi verebiliriz
-                alert(`Size en yakın istasyon: ${closestStation.name} (${minDistance.toFixed(2)} km)`);
-                // İstersen otomatik olarak o istasyonun detayını aç:
-                // triggerAction(closestStation.name); 
-            }
-
-            btn.innerHTML = '<i class="fas fa-location-arrow"></i>'; // İkonu düzelt
-        },
-        () => {
-            alert("Konum alınamadı. Lütfen GPS izni verin.");
-            btn.innerHTML = '<i class="fas fa-location-arrow"></i>';
-        }
-    );
-}
-
-// Mesafe Hesaplama (Haversine Formülü)
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  var R = 6371; // Dünyanın yarıçapı (km)
-  var dLat = deg2rad(lat2-lat1); 
-  var dLon = deg2rad(lon2-lon1); 
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  return R * c; 
-}
-
-function deg2rad(deg) {
-  return deg * (Math.PI/180)
-}
