@@ -374,3 +374,73 @@ setInterval(() => {
 
 // BAŞLAT
 loadData();
+// --- GPS VE KONUM ÖZELLİĞİ ---
+window.locateUser = () => {
+    if (!navigator.geolocation) {
+        alert("Tarayıcınız konum servisini desteklemiyor.");
+        return;
+    }
+
+    const btn = document.getElementById('gps-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Loading ikonu
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            // 1. Haritayı kullanıcıya odakla
+            map.flyTo([userLat, userLng], 15);
+
+            // 2. Kullanıcıyı göster (Mavi nokta)
+            L.circleMarker([userLat, userLng], {
+                radius: 8,
+                fillColor: "#3498db",
+                color: "#fff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup("Konumunuz").openPopup();
+
+            // 3. En yakın istasyonu bul
+            let closestStation = null;
+            let minDistance = Infinity;
+
+            metroStations.forEach(station => {
+                const dist = getDistanceFromLatLonInKm(userLat, userLng, station.coords[0], station.coords[1]);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestStation = station;
+                }
+            });
+
+            if (closestStation) {
+                // Eğer çok yakınsa (örn: 1km altı) o istasyonun kartını açabiliriz veya bilgi verebiliriz
+                alert(`Size en yakın istasyon: ${closestStation.name} (${minDistance.toFixed(2)} km)`);
+                // İstersen otomatik olarak o istasyonun detayını aç:
+                // triggerAction(closestStation.name); 
+            }
+
+            btn.innerHTML = '<i class="fas fa-location-arrow"></i>'; // İkonu düzelt
+        },
+        () => {
+            alert("Konum alınamadı. Lütfen GPS izni verin.");
+            btn.innerHTML = '<i class="fas fa-location-arrow"></i>';
+        }
+    );
+}
+
+// Mesafe Hesaplama (Haversine Formülü)
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Dünyanın yarıçapı (km)
+  var dLat = deg2rad(lat2-lat1); 
+  var dLon = deg2rad(lon2-lon1); 
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return R * c; 
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
