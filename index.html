@@ -14,27 +14,19 @@
         <aside class="sidebar" id="sidebar">
             <div class="filter-header">
                 <h3><i class="fas fa-map-marked-alt"></i> İstasyonlar</h3>
-                <p style="font-size:0.85rem; color:#666; margin-top:5px;">
-                    Listeden seçim yapın veya haritayı kullanın.
-                </p>
+                <p style="font-size:0.85rem; color:#666; margin-top:5px;">Listeden seçim yapın.</p>
             </div>
-
-            <div class="divider">
-                <span id="result-count">Yükleniyor...</span>
-            </div>
-
+            <div class="divider"><span id="result-count">Yükleniyor...</span></div>
             <div class="results-list" id="station-list"></div>
         </aside>
 
         <main class="map-container">
-            <button id="sidebar-toggle" class="btn-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button id="sidebar-toggle" class="btn-toggle"><i class="fas fa-bars"></i></button>
 
-            <div class="profile-card">
+            <div class="profile-card" onclick="openProfileModal()">
                 <div class="profile-info">
-                    <span class="user-name">Merhaba, Öğrenci</span>
-                    <span class="user-points"><i class="fas fa-star"></i> <span id="display-points">0</span> Puan</span>
+                    <span class="user-name">Gönüllü Katılımcı</span>
+                    <span class="user-points"><i class="fas fa-star"></i> <span id="display-points">150</span> Puan</span>
                 </div>
                 <div class="profile-img">
                     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profil">
@@ -45,36 +37,95 @@
         </main>
     </div>
 
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-modal-content">
+            <div class="profile-header">
+                <span class="close-btn-white" onclick="closeProfileModal()">&times;</span>
+                <div class="header-user">
+                    <div class="big-avatar">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                    </div>
+                    <div class="header-text">
+                        <h2>Gönüllü Katılımcı</h2>
+                        <p><i class="fas fa-star"></i> Seviye 2</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <i class="fas fa-trophy"></i>
+                    <h3 id="modal-total-points">150</h3>
+                    <p>Toplam Puan</p>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-stairs"></i>
+                    <h3>14</h3>
+                    <p>Toplam Rapor</p>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-certificate"></i>
+                    <h3>2</h3>
+                    <p>Rozetler</p>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-labels">
+                    <span>Sonraki Seviye İlerlemesi</span>
+                    <span>70/100</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 70%;"></div>
+                </div>
+                <p class="next-level-text">Seviye 3 olmak için 30 puan daha kazan!</p>
+            </div>
+
+            <div class="badges-section">
+                <h4><i class="fas fa-medal"></i> Rozetler</h4>
+                <div class="badge-list">
+                    <div class="badge-item">
+                        <div class="badge-icon"><i class="fas fa-user-check"></i></div>
+                        <div class="badge-info">
+                            <h5>Yeni Başlayan</h5>
+                            <p>İlk giriş yapıldı</p>
+                        </div>
+                        <i class="fas fa-check check-icon"></i>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon"><i class="fas fa-pen-nib"></i></div>
+                        <div class="badge-info">
+                            <h5>İlk Rapor</h5>
+                            <p>1 rapor oluşturuldu</p>
+                        </div>
+                        <i class="fas fa-check check-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="reportModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeReportModal()">&times;</span>
             <div class="modal-header">
-                <h2 id="modal-station-name">İstasyon Adı</h2>
-                <p>Lütfen görsel üzerinde sorunlu bölgeyi işaretleyiniz.</p>
+                <h2 id="modal-station-name">İstasyon</h2>
+                <p>Sorunlu bölgeyi seçiniz.</p>
             </div>
             <div class="modal-body">
                 <div class="visual-container">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2311/2311531.png" class="station-3d-img" alt="İstasyon Krokisi">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2311/2311531.png" class="station-3d-img">
                     <div id="click-zones" class="zones-layer"></div>
                 </div>
                 <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">
-                        <i class="fas fa-exclamation-circle"></i> Henüz bir nokta seçilmedi.
-                    </div>
+                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
                     <form id="reportForm">
                         <label>Sorun Tipi</label>
                         <div class="issue-types">
-                            <div class="radio-option">
-                                <input type="radio" name="issue" id="opt1" value="asansor" checked>
-                                <label for="opt1"><i class="fas fa-elevator"></i> Asansör Arızası</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" name="issue" id="opt2" value="rampa">
-                                <label for="opt2"><i class="fas fa-wheelchair"></i> Rampa Sorunu</label>
-                            </div>
+                            <div class="radio-option"><input type="radio" name="issue" checked> <label>Asansör</label></div>
+                            <div class="radio-option"><input type="radio" name="issue"> <label>Rampa</label></div>
                         </div>
-                        <label>Açıklama</label>
-                        <textarea placeholder="Detay ekleyiniz..."></textarea>
+                        <textarea placeholder="Açıklama..."></textarea>
                         <button type="submit" class="btn-submit">Bildirimi Gönder</button>
                     </form>
                 </div>
