@@ -137,17 +137,33 @@
                 <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    
                     <form id="reportForm">
                         <div class="issue-types-grid">
-                            <label class="issue-option"><input type="radio" name="issue" value="elevator" checked><span class="issue-box"><i class="fas fa-elevator"></i> Asansör</span></label>
-                            <label class="issue-option"><input type="radio" name="issue" value="ramp"><span class="issue-box"><i class="fas fa-wheelchair"></i> Rampa</span></label>
-                            <label class="issue-option"><input type="radio" name="issue" value="escalator"><span class="issue-box"><i class="fas fa-people-carry"></i> Y. Merdiven</span></label>
+                            <label class="issue-option">
+                                <input type="radio" name="issue" value="elevator" checked>
+                                <div class="issue-box">
+                                    <i class="fas fa-elevator"></i>
+                                    <span>Asansör</span>
+                                </div>
+                            </label>
+                            
+                            <label class="issue-option">
+                                <input type="radio" name="issue" value="escalator">
+                                <div class="issue-box">
+                                    <i class="fas fa-people-carry"></i>
+                                    <span>Yürüyen Merdiven</span>
+                                </div>
+                            </label>
                         </div>
+
                         <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()">
                             <input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span>
                         </div>
-                        <textarea placeholder="Açıklama..." rows="2" style="width:100%; margin-top:10px;"></textarea>
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Gönder</button>
+                        
+                        <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
+                        
+                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
                     </form>
                 </div>
             </div>
