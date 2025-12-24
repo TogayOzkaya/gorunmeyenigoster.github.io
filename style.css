@@ -25,6 +25,17 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 5px; }
 .brand h2 { font-size: 1.4rem; font-weight: 700; }
+/* MEVCUT KOD */
+.brand { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 5px; }
+
+/* YENİ EKLENECEK KOD (Logoyu ayarlar) */
+.site-logo {
+    width: 50px;        /* Genişlik */
+    height: 50px;       /* Yükseklik */
+    border-radius: 50%; /* Yuvarlak yapar */
+    object-fit: cover;  /* Resmi bozmadan sığdırır */
+    border: 2px solid var(--primary-color); /* Etrafına ince mavi çizgi */
+}
 .sidebar-header p { color: var(--text-muted); font-size: 0.9rem; }
 .search-ticker-area { background: var(--light-bg); padding: 15px; border-bottom: 1px solid var(--border-color); }
 .search-box { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; }
