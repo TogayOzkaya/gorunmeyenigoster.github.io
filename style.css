@@ -1,4 +1,4 @@
-/* --- GENEL AYARLAR (WEB SÜRÜMÜ - DOKUNULMADI) --- */
+/* --- GENEL AYARLAR (WEB VE TEMEL) --- */
 :root {
     --primary-color: #1e69de;
     --primary-light: #eaf6ff; 
@@ -19,16 +19,29 @@ body { height: 100vh; overflow: hidden; background-color: var(--light-bg); color
 .container { display: flex; height: 100%; position: relative; }
 button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 
-/* SIDEBAR */
-.sidebar { width: var(--sidebar-width); background: white; display: flex; flex-direction: column; box-shadow: 2px 0 15px rgba(0,0,0,0.05); z-index: 2000; transition: margin-left 0.3s ease; }
-.sidebar.closed { margin-left: calc(var(--sidebar-width) * -1); position: absolute; height: 100%; }
+/* SIDEBAR (SOL PANEL) */
+.sidebar { 
+    width: var(--sidebar-width); 
+    background: white; 
+    display: flex; flex-direction: column; 
+    box-shadow: 2px 0 15px rgba(0,0,0,0.05); 
+    z-index: 2000; 
+    transition: transform 0.3s ease, margin-left 0.3s ease; 
+}
+
+/* Sidebar Kapalı Durumu */
+.sidebar.closed { 
+    margin-left: calc(var(--sidebar-width) * -1); 
+    position: absolute; height: 100%; 
+}
+
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
 .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .brand { display: flex; align-items: center; gap: 12px; color: var(--primary-color); }
 .brand h2 { font-size: 1.2rem; font-weight: 800; line-height: 1.1; }
 .app-desc { color: var(--text-muted); font-size: 0.85rem; margin-top: 5px; }
 
-/* LOGO KUTUSU (Web) */
+/* CSS LOGO */
 .logo-box {
     width: 45px; height: 45px;
     background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%);
@@ -38,7 +51,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-shrink: 0;
 }
 
-/* PROFİL KARTI (Sidebar İçi) */
+/* PROFİL KARTI (Sidebar İçinde) */
 .profile-card-mini {
     display: flex; align-items: center; gap: 10px;
     background: var(--light-bg); padding: 5px 10px;
@@ -81,13 +94,34 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .map-container { flex: 1; position: relative; }
 #map { width: 100%; height: 100%; z-index: 1; }
 
-.btn-toggle { position: absolute; top: 20px; left: 20px; z-index: 1500; background: white; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.2rem; }
-.btn-gps { position: absolute; bottom: 30px; right: 20px; z-index: 1001; background: white; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-dark); transition: 0.2s; font-size: 1.2rem; }
+/* MENÜ VE GPS BUTONLARI (Z-INDEX YÜKSEK OLACAK) */
+.btn-toggle { 
+    position: absolute; top: 15px; left: 15px; 
+    z-index: 1500; /* Haritanın üstünde */
+    background: white; width: 45px; height: 45px; border-radius: 50%; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+    cursor: pointer; display: none; 
+    align-items: center; justify-content: center; font-size: 1.2rem;
+}
+
+.btn-gps { 
+    position: absolute; bottom: 30px; right: 20px; 
+    z-index: 1500; /* Haritanın üstünde */
+    background: white; width: 45px; height: 45px; border-radius: 50%; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    cursor: pointer; display: flex; 
+    align-items: center; justify-content: center; color: var(--text-dark); transition: 0.2s; font-size: 1.2rem; 
+}
 .btn-gps:hover { background: var(--light-bg); color: var(--primary-color); }
 .leaflet-top.leaflet-left { margin-top: 80px; }
 
-/* LEJANT (Web) */
-.map-legend { position: absolute; bottom: 30px; z-index: 1001; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); transition: left 0.3s ease, opacity 0.3s ease; }
+/* LEJANT (MASAÜSTÜ) */
+.map-legend { 
+    position: absolute; bottom: 30px; z-index: 1001; 
+    background: white; padding: 15px 20px; border-radius: 12px; 
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
+    transition: left 0.3s ease, opacity 0.3s ease; 
+}
 .map-legend h4 { font-size: 0.9rem; margin-bottom: 10px; font-weight: 700; }
 .map-legend ul { list-style: none; }
 .map-legend li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-muted); }
@@ -95,8 +129,11 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .legend-dot.status-ok { background: var(--success-color); }
 .legend-dot.status-err { background: var(--danger-color); }
 .legend-dot.status-pending { background: var(--warning-color); }
-@media (min-width: 769px) { .map-legend { left: 380px; } body:has(.sidebar.closed) .map-legend { left: 20px; } }
-@media (max-width: 768px) { .map-legend { left: 20px; bottom: 90px; } body:has(.sidebar:not(.closed)) .map-legend { display: none; } }
+
+@media (min-width: 769px) { 
+    .map-legend { left: 380px; } 
+    body:has(.sidebar.closed) .map-legend { left: 20px; } 
+}
 
 /* MODALLAR */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -152,15 +189,6 @@ textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(
 .btn-submit:hover:not(:disabled) { background: #1657ba; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(30, 105, 222, 0.3); }
 .btn-submit:disabled { background: #cbd5e0; cursor: not-allowed; box-shadow: none; color: #a0aec0; }
 
-.verify-modal-design { width: 500px; text-align: center; }
-.vm-header { padding: 25px; border-bottom: 1px solid var(--border-color); position: relative; }
-.vm-body { padding: 40px 30px; }
-.vm-icon-area { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
-.btn-verify-action { display: flex; align-items: center; padding: 15px 20px; border: 2px solid var(--border-color); border-radius: 12px; background: white; text-align: left; }
-.icon-box { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 20px; }
-.btn-still-broken:hover { border-color: var(--danger-color); background: #fff5f5; }
-.btn-fixed:hover { border-color: var(--success-color); background: #f0fff4; }
-
 .tutorial-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
 .tutorial-card { background: white; width: 90%; max-width: 420px; padding: 40px 30px; border-radius: 24px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -178,42 +206,33 @@ textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(
 #finish-tutorial-btn { background: var(--success-color); }
 #finish-tutorial-btn:hover { background: #219150; transform: translateY(-2px); }
 
-/* --- RESPONSIVE AYARLAR (SADECE MOBİL İÇİN) --- */
+/* --- RESPONSIVE AYARLAR (MOBİL İÇİN KÜÇÜLTME) --- */
 @media (max-width: 768px) {
-    /* 1. Sidebar'ı biraz daha kibar yapalım */
-    .sidebar { position: absolute; height: 100%; width: 100%; }
-    .sidebar-header { padding: 15px; /* Mobilde boşluklar azalsın */ }
-    .header-top-row { margin-bottom: 5px; }
+    /* 1. Sidebar Tam Ekran Değil, Kenarda dursun (%85 genişlik) */
+    .sidebar { width: 85%; max-width: 320px; height: 100%; }
+    .sidebar.closed { margin-left: -100%; } /* Kapalıyken tam gitsin */
     
-    /* 2. Logoyu biraz küçültelim */
-    .logo-box { width: 35px; height: 35px; font-size: 18px; border-radius: 8px; }
-    .brand h2 { font-size: 1rem; }
-    .app-desc { font-size: 0.75rem; margin-top: 2px; }
-
-    /* 3. Butonları ve ikonları görünür olsun diye ayarlayalım */
-    .btn-toggle { display: flex; width: 40px; height: 40px; top: 15px; left: 15px; }
+    /* 2. Toggle ve Kapatma Butonları Görünsün */
+    .btn-toggle { display: flex; width: 38px; height: 38px; top: 10px; left: 10px; }
     .btn-close-sidebar { display: block; }
     
-    /* 4. LEJANT (DURUM GÖSTERGESİ) KÜÇÜLTME */
-    .map-legend { 
-        bottom: 85px; /* GPS butonuna binmesin */
-        left: 15px; 
-        padding: 10px 15px; /* İç boşluğu azalttık */
-        width: auto;
-        max-width: 200px; /* Genişliği sınırladık */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        transform: scale(0.9); /* Her şeyi %10 küçült */
+    /* 3. Gereksiz Harita Kontrollerini Gizle (Zoom butonları yer kaplamasın) */
+    .leaflet-control-zoom { display: none; }
+
+    /* 4. Lejantı (Durum Göstergesi) Küçült ve Alta Al */
+    .map-legend {
+        left: 10px; bottom: 80px; /* GPS butonuna değmesin */
+        padding: 8px 12px;
+        transform: scale(0.85); /* %15 Küçült */
         transform-origin: bottom left;
+        width: auto; max-width: 180px;
     }
     .map-legend h4 { font-size: 0.8rem; margin-bottom: 5px; }
-    .map-legend li { font-size: 0.75rem; margin-bottom: 3px; gap: 6px; }
-    .legend-dot { width: 8px; height: 8px; }
+    .map-legend li { font-size: 0.7rem; margin-bottom: 2px; }
 
-    /* 5. GPS Butonunu da hizalayalım */
-    .btn-gps { 
-        bottom: 25px; right: 15px; 
-        width: 40px; height: 40px; font-size: 1rem; 
-    }
+    /* 5. GPS Butonunu Küçült */
+    .btn-gps { width: 38px; height: 38px; bottom: 20px; right: 15px; }
 
+    /* 6. Eski Profil Kartı Gizle */
     #top-profile-card.profile-card { display: none !important; }
 }
