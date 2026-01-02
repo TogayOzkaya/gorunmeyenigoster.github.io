@@ -11,31 +11,32 @@ var markersLayer = L.layerGroup().addTo(map);
 
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
+/* --- İSTASYON VERİLERİ (GÜNCELLENDİ: GİRİŞ DETAYLARI VE ZAMAN) --- */
 const metroStations = [
-    { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, zones: [{ name: "Ana Giriş", offset: [0,0] }] },
-    { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Narlıdere (İtfaiye)", coords: [38.3936, 27.0150], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Güzel Sanatlar", coords: [38.3925, 27.0236], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "DEÜ Hastanesi", coords: [38.3944, 27.0386], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Çağdaş", coords: [38.3944, 27.0453], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Balçova", coords: [38.3958, 27.0569], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Fahrettin Altay", coords: [38.3969, 27.0700], status: "active", reportScore: 0, zones: [{name:"AVM", offset:[0.0003,-0.0003]}, {name:"Pazar", offset:[-0.0003,0.0003]}] },
-    { name: "Poligon", coords: [38.3933, 27.0850], status: "active", reportScore: 0, zones: [{name:"Park", offset:[0.0002,-0.0002]}] },
-    { name: "Göztepe", coords: [38.3961, 27.0944], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "İzmirspor", coords: [38.4017, 27.1106], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Üçyol", coords: [38.4058, 27.1211], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Konak", coords: [38.4169, 27.1281], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Çankaya", coords: [38.4225, 27.1361], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Basmane", coords: [38.4228, 27.1447], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Hilal", coords: [38.4269, 27.1550], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Halkapınar", coords: [38.4344, 27.1686], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Stadyum", coords: [38.4425, 27.1806], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Sanayi", coords: [38.4483, 27.1903], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Bölge", coords: [38.4547, 27.2011], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Bornova", coords: [38.4583, 27.2125], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Ege Üniversitesi", coords: [38.4615, 27.2210], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Evka-3", coords: [38.4650, 27.2286], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] }
+    { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, lastUpdated: "10 dk önce", zones: [{ name: "Kaymakamlık Kapısı", offset: [0,0] }] },
+    { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, lastUpdated: "45 dk önce", zones: [{name:"Park Tarafı", offset:[0,0]}] },
+    { name: "Narlıdere (İtfaiye)", coords: [38.3936, 27.0150], status: "active", reportScore: 0, lastUpdated: "2 saat önce", zones: [{name:"İtfaiye Girişi", offset:[0,0]}] },
+    { name: "Güzel Sanatlar", coords: [38.3925, 27.0236], status: "active", reportScore: 0, lastUpdated: "Dün", zones: [{name:"Fakülte Kapısı", offset:[0,0]}] },
+    { name: "DEÜ Hastanesi", coords: [38.3944, 27.0386], status: "active", reportScore: 0, lastUpdated: "15 dk önce", zones: [{name:"Poliklinik Girişi", offset:[0.0002,0.0002]}, {name:"Acil Tarafı", offset:[-0.0002,-0.0002]}] },
+    { name: "Çağdaş", coords: [38.3944, 27.0453], status: "active", reportScore: 0, lastUpdated: "30 dk önce", zones: [{name:"Cadde Girişi", offset:[0,0]}] },
+    { name: "Balçova", coords: [38.3958, 27.0569], status: "active", reportScore: 0, lastUpdated: "5 dk önce", zones: [{name:"Teleferik Yönü", offset:[0,0]}] },
+    { name: "Fahrettin Altay", coords: [38.3969, 27.0700], status: "active", reportScore: 0, lastUpdated: "Şimdi", zones: [{name:"AVM Girişi", offset:[0.0003,-0.0003]}, {name:"Pazar Yeri", offset:[-0.0003,0.0003]}] },
+    { name: "Poligon", coords: [38.3933, 27.0850], status: "active", reportScore: 0, lastUpdated: "1 saat önce", zones: [{name:"Denizciler Parkı", offset:[0.0002,-0.0002]}] },
+    { name: "Göztepe", coords: [38.3961, 27.0944], status: "active", reportScore: 0, lastUpdated: "3 saat önce", zones: [{name:"Sahil Tarafı", offset:[0,0]}, {name:"Cadde Tarafı", offset:[0.0002,0.0002]}] },
+    { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, lastUpdated: "20 dk önce", zones: [{name:"Renkli Durağı", offset:[0,0]}] },
+    { name: "İzmirspor", coords: [38.4017, 27.1106], status: "active", reportScore: 0, lastUpdated: "Dün", zones: [{name:"Devlet Hastanesi", offset:[0,0]}] },
+    { name: "Üçyol", coords: [38.4058, 27.1211], status: "active", reportScore: 0, lastUpdated: "12 dk önce", zones: [{name:"Betonyol Çıkışı", offset:[0.0002,0]}, {name:"Park Girişi", offset:[-0.0002,0]}] },
+    { name: "Konak", coords: [38.4169, 27.1281], status: "active", reportScore: 0, lastUpdated: "2 dk önce", zones: [{name:"Vapur İskelesi", offset:[0.0002,-0.0002]}, {name:"Kemeraltı", offset:[-0.0002,0.0002]}, {name:"YKM Önü", offset:[0,0]}] },
+    { name: "Çankaya", coords: [38.4225, 27.1361], status: "active", reportScore: 0, lastUpdated: "1 saat önce", zones: [{name:"Hilton Tarafı", offset:[0,0]}, {name:"Bit Pazarı", offset:[0.0002,0.0002]}] },
+    { name: "Basmane", coords: [38.4228, 27.1447], status: "active", reportScore: 0, lastUpdated: "40 dk önce", zones: [{name:"Gar Girişi", offset:[0,0]}, {name:"Fuar Kapısı", offset:[0.0002,0]}] },
+    { name: "Hilal", coords: [38.4269, 27.1550], status: "active", reportScore: 0, lastUpdated: "Bugün", zones: [{name:"İZBAN Aktarma", offset:[0,0]}] },
+    { name: "Halkapınar", coords: [38.4344, 27.1686], status: "active", reportScore: 0, lastUpdated: "10 dk önce", zones: [{name:"Otobüs Aktarma", offset:[0,0]}, {name:"Tramvay Tarafı", offset:[0.0002,0.0002]}] },
+    { name: "Stadyum", coords: [38.4425, 27.1806], status: "active", reportScore: 0, lastUpdated: "Dün", zones: [{name:"Ana Giriş", offset:[0,0]}] },
+    { name: "Sanayi", coords: [38.4483, 27.1903], status: "active", reportScore: 0, lastUpdated: "5 saat önce", zones: [{name:"Ana Giriş", offset:[0,0]}] },
+    { name: "Bölge", coords: [38.4547, 27.2011], status: "active", reportScore: 0, lastUpdated: "30 dk önce", zones: [{name:"Üniversite Tarafı", offset:[0,0]}] },
+    { name: "Bornova", coords: [38.4583, 27.2125], status: "active", reportScore: 0, lastUpdated: "15 dk önce", zones: [{name:"Meydan Çıkışı", offset:[0,0]}, {name:"Hastane Tarafı", offset:[0.0002,0.0002]}] },
+    { name: "Ege Üniversitesi", coords: [38.4615, 27.2210], status: "active", reportScore: 0, lastUpdated: "1 saat önce", zones: [{name:"Kampüs Girişi", offset:[0,0]}] },
+    { name: "Evka-3", coords: [38.4650, 27.2286], status: "active", reportScore: 0, lastUpdated: "Şimdi", zones: [{name:"Ana Giriş", offset:[0,0]}] }
 ];
 
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
@@ -56,7 +57,7 @@ function getNextLevelXp() { return calculateLevel() * 100; }
 function saveData() {
     try {
         localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
-        const stationData = metroStations.map(s => ({ name: s.name, reportScore: s.reportScore }));
+        const stationData = metroStations.map(s => ({ name: s.name, reportScore: s.reportScore, lastUpdated: s.lastUpdated }));
         localStorage.setItem('izmirMetro_stations', JSON.stringify(stationData));
     } catch (e) { console.error("Kayıt hatası", e); }
 }
@@ -75,6 +76,7 @@ function loadData() {
                 const originalS = metroStations.find(s => s.name === savedS.name);
                 if (originalS) {
                     originalS.reportScore = savedS.reportScore;
+                    if(savedS.lastUpdated) originalS.lastUpdated = savedS.lastUpdated; // Zamanı yükle
                     checkAndFixStatus(originalS); 
                 }
             });
@@ -106,9 +108,19 @@ function renderStations(searchTerm = "") {
         const card = document.createElement('div');
         card.className = 'station-card';
         card.onclick = () => triggerListClick(station.name);
+        
         let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')" title="Bildir"><i class="fas fa-bullhorn"></i></button>`;
         if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')" title="Doğrula"><i class="fas fa-check"></i></button>`;
-        card.innerHTML = `<div class="card-info"><div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div><span class="status-badge ${statusClass}">${icon} ${statusText}</span></div><div class="card-actions">${btns}</div>`;
+        
+        // --- YENİ EKLENEN KISIM: Saat Bilgisi ---
+        card.innerHTML = `
+            <div class="card-info">
+                <div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div>
+                <span class="status-badge ${statusClass}">${icon} ${statusText}</span>
+                <div class="station-update-time"><i class="far fa-clock"></i> ${station.lastUpdated} güncellendi</div>
+            </div>
+            <div class="card-actions">${btns}</div>`;
+            
         listDiv.appendChild(card);
     });
 }
@@ -139,7 +151,7 @@ function openReportModal(name) {
     selectedZone = null; hasPhoto = false;
     document.getElementById('btn-submit-report').disabled = true;
     document.getElementById('selected-zone-info').className = "selection-alert";
-    document.getElementById('selected-zone-info').innerText = "Lütfen haritadan seçim yapın";
+    document.getElementById('selected-zone-info').innerText = "Lütfen haritadan arızalı girişi seçin";
     document.getElementById('file-label').innerHTML = '<i class="fas fa-camera fa-2x"></i> Fotoğraf Ekle (+20)';
     
     const s = metroStations.find(st => st.name === name);
@@ -154,6 +166,7 @@ function openReportModal(name) {
         const zones = s.zones || [{name:"Genel", offset:[0,0]}];
         zones.forEach(z => {
             const m = L.circleMarker([s.coords[0]+z.offset[0], s.coords[1]+z.offset[1]], {color:'#3498db', radius:10}).addTo(miniMap);
+            // Giriş isimlerini gösteriyoruz
             m.bindTooltip(z.name, {permanent:true, direction:'top', offset:[0,-10]});
             m.on('click', () => {
                 selectedZone = z.name;
@@ -171,6 +184,7 @@ document.getElementById('reportForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const s = metroStations.find(st => st.name === currentStationName);
     s.reportScore++;
+    s.lastUpdated = "Şimdi"; // Raporlanınca zamanı güncelle
     checkAndFixStatus(s); 
     addXp(50 + (hasPhoto?20:0)); 
     gameState.totalReports++; gameState.badges.firstReport=true;
@@ -187,6 +201,7 @@ window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
     if(fixed) { s.reportScore = 0; addXp(30); } 
     else { s.reportScore++; addXp(15); }
+    s.lastUpdated = "Şimdi"; // Doğrulanınca zamanı güncelle
     checkAndFixStatus(s); 
     gameState.verifiedCount++; gameState.badges.verifier=true;
     saveData(); updateUI(); renderStations(); closeAllModals(); alert("✅ Teşekkürler!");
@@ -244,7 +259,6 @@ window.triggerListClick = (name) => {
     const s = metroStations.find(st => st.name === name);
     map.flyTo(s.coords, 15);
     setTimeout(() => {
-        // Mobilde listeye tıklayınca haritayı görmek için sidebar'ı kapat
         if(window.innerWidth <= 768) {
             document.getElementById('sidebar').classList.add('closed');
         }
@@ -253,7 +267,6 @@ window.triggerListClick = (name) => {
 }
 document.getElementById('file-input').addEventListener('change', function() { if(this.files[0]) { hasPhoto=true; document.getElementById('file-label').innerText = "✅ Fotoğraf Eklendi"; } });
 
-// --- YENİ SIDEBAR TOGGLE MANTIĞI ---
 window.toggleSidebar = () => {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('closed');
@@ -295,13 +308,12 @@ setInterval(() => {
     if(t) { t.style.opacity = 0; setTimeout(() => { t.innerText = msgs[Math.floor(Math.random()*msgs.length)]; t.style.opacity = 1; }, 500); }
 }, 4000);
 
-/* --- ÖĞRETİCİ (TUTORIAL) MANTIĞI --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 
-// --- Geliştirme modu: Her seferinde açılır ---
+// --- DÜZELTME: Geliştirme sürecinde öğreticiyi HER SEFERİNDE göster ---
 tutorialOverlay.style.display = 'flex'; 
 
 window.nextSlide = () => {
@@ -328,7 +340,6 @@ window.closeTutorial = () => {
     }, 400);
 }
 
-// Masaüstü için başlangıçta sidebar'ı aç (Mobilde kapalı kalır)
 if(window.innerWidth > 768) {
     document.getElementById('sidebar').classList.remove('closed');
 }
