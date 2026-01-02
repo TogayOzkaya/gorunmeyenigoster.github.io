@@ -27,12 +27,12 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .brand h2 { font-size: 1.4rem; font-weight: 700; }
 .sidebar-header p { color: var(--text-muted); font-size: 0.9rem; }
 
-/* --- LOGO STİLİ (YENİ - KARE APP İKONU TARZI) --- */
+/* --- LOGO STİLİ (KARE APP İKONU) --- */
 .site-logo {
     width: 50px;
     height: 50px;
-    border-radius: 12px;   /* Yuvarlatılmış Kare */
-    object-fit: contain;   /* Resim kesilmesin */
+    border-radius: 12px;
+    object-fit: contain;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
