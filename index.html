@@ -1,178 +1,125 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Erişilebilir İzmir Metro Haritası</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e69de">
+<aside class="sidebar closed" id="sidebar">
+    <div class="sidebar-header">
+        <div class="header-content">
+            <div class="brand-group">
+                <div class="logo-box">
+                    <i class="fas fa-elevator"></i>
+                </div>
+                <h2 class="brand-title">Erişilebilir İzmir</h2>
+            </div>
+
+            <div class="profile-card-mini" id="sidebar-profile-card" onclick="handleProfileClick()">
+                <div class="profile-text">
+                    <span class="p-name" id="sidebar-user-name">Misafir</span>
+                    <span class="p-lvl" id="sidebar-user-desc">Giriş Yap</span>
+                </div>
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="sidebar-user-img">
+            </div>
+
+            <button class="btn-close-sidebar" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <p class="app-desc">Arıza bildirin, rotanızı planlayın.</p>
+    </div>
+
+    <div class="search-ticker-area">
+        ```
+
+### **2. `style.css` (Görsel Düzenleme)**
+
+Bu CSS kodları ile başlığı tek satıra alıyoruz ve profil kartını daha şık, belirgin bir hale getiriyoruz.
+
+```css
+/* --- SIDEBAR HEADER DÜZENLEMESİ --- */
+
+/* Header İçeriği: Esnek Kutu Modeli */
+.sidebar-header .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Logo solda, profil sağda */
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Mobilde sığmazsa alt satıra geçebilsin */
+}
+
+/* Logo ve Başlık Grubu */
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Başlık Stili */
+.brand-title {
+    font-size: 1.3rem; /* Boyut artırıldı */
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.2;
+    white-space: nowrap; /* Tek satırda kalmaya zorlar */
+    margin: 0;
+}
+
+/* Profil Kartı (Daha Belirgin) */
+.profile-card-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white; /* Arka plan beyaz */
+    padding: 6px 12px;
+    border-radius: 50px; /* Tam yuvarlak kenarlar */
+    cursor: pointer;
+    border: 2px solid var(--border-color); /* Çerçeve eklendi */
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Hafif gölge */
+}
+
+.profile-card-mini:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Profil Metinleri */
+.profile-text {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.p-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+}
+
+.p-lvl {
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Profil Resmi */
+.profile-card-mini img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--light-bg);
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+    .brand-title {
+        font-size: 1.1rem; /* Mobilde biraz küçülür */
+    }
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-
-    <div id="tutorial-overlay" class="tutorial-overlay">
-        <div class="tutorial-card">
-            <div class="tutorial-slides">
-                <div class="slide active">
-                    <div class="slide-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                    <h3>Hoşgeldiniz!</h3>
-                    <p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
-                </div>
-                <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <h3>Durumu Kontrol Edin</h3>
-                    <p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
-                </div>
-                <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-users"></i></div>
-                    <h3>Topluluğa Katılın</h3>
-                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
-                </div>
-            </div>
-            
-            <div class="tutorial-footer">
-                <div class="dots-container">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
-                <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
-                <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Keşfetmeye Başla 🚀</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <aside class="sidebar closed" id="sidebar">
-            <div class="sidebar-header">
-                <div class="header-top-row">
-                    <div class="brand">
-                        <div class="logo-box">
-                            <i class="fas fa-elevator"></i>
-                        </div>
-                        <h2>Erişilebilir<br>İzmir</h2>
-                    </div>
-                    
-                    <button class="btn-close-sidebar" onclick="toggleSidebar()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <p class="app-desc">Arıza bildirin, rotanızı planlayın.</p>
-                
-                <div class="profile-card-mini" id="sidebar-profile-card" onclick="handleProfileClick()">
-                    <div class="profile-text">
-                        <span class="p-name" id="sidebar-user-name">Misafir</span>
-                        <span class="p-lvl" id="sidebar-user-desc">Giriş Yap</span>
-                    </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="sidebar-user-img">
-                </div>
-            </div>
-
-            <div class="search-ticker-area">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="station-search" placeholder="İstasyon ara...">
-                </div>
-                <div class="news-ticker">
-                    <i class="fas fa-broadcast-tower"></i>
-                    <div class="ticker-wrapper">
-                        <div class="ticker-content" id="ticker-text">Sistem aktif... Veriler yükleniyor...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="list-header">
-                <h3>İstasyonlar</h3>
-                <span id="result-count" class="count-badge">24</span>
-            </div>
-
-            <div class="results-list" id="station-list"></div>
-        </aside>
-
-        <main class="map-container">
-            <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            
-            <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-
-            <div id="map"></div>
-
-            <div class="map-legend">
-                <h4>Durum Göstergesi</h4>
-                <ul>
-                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
-                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
-                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
-                </ul>
-            </div>
-        </main>
-    </div>
-
-    <div id="loginModal" class="modal">
-        <div class="modal-content login-modal-design">
-            <div class="lm-left">
-                <div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Topluluğa Katıl</h2><p>İzmir'i herkes için erişilebilir kıl.</p></div>
-            </div>
-            <div class="lm-right">
-                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-                <h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p>
-                <button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="profileModal" class="modal">
-        <div class="modal-content profile-modal-design">
-            <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
-            <div class="pm-body">
-                <div class="pm-stats-row"><div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div><div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div><div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div></div>
-                <div class="pm-progress-area"><div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div><div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div></div>
-                <div class="pm-badges-grid"><div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div></div>
-                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;"><button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="reportModal" class="modal">
-        <div class="modal-content report-modal-design">
-            <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
-            <div id="alternative-route-box" class="suggestion-box" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Sorun olabilir.</strong> <span id="suggestion-text"></span></div></div>
-            <div class="modal-body">
-                <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
-                <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
-                    <form id="reportForm">
-                        <div class="issue-types-grid">
-                            <label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label>
-                            <label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label>
-                        </div>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
-                        <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="verifyModal" class="modal">
-        <div class="modal-content verify-modal-design">
-            <div class="vm-header"><h3>Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
-            <div class="vm-body">
-                <h2 id="verify-station-name">İstasyon</h2><p>Durum nedir?</p>
-                <div class="vm-actions">
-                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)"><div class="icon-box"><i class="fas fa-times"></i></div><div class="action-text"><strong>Sorun Var</strong><span>+15 Puan</span></div></button>
-                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)"><div class="icon-box"><i class="fas fa-check"></i></div><div class="action-text"><strong>Düzelmiş</strong><span>+30 Puan</span></div></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
-    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
-</body>
-</html>
+    .profile-card-mini {
+        padding: 4px 10px; /* Mobilde biraz daha kompakt */
+    }
+    
+    .sidebar-header .header-content {
+        gap: 10px;
+    }
+}
