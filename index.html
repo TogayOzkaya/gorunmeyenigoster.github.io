@@ -6,6 +6,7 @@
     <title>Erişilebilir İzmir Metro Haritası</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e69de">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,19 +17,25 @@
         <div class="tutorial-card">
             <div class="tutorial-slides">
                 <div class="slide active">
-                    <div class="slide-icon"><i class="fas fa-universal-access"></i></div>
+                    <div class="slide-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
                     <h3>Hoşgeldiniz!</h3>
                     <p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
                 </div>
                 <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="slide-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
                     <h3>Durumu Kontrol Edin</h3>
                     <p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
                 </div>
                 <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-bullhorn"></i></div>
-                    <h3>Bildirim Yapın</h3>
-                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, sorunu seçin ve topluluğu bilgilendirin. Puan toplayıp seviye atlayın!</p>
+                    <div class="slide-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Topluluğa Katılın</h3>
+                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
                 </div>
             </div>
             
@@ -38,8 +45,8 @@
                     <span class="dot"></span>
                     <span class="dot"></span>
                 </div>
-                <button id="next-slide-btn" onclick="nextSlide()">İleri</button>
-                <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Başla 🚀</button>
+                <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
+                <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Keşfetmeye Başla 🚀</button>
             </div>
         </div>
     </div>
