@@ -11,7 +11,7 @@ var markersLayer = L.layerGroup().addTo(map);
 
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
-/* --- İSTASYON VERİLERİ (GÜNCELLENDİ: GİRİŞ DETAYLARI VE ZAMAN) --- */
+/* --- GÜNCELLENMİŞ İSTASYON VERİLERİ (ZAMAN DAMGALI VE GİRİŞLİ) --- */
 const metroStations = [
     { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, lastUpdated: "10 dk önce", zones: [{ name: "Kaymakamlık Kapısı", offset: [0,0] }] },
     { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, lastUpdated: "45 dk önce", zones: [{name:"Park Tarafı", offset:[0,0]}] },
@@ -76,7 +76,7 @@ function loadData() {
                 const originalS = metroStations.find(s => s.name === savedS.name);
                 if (originalS) {
                     originalS.reportScore = savedS.reportScore;
-                    if(savedS.lastUpdated) originalS.lastUpdated = savedS.lastUpdated; // Zamanı yükle
+                    if(savedS.lastUpdated) originalS.lastUpdated = savedS.lastUpdated;
                     checkAndFixStatus(originalS); 
                 }
             });
@@ -112,7 +112,6 @@ function renderStations(searchTerm = "") {
         let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')" title="Bildir"><i class="fas fa-bullhorn"></i></button>`;
         if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')" title="Doğrula"><i class="fas fa-check"></i></button>`;
         
-        // --- YENİ EKLENEN KISIM: Saat Bilgisi ---
         card.innerHTML = `
             <div class="card-info">
                 <div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div>
@@ -166,7 +165,6 @@ function openReportModal(name) {
         const zones = s.zones || [{name:"Genel", offset:[0,0]}];
         zones.forEach(z => {
             const m = L.circleMarker([s.coords[0]+z.offset[0], s.coords[1]+z.offset[1]], {color:'#3498db', radius:10}).addTo(miniMap);
-            // Giriş isimlerini gösteriyoruz
             m.bindTooltip(z.name, {permanent:true, direction:'top', offset:[0,-10]});
             m.on('click', () => {
                 selectedZone = z.name;
@@ -184,7 +182,7 @@ document.getElementById('reportForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const s = metroStations.find(st => st.name === currentStationName);
     s.reportScore++;
-    s.lastUpdated = "Şimdi"; // Raporlanınca zamanı güncelle
+    s.lastUpdated = "Şimdi"; 
     checkAndFixStatus(s); 
     addXp(50 + (hasPhoto?20:0)); 
     gameState.totalReports++; gameState.badges.firstReport=true;
@@ -201,26 +199,34 @@ window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
     if(fixed) { s.reportScore = 0; addXp(30); } 
     else { s.reportScore++; addXp(15); }
-    s.lastUpdated = "Şimdi"; // Doğrulanınca zamanı güncelle
+    s.lastUpdated = "Şimdi"; 
     checkAndFixStatus(s); 
     gameState.verifiedCount++; gameState.badges.verifier=true;
     saveData(); updateUI(); renderStations(); closeAllModals(); alert("✅ Teşekkürler!");
 }
 
 function updateUI() {
-    document.getElementById('top-user-name').innerText = gameState.username;
-    document.getElementById('top-user-desc').innerText = `Seviye ${calculateLevel()}`;
-    const avatarUrl = getAvatarUrl(gameState.username);
-    document.getElementById('top-user-img').src = avatarUrl;
+    // Sidebar'daki profil bilgilerini güncelle
+    const sidebarName = document.getElementById('sidebar-user-name');
+    const sidebarDesc = document.getElementById('sidebar-user-desc');
+    const sidebarImg = document.getElementById('sidebar-user-img');
+    
+    if (sidebarName) sidebarName.innerText = gameState.username;
+    if (sidebarDesc) sidebarDesc.innerText = gameState.isLoggedIn ? `Seviye ${calculateLevel()}` : "Giriş Yap";
+    if (sidebarImg) sidebarImg.src = getAvatarUrl(gameState.username);
+
+    // Modal içindeki profil bilgilerini güncelle
     document.getElementById('modal-username').innerText = gameState.username;
-    document.getElementById('modal-avatar').src = avatarUrl;
+    document.getElementById('modal-avatar').src = getAvatarUrl(gameState.username);
     document.getElementById('modal-level').innerText = calculateLevel();
     document.getElementById('stat-points').innerText = gameState.xp;
     document.getElementById('stat-reports').innerText = gameState.totalReports;
     document.getElementById('stat-badges').innerText = Object.values(gameState.badges).filter(b => b).length;
+    
     const progress = ((gameState.xp % 100) / 100) * 100;
     document.getElementById('xp-bar').style.width = `${progress}%`;
     document.getElementById('xp-text').innerText = `${gameState.xp}/${getNextLevelXp()} XP`;
+    
     const updateBadge = (id, unlocked) => {
         const el = document.getElementById(id);
         if(unlocked && el) { el.classList.remove('locked'); el.querySelector('.badge-status').className = 'fas fa-check-circle badge-status active'; }
