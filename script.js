@@ -290,8 +290,6 @@ const dots = document.querySelectorAll('.dot');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 
 // --- DÜZELTME: Geliştirme sürecinde öğreticiyi HER SEFERİNDE göster ---
-// Normalde burası şöyle olmalıydı: if (!localStorage.getItem('tutorialSeen'))
-// Ama test edebilmen için şartı kaldırdım:
 tutorialOverlay.style.display = 'flex'; 
 
 window.nextSlide = () => {
