@@ -28,14 +28,13 @@
         .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
 
-        /* YENİ HERO BÖLÜMÜ (Animasyonlu ve İki Kolonlu) */
+        /* HERO BÖLÜMÜ */
         .hero { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             padding: 80px 5% 100px; 
             background-color: var(--bg-light); 
-            /* Arka plan noktalı ızgara efekti (boşluğu doldurur) */
             background-image: radial-gradient(#d1d5db 2px, transparent 2px);
             background-size: 30px 30px;
             min-height: 85vh; 
@@ -65,7 +64,6 @@
             position: relative;
         }
 
-        /* Dekoratif Arka Plan Halkası */
         .visual-backdrop {
             position: absolute;
             width: 400px; height: 400px;
@@ -74,7 +72,6 @@
             z-index: 0;
         }
 
-        /* Asansör Boşluğu (Kuyusu) */
         .elevator-shaft {
             width: 140px;
             height: 350px;
@@ -87,15 +84,15 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Asansör aşağıdan başlasın */
-            overflow: hidden;
+            justify-content: flex-end; 
+            
+            /* DÜZELTME BURADA: Yazıların kesilmemesi için visible yapıldı */
+            overflow: visible; 
         }
 
-        /* Kat Çizgileri */
         .elevator-shaft::before { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 33%; left: 0; }
         .elevator-shaft::after { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 66%; left: 0; }
 
-        /* Asansör Kabini */
         .elevator-cabin {
             width: 100%;
             height: 90px;
@@ -109,32 +106,27 @@
             position: relative;
             z-index: 2;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            /* Hikayeli Animasyon */
             animation: elevatorJourney 10s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Kabin İçi İkon Değişimi İçin Kapsayıcı */
         .cabin-icon { animation: iconChange 10s infinite; }
 
-        /* Asansör Senaryosu (Sırayla: Çalışıyor -> Bozuldu -> Doğrulanıyor -> Düzeldi) */
         @keyframes elevatorJourney {
-            0%, 15% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } /* Zemin Kat, Sorun Yok */
-            30% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } /* Üst Kata Çıktı */
-            35% { transform: translateY(-230px); background: var(--danger); box-shadow: 0 0 30px rgba(192, 57, 43, 0.8); } /* ARIZA! Kırmızı oldu ve parladı */
-            40%, 55% { transform: translateY(-230px); background: var(--danger); box-shadow: 0 0 15px rgba(192, 57, 43, 0.5); } /* Arızalı Bekliyor */
-            60%, 75% { transform: translateY(-230px); background: var(--warning); box-shadow: 0 0 20px rgba(243, 156, 18, 0.6); } /* Doğrulama Bekliyor (Sarı) */
-            80% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } /* DÜZELDİ! (Yeşil) */
-            95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } /* Aşağı İndi */
+            0%, 15% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); }
+            30% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
+            35% { transform: translateY(-230px); background: var(--danger); box-shadow: 0 0 30px rgba(192, 57, 43, 0.8); } 
+            40%, 55% { transform: translateY(-230px); background: var(--danger); box-shadow: 0 0 15px rgba(192, 57, 43, 0.5); } 
+            60%, 75% { transform: translateY(-230px); background: var(--warning); box-shadow: 0 0 20px rgba(243, 156, 18, 0.6); } 
+            80% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
+            95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
         }
 
-        /* İkonların Duruma Göre Titremesi */
         @keyframes iconChange {
             0%, 34% { transform: scale(1); }
-            35%, 40% { transform: scale(1.2) rotate(10deg); } /* Bozulunca titrer */
+            35%, 40% { transform: scale(1.2) rotate(10deg); } 
             41%, 100% { transform: scale(1); }
         }
 
-        /* Durum Etiketleri (Animasyonun Yanında Yüzen Bilgi Balonları) */
         .floating-badge {
             position: absolute;
             background: white;
@@ -143,21 +135,23 @@
             font-weight: 700;
             font-size: 0.85rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            opacity: 0; /* Başlangıçta görünmez */
+            opacity: 0; 
             transition: 0.3s;
-            z-index: 3;
+            z-index: 10; /* Üstte kalsın */
+            white-space: nowrap; /* Yazı alt satıra geçmesin */
         }
-        .badge-error { top: 10%; right: -60px; color: var(--danger); animation: showBadgeError 10s infinite; border: 2px solid var(--danger); }
+        
+        .badge-error { top: 10%; right: -70px; color: var(--danger); animation: showBadgeError 10s infinite; border: 2px solid var(--danger); }
         .badge-fix { bottom: 15%; left: -60px; color: var(--success); animation: showBadgeFix 10s infinite; border: 2px solid var(--success); }
 
         @keyframes showBadgeError {
             0%, 34% { opacity: 0; transform: translateY(10px); }
-            35%, 55% { opacity: 1; transform: translateY(0); } /* Sadece bozukken görünür */
+            35%, 55% { opacity: 1; transform: translateY(0); } 
             56%, 100% { opacity: 0; transform: translateY(-10px); }
         }
         @keyframes showBadgeFix {
             0%, 75% { opacity: 0; transform: translateY(10px); }
-            80%, 95% { opacity: 1; transform: translateY(0); } /* Sadece düzeldiğinde görünür */
+            80%, 95% { opacity: 1; transform: translateY(0); } 
             96%, 100% { opacity: 0; transform: translateY(-10px); }
         }
 
@@ -175,7 +169,7 @@
         .blog-content h3 { font-size: 1.3rem; color: var(--secondary); margin-bottom: 12px; line-height: 1.4; font-weight: 700; }
         .blog-content p { color: #666; font-size: 1rem; line-height: 1.6; margin-bottom: 25px; }
         .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; }
-        .read-more:hover { gap: 12px; transition: 0.2s; } /* Hover efekti ok kayar */
+        .read-more:hover { gap: 12px; transition: 0.2s; } 
 
         /* FOOTER & SOSYAL MEDYA */
         footer { background: var(--secondary); color: white; padding: 60px 5% 30px; text-align: center; }
@@ -233,8 +227,21 @@
                 95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
             }
 
-            .badge-error { top: -20px; right: 0; font-size: 0.75rem; padding: 5px 10px; }
-            .badge-fix { bottom: -20px; left: 0; font-size: 0.75rem; padding: 5px 10px; }
+            /* Mobilde etiketleri konumlandır */
+            .badge-error { top: -20px; right: auto; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
+            .badge-fix { bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
+
+            /* Mobilde hata balonu animasyonu (ortalanmış olarak kalmalı) */
+            @keyframes showBadgeError {
+                0%, 34% { opacity: 0; transform: translate(-50%, 10px); }
+                35%, 55% { opacity: 1; transform: translate(-50%, 0); } 
+                56%, 100% { opacity: 0; transform: translate(-50%, -10px); }
+            }
+            @keyframes showBadgeFix {
+                0%, 75% { opacity: 0; transform: translate(-50%, 10px); }
+                80%, 95% { opacity: 1; transform: translate(-50%, 0); } 
+                96%, 100% { opacity: 0; transform: translate(-50%, -10px); }
+            }
 
             .brand-title { font-size: 1.2rem; }
             .btn-header span { display: none; } 
@@ -327,7 +334,7 @@
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-github"></i></a>
         </div>
         
         <div class="copyright">© 2024 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
@@ -388,7 +395,6 @@
                 currentSlide++;
                 updateUI();
             } else {
-                // Son slaytta butona basılırsa haritaya yönlendir
                 window.location.href = 'harita.html';
             }
         }
