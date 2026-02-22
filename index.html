@@ -8,16 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary: #1e69de;
-            --secondary: #2c3e50;
-            --bg-light: #f8f9fa;
-        }
-        
+        :root { --primary: #1e69de; --secondary: #2c3e50; --bg-light: #f8f9fa; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-light); color: #333; overflow-x: hidden; }
         
-        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
         .logo-box { width: 40px; height: 40px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -25,7 +19,6 @@
         .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
 
-        /* HERO BÖLÜMÜ */
         .hero { padding: 80px 5%; text-align: center; background: white; }
         .hero h1 { font-size: 3rem; color: var(--secondary); margin-bottom: 20px; line-height: 1.2; }
         .hero h1 span { color: var(--primary); }
@@ -37,7 +30,6 @@
         .btn-tut { background: #eaf6ff; color: var(--primary); }
         .btn-tut:hover { background: #d4edff; transform: translateY(-2px); }
 
-        /* BLOG BÖLÜMÜ */
         .blog-section { padding: 60px 5%; }
         .section-title { text-align: center; font-size: 2rem; color: var(--secondary); margin-bottom: 40px; }
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
@@ -51,7 +43,6 @@
         .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 5px; }
         .read-more:hover { text-decoration: underline; }
 
-        /* FOOTER & SOSYAL MEDYA */
         footer { background: var(--secondary); color: white; padding: 50px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .footer-logo h2 { font-size: 1.5rem; }
@@ -61,32 +52,26 @@
         .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
         .copyright { color: #7f8c8d; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
 
-        /* TUTORIAL MODAL (POP-UP) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-card { background: white; width: 90%; max-width: 450px; padding: 40px 30px; border-radius: 20px; text-align: center; position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #999; cursor: pointer; }
-        
         .slide { display: none; animation: fadeIn 0.4s; }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         .slide-icon { width: 80px; height: 80px; background: #eaf6ff; color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; margin: 0 auto 20px; }
         .slide h2 { color: var(--secondary); margin-bottom: 15px; }
         .slide p { color: #666; line-height: 1.5; margin-bottom: 30px; }
-        
         .modal-footer { border-top: 1px solid #eee; padding-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .dots { display: flex; gap: 8px; }
         .dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--primary); width: 25px; border-radius: 10px; }
-        
         .btn-modal { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
 
-        /* MOBİL UYUMLULUK */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .brand-title { font-size: 1.2rem; }
-            .btn-header span { display: none; } /* Mobilde "Uygulamaya Git" yazısı gizlenir, sadece ikon kalır */
+            .btn-header span { display: none; } 
             .btn-large { width: 100%; justify-content: center; }
         }
     </style>
@@ -115,7 +100,6 @@
     <section class="blog-section">
         <h2 class="section-title">Güncel Yazılarımız</h2>
         <div class="blog-grid">
-            
             <article class="blog-card">
                 <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1573385419999-5f2122c60c87?auto=format&fit=crop&w=600&q=80');"></div>
                 <div class="blog-content">
@@ -125,7 +109,6 @@
                     <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
                 </div>
             </article>
-
             <article class="blog-card">
                 <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?auto=format&fit=crop&w=600&q=80');"></div>
                 <div class="blog-content">
@@ -135,7 +118,6 @@
                     <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
                 </div>
             </article>
-
             <article class="blog-card">
                 <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1596752763261-26ec03b7a5a8?auto=format&fit=crop&w=600&q=80');"></div>
                 <div class="blog-content">
@@ -145,7 +127,6 @@
                     <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
                 </div>
             </article>
-
         </div>
     </section>
 
@@ -155,45 +136,35 @@
             <h2>Erişilebilir İzmir</h2>
         </div>
         <p class="footer-slogan">Görünmeyeni görünür kılıyoruz.</p>
-        
         <div class="social-links">
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="#" aria-label="YouTube"><i class="fab fa-github"></i></a>
         </div>
-        
-        <div class="copyright">© 2024 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
+        <div class="copyright">© 2026 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
     </footer>
 
     <div class="modal-overlay" id="tutorialModal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeTutorial()">&times;</span>
-            
             <div class="slide active">
                 <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
                 <h2>Durumu Kontrol Edin</h2>
                 <p>Haritadaki <b>Yeşil</b> istasyonlar sorunsuz çalıştığını, <b>Kırmızı</b> istasyonlar ise asansör veya yürüyen merdiven arızası olduğunu gösterir.</p>
             </div>
-            
             <div class="slide">
                 <div class="slide-icon"><i class="fas fa-bullhorn"></i></div>
                 <h2>Siz de Bildirin</h2>
                 <p>Gittiğiniz istasyonda bir arıza görürseniz, haritadan istasyonu seçip arızayı bildirin. Böylece yola çıkacak diğer insanlara yardım etmiş olursunuz.</p>
             </div>
-            
             <div class="slide">
                 <div class="slide-icon"><i class="fas fa-star"></i></div>
                 <h2>Puan Toplayın</h2>
                 <p>Yaptığınız her doğru bildirim ve doğrulama size puan kazandırır. Seviye atlayarak Erişilebilir İzmir topluluğunun güvenilir bir elçisi olun.</p>
             </div>
-
             <div class="modal-footer">
-                <div class="dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+                <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
                 <button class="btn-modal" id="nextBtn" onclick="nextSlide()">İleri</button>
             </div>
         </div>
@@ -206,35 +177,15 @@
         const modal = document.getElementById('tutorialModal');
         const nextBtn = document.getElementById('nextBtn');
 
-        function openTutorial() {
-            modal.style.display = 'flex';
-            currentSlide = 0;
-            updateUI();
-        }
-
-        function closeTutorial() {
-            modal.style.display = 'none';
-        }
-
+        function openTutorial() { modal.style.display = 'flex'; currentSlide = 0; updateUI(); }
+        function closeTutorial() { modal.style.display = 'none'; }
         function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                updateUI();
-            } else {
-                // Son slaytta butona basılırsa haritaya yönlendir
-                window.location.href = 'harita.html';
-            }
+            if (currentSlide < slides.length - 1) { currentSlide++; updateUI(); } 
+            else { window.location.href = 'harita.html'; }
         }
-
         function updateUI() {
-            slides.forEach((s, index) => {
-                s.classList.remove('active');
-                dots[index].classList.remove('active');
-            });
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
-
+            slides.forEach((s, index) => { s.classList.remove('active'); dots[index].classList.remove('active'); });
+            slides[currentSlide].classList.add('active'); dots[currentSlide].classList.add('active');
             if (currentSlide === slides.length - 1) {
                 nextBtn.innerText = "Haritayı Aç 🚀";
                 nextBtn.style.backgroundColor = "#27ae60";
