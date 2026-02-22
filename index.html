@@ -97,14 +97,14 @@
         .blog-section { padding: 80px 5%; background: white; }
         .section-title { text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 50px; font-weight: 800; }
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .blog-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f0f0f0; }
+        .blog-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f0f0f0; display: flex; flex-direction: column; }
         .blog-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-color: var(--primary-light); }
         .blog-img { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: #ddd; }
-        .blog-content { padding: 30px; }
-        .blog-tag { display: inline-block; background: #eaf6ff; color: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .blog-content { padding: 30px; display: flex; flex-direction: column; flex: 1; }
+        .blog-tag { align-self: flex-start; background: #eaf6ff; color: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         .blog-content h3 { font-size: 1.3rem; color: var(--secondary); margin-bottom: 12px; line-height: 1.4; font-weight: 700; }
-        .blog-content p { color: #666; font-size: 1rem; line-height: 1.6; margin-bottom: 25px; }
-        .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; }
+        .blog-content p { color: #666; font-size: 1rem; line-height: 1.6; margin-bottom: 25px; flex: 1; }
+        .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; align-self: flex-start; }
         .read-more:hover { gap: 12px; transition: 0.2s; } 
 
         /* FOOTER & SOSYAL MEDYA */
@@ -222,9 +222,8 @@
                 <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1573385419999-5f2122c60c87?auto=format&fit=crop&w=600&q=80');"></div>
                 <div class="blog-content">
                     <span class="blog-tag">Farkındalık</span>
-                    <h3>Erişilebilirlik Neden Sadece Bir Kelime Değil?</h3>
+                    <h3>İzmir'de Erişilebilirlik Bir Lütuf Değil, Herkes İçin Temel Bir Haktır</h3>
                     <p>Şehir hayatında bağımsız hareket edebilmenin önemi ve karşılaşılan görünmez engeller üzerine detaylı bir inceleme.</p>
-                    
                     <a href="blog1.html" class="read-more">Yazıyı Oku <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
@@ -233,9 +232,9 @@
                 <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?auto=format&fit=crop&w=600&q=80');"></div>
                 <div class="blog-content">
                     <span class="blog-tag">Topluluk</span>
-                    <h3>Kitle Kaynaklı Veri ile Engelleri Aşmak</h3>
-                    <p>Sizin yapacağınız tek bir arıza bildiriminin, onlarca tekerlekli sandalye kullanıcısının hayatını nasıl kolaylaştırdığını keşfedin.</p>
-                    <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-arrow-right"></i></a>
+                    <h3>Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü</h3>
+                    <p>Dijital dünyadaki erişilebilirlik standartlarının (WCAG) fiziksel kentsel özgürlüğe nasıl dönüştüğünü teknik mutfağımıza girerek inceliyoruz.</p>
+                    <a href="blog2.html" class="read-more">Yazıyı Oku <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
 
