@@ -53,62 +53,13 @@
         .btn-tut { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .btn-tut:hover { background: var(--primary-light); transform: translateY(-3px); }
 
-        /* ========================================== */
-        /* CSS ASANSÖR ANİMASYONU                     */
-        /* ========================================== */
-        .hero-visual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .visual-backdrop {
-            position: absolute;
-            width: 400px; height: 400px;
-            background: linear-gradient(135deg, #eaf6ff 0%, #d4edff 100%);
-            border-radius: 50%;
-            z-index: 0;
-        }
-
-        .elevator-shaft {
-            width: 140px;
-            height: 350px;
-            background: white;
-            border: 4px solid var(--secondary);
-            border-radius: 12px;
-            position: relative;
-            z-index: 1;
-            padding: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; 
-            
-            /* DÜZELTME BURADA: Yazıların kesilmemesi için visible yapıldı */
-            overflow: visible; 
-        }
-
+        /* CSS ASANSÖR ANİMASYONU */
+        .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+        .visual-backdrop { position: absolute; width: 400px; height: 400px; background: linear-gradient(135deg, #eaf6ff 0%, #d4edff 100%); border-radius: 50%; z-index: 0; }
+        .elevator-shaft { width: 140px; height: 350px; background: white; border: 4px solid var(--secondary); border-radius: 12px; position: relative; z-index: 1; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; overflow: visible; }
         .elevator-shaft::before { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 33%; left: 0; }
         .elevator-shaft::after { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 66%; left: 0; }
-
-        .elevator-cabin {
-            width: 100%;
-            height: 90px;
-            background: var(--success);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 35px;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            animation: elevatorJourney 10s infinite cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
+        .elevator-cabin { width: 100%; height: 90px; background: var(--success); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-size: 35px; position: relative; z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: elevatorJourney 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
         .cabin-icon { animation: iconChange 10s infinite; }
 
         @keyframes elevatorJourney {
@@ -127,20 +78,7 @@
             41%, 100% { transform: scale(1); }
         }
 
-        .floating-badge {
-            position: absolute;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            opacity: 0; 
-            transition: 0.3s;
-            z-index: 10; /* Üstte kalsın */
-            white-space: nowrap; /* Yazı alt satıra geçmesin */
-        }
-        
+        .floating-badge { position: absolute; background: white; padding: 8px 15px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); opacity: 0; transition: 0.3s; z-index: 10; white-space: nowrap; }
         .badge-error { top: 10%; right: -70px; color: var(--danger); animation: showBadgeError 10s infinite; border: 2px solid var(--danger); }
         .badge-fix { bottom: 15%; left: -60px; color: var(--success); animation: showBadgeFix 10s infinite; border: 2px solid var(--success); }
 
@@ -154,8 +92,6 @@
             80%, 95% { opacity: 1; transform: translateY(0); } 
             96%, 100% { opacity: 0; transform: translateY(-10px); }
         }
-
-        /* ========================================== */
 
         /* BLOG BÖLÜMÜ */
         .blog-section { padding: 80px 5%; background: white; }
@@ -176,8 +112,8 @@
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .footer-logo h2 { font-size: 1.5rem; }
         .footer-slogan { color: #bdc3c7; margin-bottom: 30px; font-size: 1.1rem; }
-        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .social-links a { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 1.5rem; text-decoration: none; transition: 0.3s; }
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 1.4rem; text-decoration: none; transition: 0.3s; }
         .social-links a:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30,105,222,0.4); }
         .copyright { color: #7f8c8d; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; margin-top: 20px; }
 
@@ -227,11 +163,9 @@
                 95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
             }
 
-            /* Mobilde etiketleri konumlandır */
             .badge-error { top: -20px; right: auto; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
             .badge-fix { bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
 
-            /* Mobilde hata balonu animasyonu (ortalanmış olarak kalmalı) */
             @keyframes showBadgeError {
                 0%, 34% { opacity: 0; transform: translate(-50%, 10px); }
                 35%, 55% { opacity: 1; transform: translate(-50%, 0); } 
@@ -261,7 +195,6 @@
     </header>
 
     <section class="hero">
-        
         <div class="hero-text">
             <h1>Engelsiz bir İzmir için<br><span>görünmeyeni görünür</span> kılıyoruz.</h1>
             <p>İzmir metrosundaki asansör ve yürüyen merdiven arızalarını anlık olarak haritadan takip edin, kendi bildirimlerinizi yaparak topluluğa katkı sağlayın.</p>
@@ -273,17 +206,12 @@
 
         <div class="hero-visual">
             <div class="visual-backdrop"></div>
-            
             <div class="elevator-shaft">
                 <div class="floating-badge badge-error"><i class="fas fa-exclamation-triangle"></i> Arıza Bildirildi</div>
                 <div class="floating-badge badge-fix"><i class="fas fa-check-circle"></i> Sorun Yok</div>
-                
-                <div class="elevator-cabin">
-                    <i class="fas fa-wheelchair cabin-icon"></i>
-                </div>
+                <div class="elevator-cabin"><i class="fas fa-wheelchair cabin-icon"></i></div>
             </div>
         </div>
-
     </section>
 
     <section class="blog-section">
@@ -332,10 +260,8 @@
         
         <div class="social-links">
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-github"></i></a>
-        </div>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a> <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a> <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a> </div>
         
         <div class="copyright">© 2024 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
     </footer>
