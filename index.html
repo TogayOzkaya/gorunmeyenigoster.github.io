@@ -2,223 +2,247 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Erişilebilir İzmir | Görünmeyeni Görünür Kılıyoruz</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e69de">
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #1e69de;
+            --secondary: #2c3e50;
+            --bg-light: #f8f9fa;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-light); color: #333; overflow-x: hidden; }
+        
+        /* HEADER */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+        .logo-box { width: 40px; height: 40px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .brand-title { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+        .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
+
+        /* HERO BÖLÜMÜ */
+        .hero { padding: 80px 5%; text-align: center; background: white; }
+        .hero h1 { font-size: 3rem; color: var(--secondary); margin-bottom: 20px; line-height: 1.2; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto 30px; line-height: 1.6; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn-large { padding: 15px 30px; font-size: 1.1rem; border-radius: 12px; cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
+        .btn-map { background: var(--primary); color: white; }
+        .btn-map:hover { background: #1557b0; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(30,105,222,0.3); }
+        .btn-tut { background: #eaf6ff; color: var(--primary); }
+        .btn-tut:hover { background: #d4edff; transform: translateY(-2px); }
+
+        /* BLOG BÖLÜMÜ */
+        .blog-section { padding: 60px 5%; }
+        .section-title { text-align: center; font-size: 2rem; color: var(--secondary); margin-bottom: 40px; }
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .blog-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .blog-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .blog-img { width: 100%; height: 200px; background-size: cover; background-position: center; background-color: #ddd; }
+        .blog-content { padding: 25px; }
+        .blog-tag { display: inline-block; background: #eaf6ff; color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; }
+        .blog-content h3 { font-size: 1.2rem; color: var(--secondary); margin-bottom: 10px; line-height: 1.4; }
+        .blog-content p { color: #666; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .read-more:hover { text-decoration: underline; }
+
+        /* FOOTER & SOSYAL MEDYA */
+        footer { background: var(--secondary); color: white; padding: 50px 5% 30px; text-align: center; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .footer-logo h2 { font-size: 1.5rem; }
+        .footer-slogan { color: #bdc3c7; margin-bottom: 30px; font-size: 1rem; }
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 1.2rem; text-decoration: none; transition: 0.3s; }
+        .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
+        .copyright { color: #7f8c8d; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+
+        /* TUTORIAL MODAL (POP-UP) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-card { background: white; width: 90%; max-width: 450px; padding: 40px 30px; border-radius: 20px; text-align: center; position: relative; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #999; cursor: pointer; }
+        
+        .slide { display: none; animation: fadeIn 0.4s; }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .slide-icon { width: 80px; height: 80px; background: #eaf6ff; color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; margin: 0 auto 20px; }
+        .slide h2 { color: var(--secondary); margin-bottom: 15px; }
+        .slide p { color: #666; line-height: 1.5; margin-bottom: 30px; }
+        
+        .modal-footer { border-top: 1px solid #eee; padding-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .dots { display: flex; gap: 8px; }
+        .dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--primary); width: 25px; border-radius: 10px; }
+        
+        .btn-modal { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+
+        /* MOBİL UYUMLULUK */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .brand-title { font-size: 1.2rem; }
+            .btn-header span { display: none; } /* Mobilde "Uygulamaya Git" yazısı gizlenir, sadece ikon kalır */
+            .btn-large { width: 100%; justify-content: center; }
+        }
+    </style>
 </head>
 <body>
 
-    <div id="landing-view" class="landing-page">
-        <header class="landing-header">
-            <div class="brand-container">
-                <div class="logo-box"><i class="fas fa-elevator"></i></div>
-                <h1 class="brand-title">Erişilebilir İzmir</h1>
-            </div>
-            <button class="btn-primary" onclick="enterApp()">Uygulamaya Git <i class="fas fa-arrow-right"></i></button>
-        </header>
+    <header>
+        <a href="#" class="brand">
+            <div class="logo-box"><i class="fas fa-elevator"></i></div>
+            <h1 class="brand-title">Erişilebilir İzmir</h1>
+        </a>
+        <a href="harita.html" class="btn-header">
+            <span>Haritayı Aç</span> <i class="fas fa-arrow-right"></i>
+        </a>
+    </header>
 
-        <section class="hero-section">
-            <div class="hero-content">
-                <h2>Engelsiz bir İzmir için<br><span>görünmeyeni görünür</span> kılıyoruz.</h2>
-                <p>İzmir metrosundaki asansör ve yürüyen merdiven arızalarını anlık olarak haritadan takip edin, kendi bildirimlerinizi yaparak topluluğa katkı sağlayın.</p>
-                <div class="hero-buttons">
-                    <button class="btn-primary btn-large" onclick="enterApp()"><i class="fas fa-map-marked-alt"></i> Haritayı Aç</button>
-                    <button class="btn-secondary btn-large" onclick="showTutorialFromLanding()"><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</button>
+    <section class="hero">
+        <h1>Engelsiz bir İzmir için<br><span>görünmeyeni görünür</span> kılıyoruz.</h1>
+        <p>İzmir metrosundaki asansör ve yürüyen merdiven arızalarını anlık olarak haritadan takip edin, kendi bildirimlerinizi yaparak topluluğa katkı sağlayın.</p>
+        <div class="hero-buttons">
+            <a href="harita.html" class="btn-large btn-map"><i class="fas fa-map-marked-alt"></i> Uygulamaya Git</a>
+            <button class="btn-large btn-tut" onclick="openTutorial()"><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</button>
+        </div>
+    </section>
+
+    <section class="blog-section">
+        <h2 class="section-title">Güncel Yazılarımız</h2>
+        <div class="blog-grid">
+            
+            <article class="blog-card">
+                <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1573385419999-5f2122c60c87?auto=format&fit=crop&w=600&q=80');"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Farkındalık</span>
+                    <h3>Erişilebilirlik Neden Sadece Bir Kelime Değil?</h3>
+                    <p>Şehir hayatında bağımsız hareket edebilmenin önemi ve karşılaşılan görünmez engeller üzerine detaylı bir inceleme.</p>
+                    <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
                 </div>
-            </div>
-        </section>
+            </article>
 
-        <section class="blog-section">
-            <h3 class="section-title">Güncel Yazılarımız</h3>
-            <div class="blog-grid">
-                <article class="blog-card">
-                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1573385419999-5f2122c60c87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
-                    <div class="blog-content">
-                        <span class="blog-tag">Farkındalık</span>
-                        <h4>Erişilebilirlik Neden Sadece Bir Kelime Değil?</h4>
-                        <p>Şehir hayatında bağımsız hareket edebilmenin önemi ve karşılaşılan görünmez engeller üzerine bir inceleme.</p>
-                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
-                    </div>
-                </article>
-                <article class="blog-card">
-                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
-                    <div class="blog-content">
-                        <span class="blog-tag">Topluluk</span>
-                        <h4>Kitle Kaynaklı Veri ile Engelleri Aşmak</h4>
-                        <p>Bir kişinin yaptığı küçük bir arıza bildiriminin, onlarca kişinin hayatını nasıl kolaylaştırdığını keşfedin.</p>
-                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
-                    </div>
-                </article>
-                <article class="blog-card">
-                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1596752763261-26ec03b7a5a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
-                    <div class="blog-content">
-                        <span class="blog-tag">Rehber</span>
-                        <h4>Toplu Taşımada Alternatif Rotalar</h4>
-                        <p>Metro asansörleri arızalı olduğunda otobüs ve tramvay entegrasyonu ile hedefinize nasıl ulaşırsınız?</p>
-                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
-                    </div>
-                </article>
-            </div>
-        </section>
+            <article class="blog-card">
+                <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?auto=format&fit=crop&w=600&q=80');"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Topluluk</span>
+                    <h3>Kitle Kaynaklı Veri ile Engelleri Aşmak</h3>
+                    <p>Sizin yapacağınız tek bir arıza bildiriminin, onlarca tekerlekli sandalye kullanıcısının hayatını nasıl kolaylaştırdığını keşfedin.</p>
+                    <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
+                </div>
+            </article>
 
-        <footer class="landing-footer">
-            <div class="brand-container" style="justify-content: center; margin-bottom: 15px;">
-                <div class="logo-box" style="width: 30px; height: 30px; font-size: 16px;"><i class="fas fa-elevator"></i></div>
-                <h2 class="brand-title" style="font-size: 1rem;">Erişilebilir İzmir</h2>
-            </div>
-            <p>Görünmeyeni görünür kılıyoruz.</p>
-            <div class="social-links">
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            </div>
-            <div class="copyright">© 2024 Erişilebilir İzmir. Tüm Hakları Saklıdır.</div>
-        </footer>
-    </div>
+            <article class="blog-card">
+                <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1596752763261-26ec03b7a5a8?auto=format&fit=crop&w=600&q=80');"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Rehber</span>
+                    <h3>Toplu Taşımada Alternatif Rotalar</h3>
+                    <p>Metro asansörleri arızalı olduğunda otobüs ve tramvay entegrasyonu ile gideceğiniz yere sorunsuz nasıl ulaşırsınız?</p>
+                    <a href="#" class="read-more">Yazıyı Oku <i class="fas fa-angle-right"></i></a>
+                </div>
+            </article>
 
+        </div>
+    </section>
 
-    <div id="app-view" style="display: none;">
+    <footer>
+        <div class="footer-logo">
+            <div class="logo-box" style="width: 35px; height: 35px; font-size: 18px;"><i class="fas fa-elevator"></i></div>
+            <h2>Erişilebilir İzmir</h2>
+        </div>
+        <p class="footer-slogan">Görünmeyeni görünür kılıyoruz.</p>
         
-        <div class="container">
-            <aside class="sidebar closed" id="sidebar">
-                <div class="sidebar-header">
-                    <div class="header-top-section">
-                        <div class="brand-wrapper">
-                            <div class="logo-box"><i class="fas fa-elevator"></i></div>
-                            <div class="brand-text-group">
-                                <h1 class="brand-title">Erişilebilir İzmir</h1>
-                                <p class="brand-slogan">Görünmeyeni görünür kılıyoruz.</p>
-                            </div>
-                        </div>
-                        <button class="btn-close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
-                    </div>
-
-                    <div class="profile-card-mini" id="sidebar-profile-card" onclick="handleProfileClick()">
-                        <div class="profile-text">
-                            <span class="p-name" id="sidebar-user-name">Misafir</span>
-                            <span class="p-lvl" id="sidebar-user-desc">Giriş Yap</span>
-                        </div>
-                        <div class="profile-avatar"><img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="sidebar-user-img"></div>
-                    </div>
-                </div>
-
-                <div class="search-ticker-area">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="station-search" placeholder="İstasyon ara...">
-                    </div>
-                    <div class="news-ticker">
-                        <i class="fas fa-broadcast-tower"></i>
-                        <div class="ticker-wrapper"><div class="ticker-content" id="ticker-text">Sistem aktif... Veriler yükleniyor...</div></div>
-                    </div>
-                </div>
-                
-                <div class="list-header">
-                    <h3>İstasyonlar</h3>
-                    <span id="result-count" class="count-badge">24</span>
-                </div>
-                <div class="results-list" id="station-list"></div>
-            </aside>
-
-            <main class="map-container">
-                <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-                
-                <button class="btn-home" onclick="exitApp()" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></button>
-                
-                <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-                <div id="map"></div>
-                <div class="map-legend">
-                    <h4>Durum Göstergesi</h4>
-                    <ul>
-                        <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
-                        <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
-                        <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
-                    </ul>
-                </div>
-            </main>
+        <div class="social-links">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-github"></i></a>
         </div>
-    </div>
+        
+        <div class="copyright">© 2024 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
+    </footer>
 
-    <div id="tutorial-overlay" class="tutorial-overlay">
-        <div class="tutorial-card">
-            <span class="close-icon-dark" onclick="closeTutorial()" style="position:absolute; top:15px; right:20px;">&times;</span>
-            <div class="tutorial-slides">
-                <div class="slide active">
-                    <div class="slide-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                    <h3>Hoşgeldiniz!</h3><p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
-                </div>
-                <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <h3>Durumu Kontrol Edin</h3><p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
-                </div>
-                <div class="slide">
-                    <div class="slide-icon"><i class="fas fa-users"></i></div>
-                    <h3>Topluluğa Katılın</h3><p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
-                </div>
+    <div class="modal-overlay" id="tutorialModal">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeTutorial()">&times;</span>
+            
+            <div class="slide active">
+                <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <h2>Durumu Kontrol Edin</h2>
+                <p>Haritadaki <b>Yeşil</b> istasyonlar sorunsuz çalıştığını, <b>Kırmızı</b> istasyonlar ise asansör veya yürüyen merdiven arızası olduğunu gösterir.</p>
             </div>
-            <div class="tutorial-footer">
-                <div class="dots-container"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
-                <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
-                <button id="finish-tutorial-btn" onclick="closeTutorialAndEnterApp()" style="display:none;">Uygulamaya Başla 🚀</button>
+            
+            <div class="slide">
+                <div class="slide-icon"><i class="fas fa-bullhorn"></i></div>
+                <h2>Siz de Bildirin</h2>
+                <p>Gittiğiniz istasyonda bir arıza görürseniz, haritadan istasyonu seçip arızayı bildirin. Böylece yola çıkacak diğer insanlara yardım etmiş olursunuz.</p>
+            </div>
+            
+            <div class="slide">
+                <div class="slide-icon"><i class="fas fa-star"></i></div>
+                <h2>Puan Toplayın</h2>
+                <p>Yaptığınız her doğru bildirim ve doğrulama size puan kazandırır. Seviye atlayarak Erişilebilir İzmir topluluğunun güvenilir bir elçisi olun.</p>
+            </div>
+
+            <div class="modal-footer">
+                <div class="dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <button class="btn-modal" id="nextBtn" onclick="nextSlide()">İleri</button>
             </div>
         </div>
     </div>
 
-    <div id="loginModal" class="modal">
-        <div class="modal-content login-modal-design">
-            <div class="lm-left"><div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Topluluğa Katıl</h2><p>İzmir'i herkes için erişilebilir kıl.</p></div></div>
-            <div class="lm-right"><span class="close-icon-dark" onclick="closeLoginModal()">&times;</span><h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p><button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button></div>
-        </div>
-    </div>
-    <div id="profileModal" class="modal">
-        <div class="modal-content profile-modal-design">
-            <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
-            <div class="pm-body">
-                <div class="pm-stats-row"><div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div><div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div><div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div></div>
-                <div class="pm-progress-area"><div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div><div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div></div>
-                <div class="pm-badges-grid"><div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div></div>
-                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;"><button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button></div>
-            </div>
-        </div>
-    </div>
-    <div id="reportModal" class="modal">
-        <div class="modal-content report-modal-design">
-            <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
-            <div id="alternative-route-box" class="suggestion-box" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Sorun olabilir.</strong> <span id="suggestion-text"></span></div></div>
-            <div class="modal-body">
-                <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
-                <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
-                    <form id="reportForm">
-                        <div class="issue-types-grid"><label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label><label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label></div>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
-                        <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="verifyModal" class="modal">
-        <div class="modal-content verify-modal-design">
-            <div class="vm-header"><h3>Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
-            <div class="vm-body">
-                <h2 id="verify-station-name">İstasyon</h2><p>Durum nedir?</p>
-                <div class="vm-actions">
-                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)"><div class="icon-box"><i class="fas fa-times"></i></div><div class="action-text"><strong>Sorun Var</strong><span>+15 Puan</span></div></button>
-                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)"><div class="icon-box"><i class="fas fa-check"></i></div><div class="action-text"><strong>Düzelmiş</strong><span>+30 Puan</span></div></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const modal = document.getElementById('tutorialModal');
+        const nextBtn = document.getElementById('nextBtn');
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+        function openTutorial() {
+            modal.style.display = 'flex';
+            currentSlide = 0;
+            updateUI();
+        }
+
+        function closeTutorial() {
+            modal.style.display = 'none';
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateUI();
+            } else {
+                // Son slaytta butona basılırsa haritaya yönlendir
+                window.location.href = 'harita.html';
+            }
+        }
+
+        function updateUI() {
+            slides.forEach((s, index) => {
+                s.classList.remove('active');
+                dots[index].classList.remove('active');
+            });
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+
+            if (currentSlide === slides.length - 1) {
+                nextBtn.innerText = "Haritayı Aç 🚀";
+                nextBtn.style.backgroundColor = "#27ae60";
+            } else {
+                nextBtn.innerText = "İleri";
+                nextBtn.style.backgroundColor = "var(--primary)";
+            }
+        }
+    </script>
 </body>
 </html>
