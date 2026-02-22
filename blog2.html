@@ -30,41 +30,49 @@
             
             <div class="blog-meta">
                 <span><i class="far fa-calendar-alt"></i> 22 Şubat 2026</span>
-                <span><i class="far fa-user"></i> Yazar: Togay Yalçın Özkaya - Eren Oral</span>
+                <span><i class="far fa-user"></i> Yazar: Togay Özkay</span>
             </div>
             
             <img src="https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?auto=format&fit=crop&w=1000&q=80" alt="Dijital Erişilebilirlik ve Teknoloji">
             
             <div class="blog-text">
                 <h2>Giriş: Fiziksel Engellerden Dijital Köprülere</h2>
-               <p>Fiziksel dünyadaki bir basamak, tekerlekli sandalye kullanan Mert Demir için ne kadar aşılmaz bir bariyerse, yanlış kurgulanmış bir web sitesi veya uygulama da dijital dünyada aynı ölçüde dışlayıcıdır. Dijital erişilebilirlik, teknolojinin sadece bir kesim için değil, toplumun tamamı için "algılanabilir" ve "kullanılabilir" olması demektir. İstatistiklere göre, dünya çapındaki web sitelerinin %97'si hala temel erişilebilirlik hataları barındırmakta ve bu durum milyonlarca engelli bireyin bilgiye erişimini engellemektedir. "Görünmeyeni Göster" projesi, tam da bu dijital uçurumu kapatmak ve kodların gücüyle fiziksel dünyadaki asansör krizlerini çözmek için yola çıktı. Bu yazıda, projemizin teknik mutfağına girerek dijital standartların kentsel özgürlüğe nasıl dönüştüğünü inceleyeceğiz. </p>
+                <p>Fiziksel dünyadaki bir basamak, tekerlekli sandalye kullanan Mert Demir için ne kadar aşılmaz bir bariyerse, yanlış kurgulanmış bir web sitesi veya uygulama da dijital dünyada aynı ölçüde dışlayıcıdır. [cite: 163] Dijital erişilebilirlik, teknolojinin sadece bir kesim için değil, toplumun tamamı için "algılanabilir" ve "kullanılabilir" olması demektir. [cite: 164] İstatistiklere göre, dünya çapındaki web sitelerinin %97'si hala temel erişilebilirlik hataları barındırmakta ve bu durum milyonlarca engelli bireyin bilgiye erişimini engellemektedir. [cite: 165] "Görünmeyeni Göster" projesi, tam da bu dijital uçurumu kapatmak ve kodların gücüyle fiziksel dünyadaki asansör krizlerini çözmek için yola çıktı. [cite: 166] Bu yazıda, projemizin teknik mutfağına girerek dijital standartların kentsel özgürlüğe nasıl dönüştüğünü inceleyeceğiz. [cite: 167]</p>
 
                 <h2>WCAG 2.1 ve Erişilebilirliğin Dört Altın Kuralı (POUR)</h2>
-               <p>Bir web projesinin gerçekten erişilebilir olması için uluslararası kabul görmüş WCAG 2.1 (Web İçeriği Erişilebilirlik Yönergeleri) standartlarına uyum sağlaması gerekir. Bu standartlar, projemizin teknik omurgasını oluşturan "POUR" prensiplerine dayanır: </p>
+                <p>Bir web projesinin gerçekten erişilebilir olması için uluslararası kabul görmüş WCAG 2.1 (Web İçeriği Erişilebilirlik Yönergeleri) standartlarına uyum sağlaması gerekir. [cite: 169] Bu standartlar, projemizin teknik omurgasını oluşturan "POUR" prensiplerine dayanır: [cite: 170]</p>
                 <ul>
-                    <li><b>Algılanabilirlik:</b> Kullanıcılar içeriği duyularıyla algılayabilmelidir."Görünmeyeni Göster" arayüzünde kullandığımız yüksek kontrastlı renkler (Koyu Mavi ve Orman Yeşili), az gören bireylerin metinleri rahatça okumasını sağlar. </li>
-                   <li><b>Kullanılabilirlik:</b> Arayüz bileşenleri her türlü donanımla (sadece klavye veya ekran okuyucular) kontrol edilebilmelidir. </li>
-                    <li><b>Anlaşılabilirlik:</b> İçerik ve operasyonlar karmaşık olmamalıdır.Uygulamamızın minimalist yapısı, Mert'in en az bilişsel yükle asansör durumuna ulaşmasını sağlar. </li>
-                   <li><b>Sağlamlık (Robust):</b> İçerik, gelişen teknolojilere ve farklı tarayıcılara uyum sağlayacak kadar güçlü kodlanmalıdır. </li>
+                    <li><b>Algılanabilirlik:</b> Kullanıcılar içeriği duyularıyla algılayabilmelidir. "Görünmeyeni Göster" arayüzünde kullandığımız yüksek kontrastlı renkler (Koyu Mavi ve Orman Yeşili), az gören bireylerin metinleri rahatça okumasını sağlar. [cite: 172]</li>
+                    <li><b>Kullanılabilirlik:</b> Arayüz bileşenleri her türlü donanımla (sadece klavye veya ekran okuyucular) kontrol edilebilmelidir. [cite: 173]</li>
+                    <li><b>Anlaşılabilirlik:</b> İçerik ve operasyonlar karmaşık olmamalıdır. Uygulamamızın minimalist yapısı, Mert'in en az bilişsel yükle asansör durumuna ulaşmasını sağlar. [cite: 174]</li>
+                    <li><b>Sağlamlık (Robust):</b> İçerik, gelişen teknolojilere ve farklı tarayıcılara uyum sağlayacak kadar güçlü kodlanmalıdır. [cite: 175]</li>
                 </ul>
 
                 <h2>Kodun Anatomisi: HTML5, CSS3 ve JavaScript Entegrasyonu</h2>
-               <p>Projemizin teknik altyapısı, anlamsal (semantic) web teknolojileri üzerine inşa edilmiştir. GitHub üzerinde geliştirdiğimiz index.html dosyasında, sadece div etiketleri kullanmak yerine nav, main, section gibi anlamsal etiketleri tercih ediyoruz. Bu tercih, ekran okuyucu kullanan bir görme engelli kullanıcının sayfa yapısını zihninde bir "navigasyon ağacı" gibi canlandırmasına olanak tanır. CSS3 tarafında, projemiz için belirlenen yüksek kontrastlı palet (Primary Blue #0A2D69), WCAG 2.1 AA seviyesindeki 4.5:1 kontrast oranını fazlasıyla karşılayarak okuma kolaylığı sunar. JavaScript tarafında ise script.js ve sv.js dosyalarımız, İzmir metrosundaki asansör verilerini dinamik olarak işler. Bu dosyalar, asansörün "Aktif" veya "Pasif" durumunu anlık olarak kullanıcı arayüzüne (UI) yansıtarak, verinin hıza ve özgürlüğe dönüşmesini sağlar. </p>
+                <p>Projemizin teknik altyapısı, anlamsal (semantic) web teknolojileri üzerine inşa edilmiştir. GitHub üzerinde geliştirdiğimiz index.html dosyasında, sadece div etiketleri kullanmak yerine nav, main, section gibi anlamsal etiketleri tercih ediyoruz. Bu tercih, ekran okuyucu kullanan bir görme engelli kullanıcının sayfa yapısını zihninde bir "navigasyon ağacı" gibi canlandırmasına olanak tanır. [cite: 177, 178] CSS3 tarafında, projemiz için belirlenen yüksek kontrastlı palet (Primary Blue #0A2D69), WCAG 2.1 AA seviyesindeki 4.5:1 kontrast oranını fazlasıyla karşılayarak okuma kolaylığı sunar. [cite: 179] JavaScript tarafında ise script.js ve sv.js dosyalarımız, İzmir metrosundaki asansör verilerini dinamik olarak işler. [cite: 180] Bu dosyalar, asansörün "Aktif" veya "Pasif" durumunu anlık olarak kullanıcı arayüzüne (UI) yansıtarak, verinin hıza ve özgürlüğe dönüşmesini sağlar. [cite: 181]</p>
 
                 <h2>Mobilite ve PWA: manifest.json Dosyasının Kritik Rolü</h2>
-               <p>"Görünmeyeni Göster" sadece bir web sitesi değil, bir PWA (Progressive Web App) olarak kurgulanmıştır. Teknik yapımızda yer alan manifest.json dosyası, projemizin bir mobil uygulama gibi davranmasını sağlar. Mert istasyona girmeden hemen önce telefonundan uygulamayı açtığında, bu dosya sayesinde hızlı yüklenen, tam ekran çalışan ve kullanıcıyı "erişilebilirlik odağında" tutan bir deneyim yaşar. Mobil uyumlu (Mobile-first) tasarım yaklaşımımız, kentsel hareketliliğin sokakta yaşandığı gerçeğiyle tam uyum içerisindedir. Her bir kod satırı, Mert'in bir sonraki durağa güvenle varması için bir basamak görevi görür. </p>
+                <p>"Görünmeyeni Göster" sadece bir web sitesi değil, bir PWA (Progressive Web App) olarak kurgulanmıştır. [cite: 183] Teknik yapımızda yer alan manifest.json dosyası, projemizin bir mobil uygulama gibi davranmasını sağlar. [cite: 184] Mert istasyona girmeden hemen önce telefonundan uygulamayı açtığında, bu dosya sayesinde hızlı yüklenen, tam ekran çalışan ve kullanıcıyı "erişilebilirlik odağında" tutan bir deneyim yaşar. [cite: 185] Mobil uyumlu (Mobile-first) tasarım yaklaşımımız, kentsel hareketliliğin sokakta yaşandığı gerçeğiyle tam uyum içerisindedir. [cite: 186] Her bir kod satırı, Mert'in bir sonraki durağa güvenle varması için bir basamak görevi görür. [cite: 187]</p>
 
                 <h2>Kullanıcı Deneyimi (UX) ve Psikolojik Bağımsızlık</h2>
-               <p>Erişilebilir kodlama, kullanıcı üzerinde doğrudan psikolojik bir etkiye sahiptir. "Öğrenilmiş çaresizlik" yaşayan ve bir yere gitmeden önce "Acaba asansör çalışıyor mu?" stresiyle boğuşan bireyler için, doğru çalışan bir arayüz "bağımsızlık" demektir. Projemizde uyguladığımız minimalist UX prensipleri, kullanıcının hedefe (asansör bilgisine) en fazla üç dokunuşla ulaşmasını hedefler. Hata mesajlarının bile erişilebilir olması (örneğin sadece kırmızı renk yerine bir ikon ve açıklama metni ile sunulması), her seviyeden kullanıcının sistemi sorunsuzca kullanmasını sağlar. Bu teknik hassasiyet, projemizin "insan odaklı" teknoloji vizyonunun en somut kanıtıdır. </p>
+                <p>Erişilebilir kodlama, kullanıcı üzerinde doğrudan psikolojik bir etkiye sahiptir. "Öğrenilmiş çaresizlik" yaşayan ve bir yere gitmeden önce "Acaba asansör çalışıyor mu?" stresiyle boğuşan bireyler için, doğru çalışan bir arayüz "bağımsızlık" demektir. [cite: 189, 190] Projemizde uyguladığımız minimalist UX prensipleri, kullanıcının hedefe (asansör bilgisine) en fazla üç dokunuşla ulaşmasını hedefler. [cite: 191] Hata mesajlarının bile erişilebilir olması (örneğin sadece kırmızı renk yerine bir ikon ve açıklama metni ile sunulması), her seviyeden kullanıcının sistemi sorunsuzca kullanmasını sağlar. [cite: 192] Bu teknik hassasiyet, projemizin "insan odaklı" teknoloji vizyonunun en somut kanıtıdır. [cite: 193]</p>
 
                 <h2>Veri Güvenliği ve Şeffaflık</h2>
-               <p>Kullanıcılarımızın bildirdiği "sorunlu rampa" veya "arızalı asansör" verileri, teknik altyapımızda güvenli bir şekilde depolanır ve anonimleştirilerek İzmir Kent Konseyi ile paylaşılır. Bu veri akışı, sadece bir uygulama içi özellik değil, yerel yönetimlerin yatırım planlarını etkileyebilecek bir "karar destek mekanizması"dır. Şeffaf ve açık kaynaklı (Open Source) yaklaşımımız, projemizin diğer belediyeler veya geliştiriciler tarafından ölçeklenebilir ve geliştirilebilir olmasını sağlar. Teknoloji paylaşıldıkça engeller azalır; biz bu yüzden kodlarımızı herkesin erişimine açıyoruz. </p>
+                <p>Kullanıcılarımızın bildirdiği "sorunlu rampa" veya "arızalı asansör" verileri, teknik altyapımızda güvenli bir şekilde depolanır ve anonimleştirilerek İzmir Kent Konseyi ile paylaşılır. [cite: 195] Bu veri akışı, sadece bir uygulama içi özellik değil, yerel yönetimlerin yatırım planlarını etkileyebilecek bir "karar destek mekanizması"dır. [cite: 196] Şeffaf ve açık kaynaklı (Open Source) yaklaşımımız, projemizin diğer belediyeler veya geliştiriciler tarafından ölçeklenebilir ve geliştirilebilir olmasını sağlar. Teknoloji paylaşıldıkça engeller azalır; biz bu yüzden kodlarımızı herkesin erişimine açıyoruz. [cite: 197, 198]</p>
 
                 <h2>Sonuç: Geleceğin Şehirleri Kodlarla İnşa Ediliyor</h2>
-               <p>Sonuç olarak, "Görünmeyeni Göster" projesi, dijital erişilebilirliğin sadece bir "yazılım özelliği" değil, kentsel bir hak arama aracı olduğunu kanıtlamaktadır. WCAG 2.1 standartlarına sadık kalarak kurguladığımız her algoritma, Mert Demir gibi binlerce İzmirli için daha adil bir şehir hayatı demektir. Kodların dünyasında kurduğumuz bu erişilebilir yapı, fiziksel dünyadaki bariyerleri yıkan en güçlü çekicimizdir. Şehirlerimizi akıllı yapmaktan daha önemlisi, onları herkes için "algılanabilir" kılmaktır. </p>
+                <p>Sonuç olarak, "Görünmeyeni Göster" projesi, dijital erişilebilirliğin sadece bir "yazılım özelliği" değil, kentsel bir hak arama aracı olduğunu kanıtlamaktadır. [cite: 200] WCAG 2.1 standartlarına sadık kalarak kurguladığımız her algoritma, Mert Demir gibi binlerce İzmirli için daha adil bir şehir hayatı demektir. [cite: 201] Kodların dünyasında kurduğumuz bu erişilebilir yapı, fiziksel dünyadaki bariyerleri yıkan en güçlü çekicimizdir. [cite: 202] Şehirlerimizi akıllı yapmaktan daha önemlisi, onları herkes için "algılanabilir" kılmaktır. [cite: 203]</p>
 
                 <h2>Eylem Çağrısı (Call-to-Action)</h2>
-               <p><b>Teknik Dünyamıza Katıl!</b> Eğer sen de bir yazılımcı, tasarımcı veya teknoloji meraklısıysan, projemizin GitHub deposunu inceleyerek dijital erişilebilirlik standartlarını nasıl uyguladığımızı görebilirsin.  Kendi web projelerinde erişilebilirliği bir standart haline getirerek kapsayıcı bir geleceğe katkı sağla.Unutma, erişilebilir bir kod, engelsiz bir dünyadır! Görüşlerini bizimle paylaşmayı ve projemizi desteklemek için sosyal medyada takip etmeyi unutma! </p>
+                <p><b>Teknik Dünyamıza Katıl!</b> Eğer sen de bir yazılımcı, tasarımcı veya teknoloji meraklısıysan, projemizin GitHub deposunu inceleyerek dijital erişilebilirlik standartlarını nasıl uyguladığımızı görebilirsin. [cite: 205] Kendi web projelerinde erişilebilirliği bir standart haline getirerek kapsayıcı bir geleceğe katkı sağla. Unutma, erişilebilir bir kod, engelsiz bir dünyadır! [cite: 206] Görüşlerini bizimle paylaşmayı ve projemizi desteklemek için sosyal medyada takip etmeyi unutma! [cite: 207]</p>
+
+                <h2 style="margin-top: 50px; font-size: 1.4rem; border-top: 1px solid #eee; padding-top: 20px;">Kaynakça</h2>
+                <ul style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; padding-left: 20px;">
+                    <li>ISO/IEC. (2012). ISO/IEC 40500:2012 Information technology - W3C Web Content Accessibility Guidelines (WCAG) 2.0. [cite: 209]</li>
+                    <li>W3C. (2018). Web Content Accessibility Guidelines (WCAG) 2.1. [cite: 210]</li>
+                    <li>Yaşar University. (2026). NMED 4112 Graduation Project Content Writing Guidelines. [cite: 211]</li>
+                    <li>Özkay, T. (2026). Görünmeyeni Göster: GitHub Repository and Technical Documentation. [cite: 212]</li>
+                </ul>
             </div>
         </article>
     </main>
@@ -93,7 +101,6 @@
             document.title = document.title.replace(/\/g, '');
         }
         
-        // Sayfa yüklenir yüklenmez kaynak işaretlerini anında siler
         cleanCitations();
     </script>
 </body>
