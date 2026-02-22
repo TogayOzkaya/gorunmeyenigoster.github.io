@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü | Erişilebilir İzmir</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="blog-page">
+
+    <header style="position: sticky; top: 0; z-index: 100; background: white; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <div class="logo-box" style="width: 35px; height: 35px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px;"><i class="fas fa-elevator"></i></div>
+            <h1 class="brand-title" style="font-size: 1.2rem; font-weight: 800; color: #1e69de;">Erişilebilir İzmir</h1>
+        </a>
+        <a href="harita.html" class="btn-header" style="background: #1e69de; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <span>Haritayı Aç</span> <i class="fas fa-arrow-right"></i>
+        </a>
+    </header>
+
+    <main class="blog-post-container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        
+        <article class="blog-post">
+            <span class="blog-tag" style="display: inline-block; background: #eaf6ff; color: #1e69de; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px;">Topluluk</span>
+            
+            <h1>Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü</h1>
+            
+            <div class="blog-meta">
+                <span><i class="far fa-calendar-alt"></i> 22 Şubat 2026</span>
+                <span><i class="far fa-user"></i> Yazar: Togay Özkay</span>
+            </div>
+            
+            <img src="https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?auto=format&fit=crop&w=1000&q=80" alt="Dijital Erişilebilirlik ve Teknoloji">
+            
+            <div class="blog-text">
+                <h2>Giriş: Fiziksel Engellerden Dijital Köprülere</h2>
+               <p>Fiziksel dünyadaki bir basamak, tekerlekli sandalye kullanan Mert Demir için ne kadar aşılmaz bir bariyerse, yanlış kurgulanmış bir web sitesi veya uygulama da dijital dünyada aynı ölçüde dışlayıcıdır. Dijital erişilebilirlik, teknolojinin sadece bir kesim için değil, toplumun tamamı için "algılanabilir" ve "kullanılabilir" olması demektir. İstatistiklere göre, dünya çapındaki web sitelerinin %97'si hala temel erişilebilirlik hataları barındırmakta ve bu durum milyonlarca engelli bireyin bilgiye erişimini engellemektedir. "Görünmeyeni Göster" projesi, tam da bu dijital uçurumu kapatmak ve kodların gücüyle fiziksel dünyadaki asansör krizlerini çözmek için yola çıktı. Bu yazıda, projemizin teknik mutfağına girerek dijital standartların kentsel özgürlüğe nasıl dönüştüğünü inceleyeceğiz. </p>
+
+                <h2>WCAG 2.1 ve Erişilebilirliğin Dört Altın Kuralı (POUR)</h2>
+               <p>Bir web projesinin gerçekten erişilebilir olması için uluslararası kabul görmüş WCAG 2.1 (Web İçeriği Erişilebilirlik Yönergeleri) standartlarına uyum sağlaması gerekir. Bu standartlar, projemizin teknik omurgasını oluşturan "POUR" prensiplerine dayanır: </p>
+                <ul>
+                    <li><b>Algılanabilirlik:</b> Kullanıcılar içeriği duyularıyla algılayabilmelidir."Görünmeyeni Göster" arayüzünde kullandığımız yüksek kontrastlı renkler (Koyu Mavi ve Orman Yeşili), az gören bireylerin metinleri rahatça okumasını sağlar. </li>
+                   <li><b>Kullanılabilirlik:</b> Arayüz bileşenleri her türlü donanımla (sadece klavye veya ekran okuyucular) kontrol edilebilmelidir. </li>
+                    <li><b>Anlaşılabilirlik:</b> İçerik ve operasyonlar karmaşık olmamalıdır.Uygulamamızın minimalist yapısı, Mert'in en az bilişsel yükle asansör durumuna ulaşmasını sağlar. </li>
+                   <li><b>Sağlamlık (Robust):</b> İçerik, gelişen teknolojilere ve farklı tarayıcılara uyum sağlayacak kadar güçlü kodlanmalıdır. </li>
+                </ul>
+
+                <h2>Kodun Anatomisi: HTML5, CSS3 ve JavaScript Entegrasyonu</h2>
+               <p>Projemizin teknik altyapısı, anlamsal (semantic) web teknolojileri üzerine inşa edilmiştir. GitHub üzerinde geliştirdiğimiz index.html dosyasında, sadece div etiketleri kullanmak yerine nav, main, section gibi anlamsal etiketleri tercih ediyoruz. Bu tercih, ekran okuyucu kullanan bir görme engelli kullanıcının sayfa yapısını zihninde bir "navigasyon ağacı" gibi canlandırmasına olanak tanır. CSS3 tarafında, projemiz için belirlenen yüksek kontrastlı palet (Primary Blue #0A2D69), WCAG 2.1 AA seviyesindeki 4.5:1 kontrast oranını fazlasıyla karşılayarak okuma kolaylığı sunar. JavaScript tarafında ise script.js ve sv.js dosyalarımız, İzmir metrosundaki asansör verilerini dinamik olarak işler. Bu dosyalar, asansörün "Aktif" veya "Pasif" durumunu anlık olarak kullanıcı arayüzüne (UI) yansıtarak, verinin hıza ve özgürlüğe dönüşmesini sağlar. </p>
+
+                <h2>Mobilite ve PWA: manifest.json Dosyasının Kritik Rolü</h2>
+               <p>"Görünmeyeni Göster" sadece bir web sitesi değil, bir PWA (Progressive Web App) olarak kurgulanmıştır. Teknik yapımızda yer alan manifest.json dosyası, projemizin bir mobil uygulama gibi davranmasını sağlar. Mert istasyona girmeden hemen önce telefonundan uygulamayı açtığında, bu dosya sayesinde hızlı yüklenen, tam ekran çalışan ve kullanıcıyı "erişilebilirlik odağında" tutan bir deneyim yaşar. Mobil uyumlu (Mobile-first) tasarım yaklaşımımız, kentsel hareketliliğin sokakta yaşandığı gerçeğiyle tam uyum içerisindedir. Her bir kod satırı, Mert'in bir sonraki durağa güvenle varması için bir basamak görevi görür. </p>
+
+                <h2>Kullanıcı Deneyimi (UX) ve Psikolojik Bağımsızlık</h2>
+               <p>Erişilebilir kodlama, kullanıcı üzerinde doğrudan psikolojik bir etkiye sahiptir. "Öğrenilmiş çaresizlik" yaşayan ve bir yere gitmeden önce "Acaba asansör çalışıyor mu?" stresiyle boğuşan bireyler için, doğru çalışan bir arayüz "bağımsızlık" demektir. Projemizde uyguladığımız minimalist UX prensipleri, kullanıcının hedefe (asansör bilgisine) en fazla üç dokunuşla ulaşmasını hedefler. Hata mesajlarının bile erişilebilir olması (örneğin sadece kırmızı renk yerine bir ikon ve açıklama metni ile sunulması), her seviyeden kullanıcının sistemi sorunsuzca kullanmasını sağlar. Bu teknik hassasiyet, projemizin "insan odaklı" teknoloji vizyonunun en somut kanıtıdır. </p>
+
+                <h2>Veri Güvenliği ve Şeffaflık</h2>
+               <p>Kullanıcılarımızın bildirdiği "sorunlu rampa" veya "arızalı asansör" verileri, teknik altyapımızda güvenli bir şekilde depolanır ve anonimleştirilerek İzmir Kent Konseyi ile paylaşılır. Bu veri akışı, sadece bir uygulama içi özellik değil, yerel yönetimlerin yatırım planlarını etkileyebilecek bir "karar destek mekanizması"dır. Şeffaf ve açık kaynaklı (Open Source) yaklaşımımız, projemizin diğer belediyeler veya geliştiriciler tarafından ölçeklenebilir ve geliştirilebilir olmasını sağlar. Teknoloji paylaşıldıkça engeller azalır; biz bu yüzden kodlarımızı herkesin erişimine açıyoruz. </p>
+
+                <h2>Sonuç: Geleceğin Şehirleri Kodlarla İnşa Ediliyor</h2>
+               <p>Sonuç olarak, "Görünmeyeni Göster" projesi, dijital erişilebilirliğin sadece bir "yazılım özelliği" değil, kentsel bir hak arama aracı olduğunu kanıtlamaktadır. WCAG 2.1 standartlarına sadık kalarak kurguladığımız her algoritma, Mert Demir gibi binlerce İzmirli için daha adil bir şehir hayatı demektir. Kodların dünyasında kurduğumuz bu erişilebilir yapı, fiziksel dünyadaki bariyerleri yıkan en güçlü çekicimizdir. Şehirlerimizi akıllı yapmaktan daha önemlisi, onları herkes için "algılanabilir" kılmaktır. </p>
+
+                <h2>Eylem Çağrısı (Call-to-Action)</h2>
+               <p><b>Teknik Dünyamıza Katıl!</b> Eğer sen de bir yazılımcı, tasarımcı veya teknoloji meraklısıysan, projemizin GitHub deposunu inceleyerek dijital erişilebilirlik standartlarını nasıl uyguladığımızı görebilirsin.  Kendi web projelerinde erişilebilirliği bir standart haline getirerek kapsayıcı bir geleceğe katkı sağla.Unutma, erişilebilir bir kod, engelsiz bir dünyadır! Görüşlerini bizimle paylaşmayı ve projemizi desteklemek için sosyal medyada takip etmeyi unutma! </p>
+            </div>
+        </article>
+    </main>
+
+    <footer style="background: #2c3e50; color: white; padding: 50px 5% 30px; text-align: center;">
+        <div class="footer-logo" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <div class="logo-box" style="width: 30px; height: 30px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;"><i class="fas fa-elevator"></i></div>
+            <h2 style="font-size: 1.2rem;">Erişilebilir İzmir</h2>
+        </div>
+        <p style="color: #bdc3c7; margin-bottom: 20px;">Görünmeyeni görünür kılıyoruz.</p>
+        <div class="copyright" style="color: #7f8c8d; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">© 2026 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
+    </footer>
+
+    <script>
+        function cleanCitations() {
+            function walk(node) {
+                if (node.nodeType === 3) {
+                    node.nodeValue = node.nodeValue.replace(/\/g, '');
+                } else if (node.nodeType === 1) {
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        walk(node.childNodes[i]);
+                    }
+                }
+            }
+            walk(document.body);
+            document.title = document.title.replace(/\/g, '');
+        }
+        
+        // Sayfa yüklenir yüklenmez kaynak işaretlerini anında siler
+        cleanCitations();
+    </script>
+</body>
+</html>
