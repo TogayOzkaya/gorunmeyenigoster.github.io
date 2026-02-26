@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erişilebilir İzmir | Görünmeyeni Görünür Kılıyoruz</title>
+    <title>Visi | Görünmeyeni Görünür Kılıyoruz</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -25,10 +25,9 @@
             background-size: 30px 30px;
             color: #333; 
             overflow-x: hidden; 
-            scroll-behavior: smooth; /* Yumuşak kaydırma efekti */
+            scroll-behavior: smooth;
         }
         
-        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
         .logo-box { width: 40px; height: 40px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -36,22 +35,8 @@
         .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
 
-        /* HERO BÖLÜMÜ */
-        .hero { 
-            display: flex; 
-            flex-direction: column;
-            padding: 80px 5% 40px; 
-            min-height: 85vh; 
-        }
-        
-        .hero-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            width: 100%;
-        }
-
+        .hero { display: flex; flex-direction: column; padding: 80px 5% 40px; min-height: 85vh; }
+        .hero-content { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
         .hero-text { flex: 1; text-align: left; max-width: 600px; }
         .hero-text h1 { font-size: 3.5rem; color: var(--secondary); margin-bottom: 25px; line-height: 1.15; }
         .hero-text h1 span { color: var(--primary); }
@@ -64,7 +49,6 @@
         .btn-tut { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .btn-tut:hover { background: var(--primary-light); transform: translateY(-3px); }
 
-        /* CSS ASANSÖR ANİMASYONU */
         .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
         .visual-backdrop { position: absolute; width: 400px; height: 400px; background: linear-gradient(135deg, #eaf6ff 0%, #d4edff 100%); border-radius: 50%; z-index: 0; }
         .elevator-shaft { width: 140px; height: 350px; background: white; border: 4px solid var(--secondary); border-radius: 12px; position: relative; z-index: 1; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; overflow: visible; }
@@ -104,7 +88,6 @@
             96%, 100% { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* TOPLULUK BANNER'I */
         .community-banner {
             margin-top: 80px;
             background: linear-gradient(135deg, var(--primary) 0%, #3a7bd5 100%);
@@ -120,7 +103,7 @@
             overflow: hidden;
         }
         .community-banner::before {
-            content: '\f4c4'; /* El içi kalp ikonu */
+            content: '\f4c4';
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
             position: absolute;
@@ -129,53 +112,17 @@
             font-size: 150px;
             opacity: 0.05;
         }
-        .cb-icon {
-            font-size: 2.5rem;
-            background: rgba(255,255,255,0.2);
-            width: 80px; height: 80px;
-            display: flex; justify-content: center; align-items: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
+        .cb-icon { font-size: 2.5rem; background: rgba(255,255,255,0.2); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0; }
         .cb-text h3 { font-size: 1.6rem; margin-bottom: 8px; font-weight: 800; }
         .cb-text p { font-size: 1.05rem; opacity: 0.9; line-height: 1.6; }
 
-        /* YENİ EKLENEN AŞAĞI KAYDIRMA OKU */
-        .scroll-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 40px;
-            color: var(--primary);
-            text-decoration: none;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: 0.3s;
-        }
-        .scroll-indicator:hover {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        .scroll-indicator span {
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-        .scroll-indicator i {
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-15px); }
-            60% { transform: translateY(-7px); }
-        }
+        .scroll-indicator { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 40px; color: var(--primary); text-decoration: none; cursor: pointer; opacity: 0.8; transition: 0.3s; }
+        .scroll-indicator:hover { opacity: 1; transform: scale(1.05); }
+        .scroll-indicator span { font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+        .scroll-indicator i { font-size: 2rem; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
 
-        /* BLOG BÖLÜMÜ */
-        .blog-section { padding: 80px 5%; scroll-margin-top: 80px; /* Tıklanınca başlık altında boşluk bırakır */ } 
+        .blog-section { padding: 80px 5%; scroll-margin-top: 80px; } 
         .section-title { text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 50px; font-weight: 800; }
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
         .blog-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f0f0f0; display: flex; flex-direction: column; }
@@ -188,7 +135,6 @@
         .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; align-self: flex-start; }
         .read-more:hover { gap: 12px; transition: 0.2s; } 
 
-        /* FOOTER & SOSYAL MEDYA */
         footer { background: var(--secondary); color: white; padding: 60px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .footer-logo h2 { font-size: 1.5rem; }
@@ -198,30 +144,24 @@
         .social-links a:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30,105,222,0.4); }
         .copyright { color: #7f8c8d; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; margin-top: 20px; }
 
-        /* TUTORIAL MODAL (POP-UP) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-card { background: white; width: 90%; max-width: 450px; padding: 40px 30px; border-radius: 20px; text-align: center; position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #999; cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: var(--danger); }
-        
         .slide { display: none; animation: fadeIn 0.4s; }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         .slide-icon { width: 90px; height: 90px; background: #eaf6ff; color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; margin: 0 auto 20px; }
         .slide h2 { color: var(--secondary); margin-bottom: 15px; font-size: 1.6rem; }
         .slide p { color: #666; line-height: 1.6; margin-bottom: 30px; font-size: 1.05rem; }
-        
         .modal-footer { border-top: 1px solid #eee; padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .dots { display: flex; gap: 8px; }
         .dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--primary); width: 25px; border-radius: 10px; }
-        
         .btn-modal { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-modal:hover { background: #1557b0; }
 
-        /* MOBİL UYUMLULUK */
         @media (max-width: 768px) {
             .hero { padding: 40px 5% 40px; min-height: auto; }
             .hero-content { flex-direction: column; text-align: center; }
@@ -229,15 +169,8 @@
             .hero h1 { font-size: 2.2rem; }
             .hero-buttons { justify-content: center; }
             .btn-large { width: 100%; justify-content: center; }
-            
-            .community-banner {
-                flex-direction: column;
-                text-align: center;
-                padding: 25px 20px;
-                margin-top: 50px;
-            }
+            .community-banner { flex-direction: column; text-align: center; padding: 25px 20px; margin-top: 50px; }
             .cb-text h3 { font-size: 1.4rem; }
-
             .hero-visual { margin-top: 30px; width: 100%; }
             .visual-backdrop { width: 250px; height: 250px; }
             .elevator-shaft { width: 100px; height: 250px; }
@@ -265,7 +198,7 @@
     <header>
         <a href="#" class="brand">
             <div class="logo-box"><i class="fas fa-elevator"></i></div>
-            <h1 class="brand-title">Erişilebilir İzmir</h1>
+            <h1 class="brand-title">Visi</h1>
         </a>
         <a href="harita.html" class="btn-header">
             <span>Haritayı Aç</span> <i class="fas fa-arrow-right"></i>
@@ -348,7 +281,7 @@
     <footer>
         <div class="footer-logo">
             <div class="logo-box" style="width: 35px; height: 35px; font-size: 18px;"><i class="fas fa-elevator"></i></div>
-            <h2>Erişilebilir İzmir</h2>
+            <h2>Visi</h2>
         </div>
         <p class="footer-slogan">Görünmeyeni görünür kılıyoruz.</p>
         <div class="social-links">
@@ -358,7 +291,7 @@
             <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
         </div>
-        <div class="copyright">© 2026 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
+        <div class="copyright">© 2026 Visi. Tüm hakları saklıdır.</div>
     </footer>
 
     <div class="modal-overlay" id="tutorialModal">
@@ -377,7 +310,7 @@
             <div class="slide">
                 <div class="slide-icon"><i class="fas fa-star"></i></div>
                 <h2>Puan Toplayın</h2>
-                <p>Yaptığınız her doğru bildirim ve doğrulama size puan kazandırır. Seviye atlayarak Erişilebilir İzmir topluluğunun güvenilir bir elçisi olun.</p>
+                <p>Yaptığınız her doğru bildirim ve doğrulama size puan kazandırır. Seviye atlayarak Visi topluluğunun güvenilir bir elçisi olun.</p>
             </div>
             <div class="modal-footer">
                 <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
