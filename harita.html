@@ -73,9 +73,7 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
-            
             <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-
             <div class="lm-left">
                 <div class="interactive-blobs" id="blob-container">
                     <div class="blob blob-purple"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
@@ -84,14 +82,11 @@
                     <div class="blob blob-orange"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
                 </div>
             </div>
-
             <div class="lm-right">
-                
                 <div class="auth-tabs">
                     <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
                     <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Kayıt Ol</button>
                 </div>
-
                 <div class="login-form">
                     <div id="form-login-content">
                         <p class="lm-subtext">Tekrar merhaba, lütfen bilgilerini gir.</p>
@@ -99,30 +94,24 @@
                         <input type="password" class="password-input" placeholder="Parola">
                         <button class="btn-login-mail" onclick="performLogin()">Giriş Yap</button>
                     </div>
-
                     <div id="form-signup-content" style="display: none;">
                         <p class="lm-subtext">Topluluğa katıl ve engelleri birlikte aşalım.</p>
                         <input type="text" placeholder="Adınız Soyadınız">
                         <input type="email" placeholder="E-posta Adresi">
                         <input type="password" class="password-input" placeholder="Parola Belirle">
-                        
                         <label class="terms-box">
                             <input type="checkbox" id="terms-check">
                             <span>Platformda doğru ve güvenilir bildirimler yapacağımı, <strong>yanıltıcı bilgi vermem durumunda hesabımın kalıcı olarak kapatılacağını</strong> kabul ediyorum.</span>
                         </label>
-
                         <button class="btn-login-mail" onclick="performLogin()">Kayıt Ol</button>
                     </div>
-                    
                     <div class="divider">veya</div>
-                    
                     <button class="btn-google-login" onclick="performLogin()">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
                         <span id="google-btn-text">Google ile Giriş Yap</span>
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -137,24 +126,41 @@
             </div>
         </div>
     </div>
+
     <div id="reportModal" class="modal">
         <div class="modal-content report-modal-design">
             <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
             <div id="alternative-route-box" class="suggestion-box" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Sorun olabilir.</strong> <span id="suggestion-text"></span></div></div>
             <div class="modal-body">
                 <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
+                
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    
                     <form id="reportForm">
-                        <div class="issue-types-grid"><label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label><label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label></div>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
-                        <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
+                        <div class="single-issue">
+                            <div class="selected-issue">
+                                <i class="fas fa-wheelchair"></i>
+                                <span>Asansör / Rampa Arızası</span>
+                            </div>
+                        </div>
+                        
+                        <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
+                            <input type="file" id="file-input" hidden accept="image/*">
+                            <i class="fas fa-camera fa-2x" id="upload-icon"></i> 
+                            <span id="file-label">Fotoğraf Ekle (Zorunlu)</span>
+                            <small id="file-warning" style="color: var(--danger-color); font-weight: 600; margin-top: 5px;">* Teyit için fotoğraf yüklemeniz gereklidir.</small>
+                        </div>
+
+                        <textarea placeholder="Açıklama (Opsiyonel)..."></textarea>
+                        
                         <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="verifyModal" class="modal">
         <div class="modal-content verify-modal-design">
             <div class="vm-header"><h3>Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
@@ -173,6 +179,7 @@
     <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
     
     <script>
+        /* SEKME VE GÖZ ANİMASYONLARI */
         function switchAuthTab(tab) {
             const loginContent = document.getElementById('form-login-content');
             const signupContent = document.getElementById('form-signup-content');
@@ -181,16 +188,12 @@
             const googleBtnText = document.getElementById('google-btn-text');
 
             if(tab === 'login') {
-                loginContent.style.display = 'block';
-                signupContent.style.display = 'none';
-                tabLogin.classList.add('active');
-                tabSignup.classList.remove('active');
+                loginContent.style.display = 'block'; signupContent.style.display = 'none';
+                tabLogin.classList.add('active'); tabSignup.classList.remove('active');
                 googleBtnText.innerText = "Google ile Giriş Yap";
             } else {
-                loginContent.style.display = 'none';
-                signupContent.style.display = 'block';
-                tabSignup.classList.add('active');
-                tabLogin.classList.remove('active');
+                loginContent.style.display = 'none'; signupContent.style.display = 'block';
+                tabSignup.classList.add('active'); tabLogin.classList.remove('active');
                 googleBtnText.innerText = "Google ile Kayıt Ol";
             }
         }
@@ -203,7 +206,6 @@
 
             document.addEventListener('mousemove', (e) => {
                 if (loginModal.style.display !== 'flex') return;
-                
                 if (document.activeElement.classList.contains('password-input')) return;
 
                 eyes.forEach(eye => {
@@ -214,19 +216,13 @@
                     const maxDistance = 4;
                     const moveX = Math.cos(angle) * maxDistance;
                     const moveY = Math.sin(angle) * maxDistance;
-                    
                     const pupil = eye.querySelector('.pupil');
-                    if(pupil) {
-                        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                    }
+                    if(pupil) pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
                 });
             });
 
             passwordInputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    blobContainer.classList.add('blindfolded');
-                });
-
+                input.addEventListener('focus', () => blobContainer.classList.add('blindfolded'));
                 input.addEventListener('blur', () => {
                     blobContainer.classList.remove('blindfolded');
                     eyes.forEach(eye => {
@@ -235,6 +231,46 @@
                     });
                 });
             });
+
+            /* FOTOĞRAF ZORUNLULUĞU KONTROLÜ (YENİ EKLENDİ) */
+            const reportForm = document.getElementById('reportForm');
+            const fileInput = document.getElementById('file-input');
+            
+            // Fotoğraf seçildiğinde arayüzü yeşil yap
+            fileInput.addEventListener('change', function() {
+                const label = document.getElementById('file-label');
+                const warning = document.getElementById('file-warning');
+                const wrapper = document.getElementById('upload-wrapper');
+                const icon = document.getElementById('upload-icon');
+                
+                if(this.files && this.files.length > 0) {
+                    label.innerText = "Fotoğraf Eklendi: " + this.files[0].name;
+                    label.style.color = "var(--success-color)";
+                    icon.style.color = "var(--success-color)";
+                    warning.style.display = "none";
+                    wrapper.style.borderColor = "var(--success-color)";
+                    wrapper.style.backgroundColor = "#e8f8f5";
+                }
+            });
+
+            // Gönder butonuna basıldığında fotoğraf kontrolü yap
+            if(reportForm) {
+                reportForm.addEventListener('submit', function(e) {
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        e.preventDefault(); // Formun gönderilmesini durdurur
+                        e.stopImmediatePropagation(); // Sistemin hata vermesini engeller
+                        
+                        const wrapper = document.getElementById('upload-wrapper');
+                        wrapper.style.borderColor = 'var(--danger-color)';
+                        wrapper.style.backgroundColor = '#fdedec';
+                        
+                        // Titreme animasyonunu tetikle
+                        wrapper.classList.remove('shake-animation');
+                        void wrapper.offsetWidth; // Animasyonu sıfırlamak için ufak bir hile
+                        wrapper.classList.add('shake-animation');
+                    }
+                }, true); // true parametresi, bu kontrolün her şeyden önce çalışmasını sağlar
+            }
         });
     </script>
 
