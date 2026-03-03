@@ -117,12 +117,83 @@
 
     <div id="profileModal" class="modal">
         <div class="modal-content profile-modal-design">
-            <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
+            
+            <div class="pm-header">
+                <span class="close-icon-light" onclick="closeProfileModal()">&times;</span>
+                <div class="pm-user-info">
+                    <div class="pm-avatar-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="pm-avatar" id="modal-avatar">
+                        <div class="pm-level-badge">Seviye <span id="modal-level">1</span></div>
+                    </div>
+                    <div class="pm-text">
+                        <h2 id="modal-username">Merhaba, Yol Arkadaşımız! 👋</h2>
+                        <p>Engelsiz bir İzmir için buradasın, harikasın.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="pm-body">
-                <div class="pm-stats-row"><div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div><div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div><div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div></div>
-                <div class="pm-progress-area"><div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div><div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div></div>
-                <div class="pm-badges-grid"><div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div></div>
-                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;"><button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button></div>
+                
+                <div class="pm-stats-row">
+                    <div class="pm-stat-box">
+                        <i class="fas fa-star" style="color:#f1c40f;"></i>
+                        <h3 id="stat-points">0</h3>
+                        <p>Topluluk Puanı</p>
+                    </div>
+                    <div class="pm-stat-box">
+                        <i class="fas fa-bullhorn" style="color:#e74c3c;"></i>
+                        <h3 id="stat-reports">0</h3>
+                        <p>Bildirimin</p>
+                    </div>
+                    <div class="pm-stat-box">
+                        <i class="fas fa-hands-helping" style="color:#27ae60;"></i>
+                        <h3 id="stat-badges">0</h3>
+                        <p>Doğrulaman</p>
+                    </div>
+                </div>
+
+                <div class="pm-progress-area">
+                    <div class="pm-prog-labels">
+                        <span class="lvl-current">Seviye <span id="current-level-txt">1</span></span>
+                        <span id="xp-text" class="xp-text-friendly">Sonraki seviyeye 100 XP kaldı 🚀</span>
+                        <span class="lvl-next">Seviye <span id="next-level-txt">2</span></span>
+                    </div>
+                    <div class="pm-prog-bg">
+                        <div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div>
+                    </div>
+                </div>
+
+                <h4 class="pm-section-title">Kazanılan Rozetler 🏅</h4>
+                <div class="pm-badges-grid">
+                    <div class="pm-badge-card" id="badge-first-login">
+                        <div class="badge-icon"><i class="fas fa-seedling"></i></div>
+                        <div class="badge-info">
+                            <h5>Tohum</h5>
+                            <small>Topluluğa katıldın</small>
+                        </div>
+                    </div>
+                    <div class="pm-badge-card locked" id="badge-first-report">
+                        <div class="badge-icon"><i class="fas fa-microphone-alt"></i></div>
+                        <div class="badge-info">
+                            <h5>İlk Ses</h5>
+                            <small>İlk bildirimini yap</small>
+                        </div>
+                    </div>
+                    <div class="pm-badge-card locked" id="badge-verifier">
+                        <div class="badge-icon"><i class="fas fa-search"></i></div>
+                        <div class="badge-info">
+                            <h5>Müfettiş</h5>
+                            <small>5 doğru teyit yap</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pm-footer-action">
+                    <button onclick="resetData()" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Hesaptan Çıkış Yap
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -260,13 +331,13 @@
                 const icon = document.getElementById('upload-icon');
                 
                 if(this.files && this.files.length > 0) {
-                    label.innerText = "Harika! Fotoğraf Eklendi 📸"; // Samimi başarılı mesajı
+                    label.innerText = "Harika! Fotoğraf Eklendi 📸"; 
                     label.style.color = "var(--success-color)";
                     icon.style.color = "var(--success-color)";
                     warning.style.display = "none";
                     wrapper.style.borderColor = "var(--success-color)";
                     wrapper.style.backgroundColor = "#f0fdf4";
-                    wrapper.classList.remove('shake-animation'); // Varsa hata titremesini temizle
+                    wrapper.classList.remove('shake-animation');
                 }
             });
 
@@ -279,11 +350,9 @@
                         const wrapper = document.getElementById('upload-wrapper');
                         const warning = document.getElementById('file-warning');
                         
-                        // Uyarı rengini ve metnini daha dikkat çekici yap
                         warning.style.color = "var(--danger-color)";
                         warning.innerText = "Lütfen önce bir fotoğraf ekle! 📸";
                         
-                        // Titreme animasyonu
                         wrapper.classList.remove('shake-animation');
                         void wrapper.offsetWidth;
                         wrapper.classList.add('shake-animation');
