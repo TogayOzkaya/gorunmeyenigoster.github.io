@@ -7,23 +7,23 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e69de">
     
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
-        <aside class="sidebar closed" id="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="header-top-section">
-                    <div class="brand-wrapper" style="display: flex; align-items: center; gap: 12px;">
+                    <a href="index.html" class="brand-wrapper">
                         <img src="visi-logo.png" alt="Visi Logo" style="height: 48px; width: auto; object-fit: contain;">
                         <div class="brand-text-group">
-                            <h1 class="brand-title" style="margin: 0; padding: 0;">Visi</h1>
-                            <p class="brand-slogan" style="margin: 0; padding: 0;">Görünmeyeni görünür kılıyoruz.</p>
+                            <h1 class="brand-title">Visi</h1>
+                            <p class="brand-slogan">Görünmeyeni görünür kılıyoruz.</p>
                         </div>
-                    </div>
+                    </a>
                     <button class="btn-close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
                 </div>
 
@@ -73,7 +73,7 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
-            
+            <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
             <div class="lm-left">
                 <div class="interactive-blobs" id="blob-container">
                     <div class="blob blob-purple"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
@@ -82,86 +82,149 @@
                     <div class="blob blob-orange"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
                 </div>
             </div>
-
             <div class="lm-right">
-                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-                
                 <div class="auth-tabs">
                     <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
                     <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Kayıt Ol</button>
                 </div>
-
                 <div class="login-form">
                     <div id="form-login-content">
                         <p class="lm-subtext">Tekrar merhaba, lütfen bilgilerini gir.</p>
                         <input type="email" placeholder="E-posta Adresi">
                         <input type="password" class="password-input" placeholder="Parola">
-                        <button class="btn-login-mail" onclick="performLogin()">Giriş Yap</button>
+                        <button class="btn-login-mail" onclick="performLogin(event)">Giriş Yap</button>
                     </div>
-
                     <div id="form-signup-content" style="display: none;">
                         <p class="lm-subtext">Topluluğa katıl ve engelleri birlikte aşalım.</p>
                         <input type="text" placeholder="Adınız Soyadınız">
                         <input type="email" placeholder="E-posta Adresi">
                         <input type="password" class="password-input" placeholder="Parola Belirle">
-                        
                         <label class="terms-box">
                             <input type="checkbox" id="terms-check">
                             <span>Platformda doğru ve güvenilir bildirimler yapacağımı, <strong>yanıltıcı bilgi vermem durumunda hesabımın kalıcı olarak kapatılacağını</strong> kabul ediyorum.</span>
                         </label>
-
-                        <button class="btn-login-mail" onclick="performLogin()">Kayıt Ol</button>
+                        <button class="btn-login-mail" onclick="performLogin(event)">Kayıt Ol</button>
                     </div>
-                    
                     <div class="divider">veya</div>
-                    
-                    <button class="btn-google-login" onclick="performLogin()">
+                    <button class="btn-google-login" onclick="performLogin(event)">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
                         <span id="google-btn-text">Google ile Giriş Yap</span>
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 
     <div id="profileModal" class="modal">
         <div class="modal-content profile-modal-design">
-            <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
+            <div class="pm-header">
+                <span class="close-icon-light" onclick="closeProfileModal()">&times;</span>
+                <div class="pm-user-info">
+                    <div class="pm-avatar-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="pm-avatar" id="modal-avatar">
+                        <div class="pm-level-badge">Seviye <span id="modal-level">1</span></div>
+                    </div>
+                    <div class="pm-text">
+                        <h2 id="modal-username">Merhaba, Yol Arkadaşımız! 👋</h2>
+                        <p>Engelsiz bir İzmir için buradasın, harikasın.</p>
+                    </div>
+                </div>
+            </div>
             <div class="pm-body">
-                <div class="pm-stats-row"><div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div><div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div><div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div></div>
-                <div class="pm-progress-area"><div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div><div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div></div>
-                <div class="pm-badges-grid"><div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div></div>
-                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;"><button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button></div>
+                <div class="pm-stats-row">
+                    <div class="pm-stat-box"><i class="fas fa-star" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Topluluk Puanı</p></div>
+                    <div class="pm-stat-box"><i class="fas fa-bullhorn" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Bildirimin</p></div>
+                    <div class="pm-stat-box"><i class="fas fa-hands-helping" style="color:#27ae60;"></i><h3 id="stat-badges">0</h3><p>Doğrulaman</p></div>
+                </div>
+                <div class="pm-progress-area">
+                    <div class="pm-prog-labels">
+                        <span class="lvl-current">Seviye <span id="current-level-txt">1</span></span>
+                        <span id="xp-text" class="xp-text-friendly">Sonraki seviyeye 100 XP kaldı 🚀</span>
+                        <span class="lvl-next">Seviye <span id="next-level-txt">2</span></span>
+                    </div>
+                    <div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div>
+                </div>
+                <h4 class="pm-section-title">Kazanılan Rozetler 🏅</h4>
+                <div class="pm-badges-grid">
+                    <div class="pm-badge-card" id="badge-first-login"><div class="badge-icon"><i class="fas fa-seedling"></i></div><div class="badge-info"><h5>Tohum</h5><small>Topluluğa katıldın</small></div></div>
+                    <div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-microphone-alt"></i></div><div class="badge-info"><h5>İlk Ses</h5><small>İlk bildirimini yap</small></div></div>
+                    <div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-search"></i></div><div class="badge-info"><h5>Müfettiş</h5><small>5 doğru teyit yap</small></div></div>
+                </div>
+                <div class="pm-footer-action"><button onclick="resetData()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Hesaptan Çıkış Yap</button></div>
             </div>
         </div>
     </div>
+
     <div id="reportModal" class="modal">
         <div class="modal-content report-modal-design">
-            <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
-            <div id="alternative-route-box" class="suggestion-box" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Sorun olabilir.</strong> <span id="suggestion-text"></span></div></div>
+            <div class="modal-header">
+                <h2 id="modal-station-name">İstasyon</h2>
+                <span class="close-btn" onclick="closeReportModal()">&times;</span>
+            </div>
+            
             <div class="modal-body">
-                <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
+                <div class="visual-container">
+                    <div id="mini-map"></div>
+                    <div class="mini-map-overlay">Haritadan Seç 👇</div>
+                </div>
+                
                 <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    <div class="form-friendly-header">
+                        <h3>Bir Engeli Daha Kaldıralım! 🦸‍♂️</h3>
+                        <p>Bildirimin topluluğumuza büyük güç katıyor.</p>
+                    </div>
+
+                    <div id="selected-zone-info" class="selection-alert">Lütfen sol taraftaki haritadan sorunlu noktayı seçin 📍</div>
+                    
                     <form id="reportForm">
-                        <div class="issue-types-grid"><label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label><label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label></div>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
-                        <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
+                        <div class="single-issue">
+                            <div class="selected-issue">
+                                <i class="fas fa-wheelchair"></i>
+                                <span>Asansör / Rampa Çalışmıyor</span>
+                            </div>
+                        </div>
+                        
+                        <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
+                            <input type="file" id="file-input" hidden accept="image/*" capture="environment">
+                            <i class="fas fa-camera fa-2x" id="upload-icon"></i> 
+                            <span id="file-label">Kamerayı Aç & Fotoğraf Çek 📸</span>
+                            <small id="file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Güvenilir bir topluluk için kanıt eklemeliyiz. 😊</small>
+                        </div>
+
+                        <textarea placeholder="Detay eklemek ister misin? (Örn: Rampa çok dik, asansörün kapısı kapanmıyor...)"></textarea>
+                        <button type="submit" class="btn-submit" id="btn-submit-report">Topluluğa Bildir 🚀</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="verifyModal" class="modal">
         <div class="modal-content verify-modal-design">
-            <div class="vm-header"><h3>Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
+            <div class="vm-header">
+                <h3>Durum Doğrulaması 🕵️‍♂️</h3>
+                <span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span>
+            </div>
             <div class="vm-body">
-                <h2 id="verify-station-name">İstasyon</h2><p>Durum nedir?</p>
+                <h2 id="verify-station-name" style="margin-bottom: 5px; color: var(--primary-color); font-weight: 800;">İstasyon</h2>
+                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">Topluluğa rehberlik etmek için güncel durumu onayla.</p>
+                
+                <div class="file-upload-wrapper required-upload" id="verify-upload-wrapper" onclick="document.getElementById('verify-file-input').click()">
+                    <input type="file" id="verify-file-input" hidden accept="image/*" capture="environment">
+                    <i class="fas fa-camera fa-2x" id="verify-upload-icon"></i> 
+                    <span id="verify-file-label">Kanıt Fotoğrafı Çek 📸</span>
+                    <small id="verify-file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Doğrulama için durumu göstermelisin. 😊</small>
+                </div>
+
                 <div class="vm-actions">
-                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)"><div class="icon-box"><i class="fas fa-times"></i></div><div class="action-text"><strong>Sorun Var</strong><span>+15 Puan</span></div></button>
-                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)"><div class="icon-box"><i class="fas fa-check"></i></div><div class="action-text"><strong>Düzelmiş</strong><span>+30 Puan</span></div></button>
+                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false, event)">
+                        <div class="icon-box"><i class="fas fa-times"></i></div>
+                        <div class="action-text"><strong>Hala Bozuk 🚧</strong><span style="color: var(--danger-color); font-size: 0.85rem; font-weight: 600;">+15 Puan Kazan</span></div>
+                    </button>
+                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true, event)">
+                        <div class="icon-box"><i class="fas fa-check"></i></div>
+                        <div class="action-text"><strong>Düzelmiş! 🎉</strong><span style="color: var(--success-color); font-size: 0.85rem; font-weight: 600;">+30 Puan Kazan</span></div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -169,78 +232,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
-    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
-    
-    <script>
-        // 1. Sekme (Tab) Değiştirme Fonksiyonu
-        function switchAuthTab(tab) {
-            const loginContent = document.getElementById('form-login-content');
-            const signupContent = document.getElementById('form-signup-content');
-            const tabLogin = document.getElementById('tab-login');
-            const tabSignup = document.getElementById('tab-signup');
-            const googleBtnText = document.getElementById('google-btn-text');
-
-            if(tab === 'login') {
-                loginContent.style.display = 'block';
-                signupContent.style.display = 'none';
-                tabLogin.classList.add('active');
-                tabSignup.classList.remove('active');
-                googleBtnText.innerText = "Google ile Giriş Yap";
-            } else {
-                loginContent.style.display = 'none';
-                signupContent.style.display = 'block';
-                tabSignup.classList.add('active');
-                tabLogin.classList.remove('active');
-                googleBtnText.innerText = "Google ile Kayıt Ol";
-            }
-        }
-
-        // 2. Karakterlerin Göz Takip ve Şaşırma Animasyon Kodları
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginModal = document.getElementById('loginModal');
-            const blobContainer = document.getElementById('blob-container');
-            const passwordInputs = document.querySelectorAll('.password-input'); // İki parola alanını da seçer
-            const eyes = document.querySelectorAll('.eye');
-
-            // Gözlerin Fareyi Takip Etmesi
-            document.addEventListener('mousemove', (e) => {
-                if (loginModal.style.display !== 'flex') return;
-                
-                // Eğer odaklanılan eleman bir parola alanıysa gözleri oynatma (çünkü yukarı bakıyor olacaklar)
-                if (document.activeElement.classList.contains('password-input')) return;
-
-                eyes.forEach(eye => {
-                    const rect = eye.getBoundingClientRect();
-                    const eyeCenterX = rect.left + rect.width / 2;
-                    const eyeCenterY = rect.top + rect.height / 2;
-                    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-                    const maxDistance = 4;
-                    const moveX = Math.cos(angle) * maxDistance;
-                    const moveY = Math.sin(angle) * maxDistance;
-                    
-                    const pupil = eye.querySelector('.pupil');
-                    if(pupil) {
-                        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                    }
-                });
-            });
-
-            // Parola Alanlarına Tıklanınca Şaşırma Efekti
-            passwordInputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    blobContainer.classList.add('blindfolded');
-                });
-
-                input.addEventListener('blur', () => {
-                    blobContainer.classList.remove('blindfolded');
-                    eyes.forEach(eye => {
-                        const pupil = eye.querySelector('.pupil');
-                        if(pupil) pupil.style.transform = `translate(0px, 0px)`;
-                    });
-                });
-            });
-        });
-    </script>
 
 </body>
 </html>
