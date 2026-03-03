@@ -17,13 +17,13 @@
         <aside class="sidebar closed" id="sidebar">
             <div class="sidebar-header">
                 <div class="header-top-section">
-                    <div class="brand-wrapper" style="display: flex; align-items: center; gap: 12px;">
+                    <a href="index.html" class="brand-wrapper" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; cursor: pointer;">
                         <img src="visi-logo.png" alt="Visi Logo" style="height: 48px; width: auto; object-fit: contain;">
                         <div class="brand-text-group">
                             <h1 class="brand-title" style="margin: 0; padding: 0;">Visi</h1>
                             <p class="brand-slogan" style="margin: 0; padding: 0;">Görünmeyeni görünür kılıyoruz.</p>
                         </div>
-                    </div>
+                    </a>
                     <button class="btn-close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
                 </div>
 
@@ -173,7 +173,6 @@
     <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
     
     <script>
-        // 1. Sekme (Tab) Değiştirme Fonksiyonu
         function switchAuthTab(tab) {
             const loginContent = document.getElementById('form-login-content');
             const signupContent = document.getElementById('form-signup-content');
@@ -196,18 +195,15 @@
             }
         }
 
-        // 2. Karakterlerin Göz Takip ve Şaşırma Animasyon Kodları
         document.addEventListener('DOMContentLoaded', () => {
             const loginModal = document.getElementById('loginModal');
             const blobContainer = document.getElementById('blob-container');
             const passwordInputs = document.querySelectorAll('.password-input');
             const eyes = document.querySelectorAll('.eye');
 
-            // Gözlerin Fareyi Takip Etmesi
             document.addEventListener('mousemove', (e) => {
                 if (loginModal.style.display !== 'flex') return;
                 
-                // Eğer odaklanılan eleman bir parola alanıysa gözleri oynatma (yukarı bakıyor olacaklar)
                 if (document.activeElement.classList.contains('password-input')) return;
 
                 eyes.forEach(eye => {
@@ -226,7 +222,6 @@
                 });
             });
 
-            // Parola Alanlarına Tıklanınca Şaşırma Efekti
             passwordInputs.forEach(input => {
                 input.addEventListener('focus', () => {
                     blobContainer.classList.add('blindfolded');
