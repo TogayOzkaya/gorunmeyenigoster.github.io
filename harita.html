@@ -74,6 +74,8 @@
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
             
+            <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
+
             <div class="lm-left">
                 <div class="interactive-blobs" id="blob-container">
                     <div class="blob blob-purple"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
@@ -84,7 +86,6 @@
             </div>
 
             <div class="lm-right">
-                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
                 
                 <div class="auth-tabs">
                     <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
@@ -199,14 +200,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const loginModal = document.getElementById('loginModal');
             const blobContainer = document.getElementById('blob-container');
-            const passwordInputs = document.querySelectorAll('.password-input'); // İki parola alanını da seçer
+            const passwordInputs = document.querySelectorAll('.password-input');
             const eyes = document.querySelectorAll('.eye');
 
             // Gözlerin Fareyi Takip Etmesi
             document.addEventListener('mousemove', (e) => {
                 if (loginModal.style.display !== 'flex') return;
                 
-                // Eğer odaklanılan eleman bir parola alanıysa gözleri oynatma (çünkü yukarı bakıyor olacaklar)
+                // Eğer odaklanılan eleman bir parola alanıysa gözleri oynatma (yukarı bakıyor olacaklar)
                 if (document.activeElement.classList.contains('password-input')) return;
 
                 eyes.forEach(eye => {
