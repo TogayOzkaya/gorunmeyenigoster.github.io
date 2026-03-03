@@ -162,11 +162,6 @@
                 <span class="close-btn" onclick="closeReportModal()">&times;</span>
             </div>
             
-            <div id="alternative-route-box" class="suggestion-box" style="display:none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div><strong>Dikkat!</strong> <span id="suggestion-text"></span></div>
-            </div>
-            
             <div class="modal-body">
                 <div class="visual-container">
                     <div id="mini-map"></div>
@@ -197,7 +192,6 @@
                         </div>
 
                         <textarea placeholder="Detay eklemek ister misin? (Örn: Rampa çok dik, asansörün kapısı kapanmıyor...)"></textarea>
-                        
                         <button type="submit" class="btn-submit" id="btn-submit-report">Topluluğa Bildir 🚀</button>
                     </form>
                 </div>
@@ -207,252 +201,37 @@
 
     <div id="verifyModal" class="modal">
         <div class="modal-content verify-modal-design">
-            
             <div class="vm-header">
                 <h3>Durum Doğrulaması 🕵️‍♂️</h3>
                 <span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span>
             </div>
-            
             <div class="vm-body">
                 <h2 id="verify-station-name" style="margin-bottom: 5px; color: var(--primary-color); font-weight: 800;">İstasyon</h2>
-                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">Topluluğa rehberlik etmek için güncel durumu onayla. Gerçekten düzelmiş mi?</p>
+                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">Topluluğa rehberlik etmek için güncel durumu onayla.</p>
                 
                 <div class="file-upload-wrapper required-upload" id="verify-upload-wrapper" onclick="document.getElementById('verify-file-input').click()">
                     <input type="file" id="verify-file-input" hidden accept="image/*" capture="environment">
                     <i class="fas fa-camera fa-2x" id="verify-upload-icon"></i> 
                     <span id="verify-file-label">Kanıt Fotoğrafı Çek 📸</span>
-                    <small id="verify-file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Doğrulama için o anki durumu göstermelisin. 😊</small>
+                    <small id="verify-file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Doğrulama için durumu göstermelisin. 😊</small>
                 </div>
 
                 <div class="vm-actions">
                     <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false, event)">
                         <div class="icon-box"><i class="fas fa-times"></i></div>
-                        <div class="action-text">
-                            <strong>Hala Bozuk 🚧</strong>
-                            <span style="color: var(--danger-color); font-size: 0.85rem; font-weight: 600;">+15 Puan Kazan</span>
-                        </div>
+                        <div class="action-text"><strong>Hala Bozuk 🚧</strong><span style="color: var(--danger-color); font-size: 0.85rem; font-weight: 600;">+15 Puan Kazan</span></div>
                     </button>
                     <button class="btn-verify-action btn-fixed" onclick="submitVerification(true, event)">
                         <div class="icon-box"><i class="fas fa-check"></i></div>
-                        <div class="action-text">
-                            <strong>Düzelmiş! 🎉</strong>
-                            <span style="color: var(--success-color); font-size: 0.85rem; font-weight: 600;">+30 Puan Kazan</span>
-                        </div>
+                        <div class="action-text"><strong>Düzelmiş! 🎉</strong><span style="color: var(--success-color); font-size: 0.85rem; font-weight: 600;">+30 Puan Kazan</span></div>
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
-    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
-    
-    <script>
-        /* ==================================================
-           SİSTEMİN DÜZGÜN ÇALIŞMASI İÇİN GEREKLİ KODLAR 
-           ================================================== */
-
-        window.toggleSidebar = function() {
-            document.getElementById('sidebar').classList.toggle('closed');
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if(window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.add('closed');
-            }
-        });
-
-        /* GİRİŞ/KAYIT SEKMESİ KONTROLÜ */
-        window.switchAuthTab = function(tab) {
-            const loginContent = document.getElementById('form-login-content');
-            const signupContent = document.getElementById('form-signup-content');
-            const tabLogin = document.getElementById('tab-login');
-            const tabSignup = document.getElementById('tab-signup');
-            const googleBtnText = document.getElementById('google-btn-text');
-
-            if(tab === 'login') {
-                loginContent.style.display = 'block'; signupContent.style.display = 'none';
-                tabLogin.classList.add('active'); tabSignup.classList.remove('active');
-                googleBtnText.innerText = "Google ile Giriş Yap";
-            } else {
-                loginContent.style.display = 'none'; signupContent.style.display = 'block';
-                tabSignup.classList.add('active'); tabLogin.classList.remove('active');
-                googleBtnText.innerText = "Google ile Kayıt Ol";
-            }
-        }
-
-        window.performLogin = function(e) {
-            if(e) e.preventDefault();
-            const isSignup = document.getElementById('tab-signup').classList.contains('active');
-            
-            if(isSignup) {
-                const terms = document.getElementById('terms-check');
-                if(!terms.checked) {
-                    alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz.");
-                    return;
-                }
-            }
-
-            document.getElementById('sidebar-user-name').innerText = "Togay Özkay";
-            document.getElementById('sidebar-user-desc').innerText = "Seviye 1";
-            document.getElementById('sidebar-user-img').src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-            document.getElementById('loginModal').style.display = 'none';
-            alert(isSignup ? "Kayıt Başarılı! Visi topluluğuna hoş geldin." : "Giriş Başarılı! Tekrar hoş geldin.");
-        };
-
-        /* DOĞRULAMA EKRANINI AÇMA FONKSİYONU */
-        window.openVerifyModal = function(stationName) {
-            document.getElementById('verify-station-name').innerText = stationName;
-            document.getElementById('verifyModal').style.display = 'flex';
-        };
-        window.closeVerifyModal = function() { document.getElementById('verifyModal').style.display = 'none'; };
-
-        /* ==================================================
-           GÖZ ANİMASYONLARI VE FOTOĞRAF KONTROLLERİ 
-           ================================================== */
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginModal = document.getElementById('loginModal');
-            const blobContainer = document.getElementById('blob-container');
-            const passwordInputs = document.querySelectorAll('.password-input');
-            const eyes = document.querySelectorAll('.eye');
-
-            document.addEventListener('mousemove', (e) => {
-                if (loginModal.style.display !== 'flex') return;
-                if (document.activeElement.classList.contains('password-input')) return;
-
-                eyes.forEach(eye => {
-                    const rect = eye.getBoundingClientRect();
-                    const eyeCenterX = rect.left + rect.width / 2;
-                    const eyeCenterY = rect.top + rect.height / 2;
-                    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-                    const maxDistance = 4;
-                    const moveX = Math.cos(angle) * maxDistance;
-                    const moveY = Math.sin(angle) * maxDistance;
-                    const pupil = eye.querySelector('.pupil');
-                    if(pupil) pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-            });
-
-            passwordInputs.forEach(input => {
-                input.addEventListener('focus', () => blobContainer.classList.add('blindfolded'));
-                input.addEventListener('blur', () => {
-                    blobContainer.classList.remove('blindfolded');
-                    eyes.forEach(eye => {
-                        const pupil = eye.querySelector('.pupil');
-                        if(pupil) pupil.style.transform = `translate(0px, 0px)`;
-                    });
-                });
-            });
-
-            /* 1. BİLDİRİM FORMU FOTOĞRAF KONTROLÜ */
-            const reportForm = document.getElementById('reportForm');
-            const fileInput = document.getElementById('file-input');
-            
-            if(fileInput) {
-                fileInput.addEventListener('change', function() {
-                    const label = document.getElementById('file-label');
-                    const warning = document.getElementById('file-warning');
-                    const wrapper = document.getElementById('upload-wrapper');
-                    const icon = document.getElementById('upload-icon');
-                    
-                    if(this.files && this.files.length > 0) {
-                        label.innerText = "Harika! Fotoğraf Eklendi 📸"; 
-                        label.style.color = "var(--success-color)";
-                        icon.style.color = "var(--success-color)";
-                        warning.style.display = "none";
-                        wrapper.style.borderColor = "var(--success-color)";
-                        wrapper.style.backgroundColor = "#f0fdf4";
-                        wrapper.classList.remove('shake-animation');
-                    }
-                });
-            }
-
-            if(reportForm) {
-                reportForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); 
-                    
-                    if (!fileInput.files || fileInput.files.length === 0) {
-                        const wrapper = document.getElementById('upload-wrapper');
-                        const warning = document.getElementById('file-warning');
-                        
-                        warning.style.color = "var(--danger-color)";
-                        warning.innerText = "Lütfen önce bir fotoğraf ekle! 📸";
-                        
-                        wrapper.classList.remove('shake-animation');
-                        void wrapper.offsetWidth;
-                        wrapper.classList.add('shake-animation');
-                    } else {
-                        alert("Harika! Bildirimin başarıyla topluluğa iletildi. 🚀");
-                        document.getElementById('reportModal').style.display = 'none';
-                        
-                        reportForm.reset();
-                        document.getElementById('file-label').innerText = "Kamerayı Aç & Fotoğraf Çek 📸";
-                        document.getElementById('file-label').style.color = "var(--secondary-color)";
-                        document.getElementById('upload-icon').style.color = "#64748b";
-                        document.getElementById('upload-wrapper').style.borderColor = "#cbd5e1";
-                        document.getElementById('upload-wrapper').style.backgroundColor = "#f8fafc";
-                    }
-                });
-            }
-
-            /* 2. DOĞRULAMA (VERIFY) EKRANI FOTOĞRAF KONTROLÜ */
-            const verifyFileInput = document.getElementById('verify-file-input');
-            if(verifyFileInput) {
-                verifyFileInput.addEventListener('change', function() {
-                    const label = document.getElementById('verify-file-label');
-                    const warning = document.getElementById('verify-file-warning');
-                    const wrapper = document.getElementById('verify-upload-wrapper');
-                    const icon = document.getElementById('verify-upload-icon');
-                    
-                    if(this.files && this.files.length > 0) {
-                        label.innerText = "Süper! Kanıt Eklendi 📸"; 
-                        label.style.color = "var(--success-color)";
-                        icon.style.color = "var(--success-color)";
-                        warning.style.display = "none";
-                        wrapper.style.borderColor = "var(--success-color)";
-                        wrapper.style.backgroundColor = "#f0fdf4";
-                        wrapper.classList.remove('shake-animation');
-                    }
-                });
-            }
-
-            // Doğrulama Gönderme Fonksiyonu
-            window.submitVerification = function(isFixed, e) {
-                if(e) e.preventDefault();
-                
-                if (!verifyFileInput.files || verifyFileInput.files.length === 0) {
-                    const wrapper = document.getElementById('verify-upload-wrapper');
-                    const warning = document.getElementById('verify-file-warning');
-                    
-                    warning.style.color = "var(--danger-color)";
-                    warning.innerText = "Lütfen durumu gösteren bir fotoğraf ekle! 📸";
-                    warning.style.display = "block";
-                    
-                    wrapper.classList.remove('shake-animation');
-                    void wrapper.offsetWidth;
-                    wrapper.classList.add('shake-animation');
-                } else {
-                    // Fotoğraf varsa başarılı işlem mesajı
-                    alert(isFixed ? "Harika! Düzeldiğini doğruladın ve +30 Puan kazandın! 🎉" : "Teşekkürler! Arızanın devam ettiğini doğruladın ve +15 Puan kazandın! 🚧");
-                    closeVerifyModal();
-                    
-                    // İşlem bittikten sonra doğrulama formunu sıfırla
-                    verifyFileInput.value = "";
-                    document.getElementById('verify-file-label').innerText = "Kanıt Fotoğrafı Çek 📸";
-                    document.getElementById('verify-file-label').style.color = "var(--secondary-color)";
-                    document.getElementById('verify-file-warning').innerText = "Doğrulama için o anki durumu göstermelisin. 😊";
-                    document.getElementById('verify-file-warning').style.color = "var(--text-muted)";
-                    document.getElementById('verify-file-warning').style.display = "block";
-                    document.getElementById('verify-upload-icon').style.color = "#64748b";
-                    document.getElementById('verify-upload-wrapper').style.borderColor = "#cbd5e1";
-                    document.getElementById('verify-upload-wrapper').style.backgroundColor = "#f8fafc";
-                }
-            };
-
-        });
-    </script>
 
 </body>
 </html>
