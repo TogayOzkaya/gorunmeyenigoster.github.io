@@ -9,8 +9,7 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=999">
 </head>
 <body>
 
@@ -60,7 +59,7 @@
             <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <a href="index.html" class="btn-home" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></a>
             
-            <div id="map" style="width: 100%; height: 100%; position: absolute; top:0; left:0; z-index:1;"></div>
+            <div id="map"></div>
             
             <div class="map-legend">
                 <h4>Durum Göstergesi</h4>
@@ -186,6 +185,17 @@
                             </select>
                         </div>
                         
+                        <div class="issue-types-grid">
+                            <label class="issue-option">
+                                <input type="radio" name="issue" value="elevator" checked>
+                                <div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div>
+                            </label>
+                            <label class="issue-option">
+                                <input type="radio" name="issue" value="ramp">
+                                <div class="issue-box"><i class="fas fa-wheelchair"></i><span>Rampa</span></div>
+                            </label>
+                        </div>
+                        
                         <div id="selected-zone-info" class="selection-alert">Lütfen haritadan sorunlu noktaya tıklayın 📍</div>
 
                         <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
@@ -232,7 +242,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=999"></script>
 
 </body>
 </html>
