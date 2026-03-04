@@ -4,21 +4,28 @@
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 window.currentReportingStation = null; 
 window.currentVerifyingStation = null;
-window.mainMapMarkers = []; // Haritadaki pinleri hafızada tutar
+window.mainMapMarkers = []; 
 
+// DİNAMİK İSİM GÜNCELLEME SİSTEMİ
 window.updateUserInfo = function() {
     const userNameEl = document.getElementById('sidebar-user-name');
     const userDescEl = document.getElementById('sidebar-user-desc');
     const userImgEl = document.getElementById('sidebar-user-img');
+    const modalUserName = document.getElementById('modal-username'); // Profil içindeki başlık
     
     if (window.isUserLoggedIn) {
-        if(userNameEl) userNameEl.innerText = "Togay Özkay";
+        // Hafızadan kullanıcının gerçek adını çek, yoksa 'Kullanıcı' yaz
+        const storedName = localStorage.getItem('visi_user_name') || "Kullanıcı";
+        
+        if(userNameEl) userNameEl.innerText = storedName;
         if(userDescEl) userDescEl.innerText = "Seviye 1";
-        if(userImgEl) userImgEl.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+        if(userImgEl) userImgEl.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"; // İstersen buraya rastgele avatar getiren bir sistem de eklenebilir
+        if(modalUserName) modalUserName.innerHTML = `Merhaba, ${storedName}! 👋`;
     } else {
         if(userNameEl) userNameEl.innerText = "Misafir";
         if(userDescEl) userDescEl.innerText = "Giriş Yap";
         if(userImgEl) userImgEl.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        if(modalUserName) modalUserName.innerHTML = "Merhaba, Yol Arkadaşımız! 👋";
     }
 };
 
@@ -48,6 +55,7 @@ window.closeVerifyModal = window.closeModals;
 
 window.resetData = function() {
     localStorage.setItem('visi_logged_in', 'false');
+    // Çıkış yapıldığında arayüzü "Misafir"e döndür
     window.isUserLoggedIn = false;
     window.updateUserInfo();
     window.closeModals();
@@ -59,19 +67,51 @@ window.performLogin = function(e) {
     const tabSignup = document.getElementById('tab-signup');
     const isSignup = tabSignup && tabSignup.classList.contains('active');
     
+    let userName = "Yol Arkadaşımız";
+
     if(isSignup) {
+        // KAYIT OLMA EKRANI
         const terms = document.getElementById('terms-check');
         if(terms && !terms.checked) {
             alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz.");
             return;
         }
+        
+        // Forma yazılan Ad-Soyad'ı al
+        const nameInput = document.querySelector('#form-signup-content input[type="text"]');
+        if(nameInput && nameInput.value.trim() !== "") {
+            userName = nameInput.value.trim();
+        } else {
+            alert("Lütfen adınızı ve soyadınızı giriniz.");
+            return;
+        }
+    } else {
+        // GİRİŞ YAPMA EKRANI
+        const savedName = localStorage.getItem('visi_user_name');
+        if(savedName) {
+            userName = savedName; // Varsa eski ismi kullan
+        } else {
+            // İsim yoksa email adresinden isim türet
+            const emailInput = document.querySelector('#form-login-content input[type="email"]');
+            if(emailInput && emailInput.value.trim() !== "") {
+                let mailName = emailInput.value.split('@')[0];
+                userName = mailName.charAt(0).toUpperCase() + mailName.slice(1);
+            } else {
+                userName = "Kullanıcı";
+            }
+        }
     }
 
+    // Sisteme giriş yaptığını ve kullanıcının ismini hafızaya yaz
     localStorage.setItem('visi_logged_in', 'true');
+    localStorage.setItem('visi_user_name', userName);
     window.isUserLoggedIn = true;
+    
+    // Bütün arayüzü bu isimle anında güncelle
     window.updateUserInfo();
     window.closeModals();
-    alert(isSignup ? "Kayıt Başarılı! Visi topluluğuna hoş geldin. 🚀" : "Giriş Başarılı! Tekrar hoş geldin. 👋");
+    
+    alert(isSignup ? `Kayıt Başarılı! Visi topluluğuna hoş geldin ${userName}. 🚀` : `Giriş Başarılı! Tekrar hoş geldin ${userName}. 👋`);
 };
 
 window.switchAuthTab = function(tab) {
@@ -97,7 +137,7 @@ window.switchAuthTab = function(tab) {
 };
 
 /* ==================================================
-   İSTASYON VERİLERİ (Doğrulama Sayacı Eklendi)
+   İSTASYON VERİLERİ VE OFSETLER
    ================================================== */
 window.metroStations = [
     { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş Asansörü", offset: [0, 0]}] },
@@ -142,7 +182,6 @@ window.renderStations = function() {
     const stationListElement = document.getElementById('station-list');
     if(stationListElement) stationListElement.innerHTML = '';
     
-    // Eski pinleri haritadan temizle
     window.mainMapMarkers.forEach(m => { if(window.mainMap) window.mainMap.removeLayer(m); });
     window.mainMapMarkers = [];
 
@@ -151,7 +190,6 @@ window.renderStations = function() {
             const marker = L.marker([station.lat, station.lng], { icon: window.getIcon(station.status) }).addTo(window.mainMap);
             window.mainMapMarkers.push(marker);
 
-            // Duruma Göre Buton Rengi ve Aksiyonu (OK = Bildir, Pending/Error = Doğrula)
             let btnAction = station.status === 'ok' ? `openReportModal('${station.name}')` : `openVerifyModal('${station.name}')`;
             let btnText = station.status === 'ok' ? "Durum Bildir" : "Durumu Doğrula";
             let btnColor = station.status === 'ok' ? "#1e69de" : "#f39c12";
@@ -181,7 +219,6 @@ window.renderStations = function() {
                 btnIcon = 'fa-check-double';
                 btnBg = 'var(--danger-color)';
             } else {
-                // SARI RENK: 5 üzerinden kaç kişinin doğruladığını gösterir!
                 statusBadge = `<span class="status-badge status-pending"><i class="fas fa-clock"></i> Doğrulanıyor (${station.verifyCount}/5)</span>`;
                 btnIcon = 'fa-check-double';
                 btnBg = 'var(--warning-color)';
@@ -207,7 +244,6 @@ window.renderStations = function() {
     }
 };
 
-
 /* ==================================================
    SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ANA SİSTEM
    ================================================== */
@@ -228,10 +264,8 @@ window.addEventListener('load', function() {
             const lineCoords = window.metroStations.map(s => [s.lat, s.lng]);
             L.polyline(lineCoords, { color: '#e74c3c', weight: 4, opacity: 0.7 }).addTo(window.mainMap);
 
-            // İstasyonları İlk Kez Render Et
             window.renderStations();
 
-            // Arama Motoru
             const searchInput = document.getElementById('station-search');
             if (searchInput) {
                 searchInput.addEventListener('keyup', function(e) {
@@ -347,7 +381,6 @@ window.addEventListener('load', function() {
         document.getElementById('verifyModal').style.display = 'flex';
     };
 
-
     /* ==========================================
        BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ
        ========================================== */
@@ -397,14 +430,13 @@ window.addEventListener('load', function() {
                 
                 alert(`✅ Harika! '${window.selectedZoneName}' için bildirimin topluluğa iletildi ve puan kazandın! 🚀`);
                 
-                // MUCİZE KOD BURADA: İSTASYONU SARIYA ÇEVİR!
                 const stationIndex = window.metroStations.findIndex(s => s.name === window.currentReportingStation);
                 if(stationIndex !== -1) {
                     window.metroStations[stationIndex].status = "pending";
-                    window.metroStations[stationIndex].verifyCount = 1; // 1 kişi bildirdi
+                    window.metroStations[stationIndex].verifyCount = 1;
                 }
                 
-                window.renderStations(); // EKRANI ANINDA YENİLE
+                window.renderStations(); 
                 window.closeReportModal();
                 reportForm.reset();
             });
@@ -451,19 +483,16 @@ window.addEventListener('load', function() {
             } else {
                 alert("✅ Teşekkürler! Arızanın devam ettiğini doğruladın ve +15 Puan kazandın! 🚧");
                 if(stationIndex !== -1) {
-                    window.metroStations[stationIndex].verifyCount += 1; // Sayacı 1 artır
-                    
-                    // 5 KİŞİ DOĞRULARSA KIRMIZIYA (ERROR) ÇEVİR!
+                    window.metroStations[stationIndex].verifyCount += 1; 
                     if(window.metroStations[stationIndex].verifyCount >= 5) {
                         window.metroStations[stationIndex].status = "error";
                     }
                 }
             }
             
-            window.renderStations(); // EKRANI ANINDA YENİLE
+            window.renderStations(); 
             window.closeVerifyModal();
 
-            // Formu sıfırla
             verifyFileInput.value = "";
             document.getElementById('verify-file-label').innerText = "Kanıt Fotoğrafı Çek 📸";
             document.getElementById('verify-file-label').style.color = "var(--secondary-color)";
