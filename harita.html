@@ -114,7 +114,7 @@
                         <button class="btn-login-mail" onclick="performLogin(event, 'signup')">Kayıt Ol</button>
                     </div>
                     <div class="divider">veya</div>
-                    <button class="btn-google-login" onclick="performLogin(event, 'google')">
+                    <button id="google-login-btn" class="btn-google-login">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
                         <span id="google-btn-text">Google ile Giriş Yap</span>
                     </button>
@@ -140,7 +140,7 @@
             </div>
             <div class="pm-body">
                 <div class="pm-stats-row">
-                    <div class="pm-stat-box"><i class="fas fa-star" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Topluluk Puanı</p></div>
+                    <div class="pm-stat-box"><i class="fas fa-star" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Toplulu Puanı</p></div>
                     <div class="pm-stat-box"><i class="fas fa-bullhorn" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Bildirimin</p></div>
                     <div class="pm-stat-box"><i class="fas fa-hands-helping" style="color:#27ae60;"></i><h3 id="stat-badges">0</h3><p>Doğrulaman</p></div>
                 </div>
@@ -239,6 +239,41 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script src="script.js?v=20"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
+        authDomain: "vizi-96158.firebaseapp.com",
+        projectId: "vizi-96158",
+        storageBucket: "vizi-96158.firebasestorage.app",
+        messagingSenderId: "145575387910",
+        appId: "1:145575387910:web:59776c4c9a2c20434ff487",
+        measurementId: "G-3QS58WW5KZ"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
+      const loginBtn = document.getElementById("google-login-btn");
+
+      if(loginBtn) {
+        loginBtn.addEventListener("click", () => {
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              const user = result.user;
+              console.log("Giriş başarılı! Kullanıcı:", user);
+              alert("Hoş geldin, " + user.displayName + "!"); 
+            })
+            .catch((error) => {
+              console.error("Giriş hatası:", error);
+            });
+        });
+      }
+    </script>
 
 </body>
 </html>
