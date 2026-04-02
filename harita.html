@@ -297,10 +297,9 @@
         };
     </script>
 
-<script type="module">
+    <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
       import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-      // YENİ 1: Firestore (Veritabanı) modüllerini sitemize ekliyoruz
       import { getFirestore, collection, getDocs, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
       const firebaseConfig = {
@@ -317,10 +316,8 @@
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
       
-      // YENİ 2: Veritabanını başlat
       const db = getFirestore(app);
 
-      // YENİ 3: script.js içinden veritabanına arıza yazabilmemiz için köprü fonksiyon
       window.dbUpdateStation = async function(stationName, dataToUpdate) {
           try {
               const stationRef = doc(db, "stations", stationName);
@@ -330,12 +327,10 @@
           }
       };
 
-      // YENİ 4: Veritabanı İlk Kurulum ve Canlı Dinleme (SİHİRLİ KISIM)
       async function initDatabase() {
           const stationsCollection = collection(db, "stations");
           const snapshot = await getDocs(stationsCollection);
           
-          // Eğer Firestore boşsa (siteyi veritabanına ilk kez bağlıyorsak), 24 istasyonu veritabanına yükle
           if (snapshot.empty) {
               console.log("Veritabanı boş, istasyonlar sisteme yükleniyor...");
               for (let station of window.metroStations) {
@@ -344,7 +339,7 @@
               console.log("Tüm istasyonlar veritabanına eklendi!");
           }
 
-// CANLI HARİTA VE KAYAN YAZI (TICKER) DİNLEYİCİSİ
+          // CANLI HARİTA VE KAYAN YAZI (TICKER) DİNLEYİCİSİ
           onSnapshot(stationsCollection, (querySnapshot) => {
               const liveStations = [];
               querySnapshot.forEach((doc) => {
@@ -365,31 +360,27 @@
                   
                   if (tickerEl) {
                       if (problemStations.length > 0) {
-                          // Eğer arızalı istasyonlar varsa, mesajları oluştur
                           let messages = problemStations.map(s => {
                               let statusText = s.status === 'error' ? 'Arızalı 🚨' : 'Doğrulama Bekliyor 🚧';
                               let reporter = s.lastReporter ? s.lastReporter : 'Bir Yol Arkadaşımız';
                               return `⚠️ ${s.name} İstasyonu: ${statusText} (Son İşlem: ${reporter})`;
                           });
                           
-                          // Döngü sürekli aksın diye metni aralarına boşluk koyarak birleştir
                           tickerEl.innerText = " ••• " + messages.join(" ••• ") + " ••• ";
-                          tickerEl.style.color = "var(--danger-color)"; // Arıza varken yazıyı kırmızı/turuncu yap
+                          tickerEl.style.color = "var(--danger-color)"; 
                       } else {
-                          // Hiç arıza yoksa
                           tickerEl.innerText = "✅ Anlık olarak tüm istasyonlarımız sorunsuz çalışmaktadır. Vizi topluluğu iyi yolculuklar diler! 🚄";
                           tickerEl.style.color = "var(--success-color)";
                       }
                   }
               }
           });
+      } // İŞTE EKSİK OLAN O SİHİRLİ PARANTEZ BURASI!
 
-      // Sayfa yüklendikten hemen sonra veritabanını dinlemeye başla
       window.addEventListener('load', () => {
           setTimeout(initDatabase, 1500); 
       });
 
-      // --- Google Giriş Kodları (Aynı) ---
       const loginBtn = document.getElementById("google-login-btn");
       if(loginBtn) {
         loginBtn.addEventListener("click", () => {
@@ -411,3 +402,6 @@
         });
       }
     </script>
+
+</body>
+</html>
