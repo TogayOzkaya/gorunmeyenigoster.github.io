@@ -38,6 +38,14 @@ window.handleProfileClick = function() {
     } else {
         document.getElementById('loginModal').style.display = 'flex';
     }
+
+    // YENİ EKLENEN KISIM: Mobilde tıklanınca yan menüyü otomatik kapat
+    if (window.innerWidth <= 768) {
+        const sb = document.getElementById('sidebar');
+        if(sb && !sb.classList.contains('closed')) {
+            sb.classList.add('closed');
+        }
+    }
 };
 
 window.closeModals = function() {
