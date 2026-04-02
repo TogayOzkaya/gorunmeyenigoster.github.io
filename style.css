@@ -437,3 +437,49 @@ textarea { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius:
     color: #1557b0;
     gap: 12px; 
 }
+
+/* ==================================================
+   MOBİL PROFİL EKRANI DÜZELTMELERİ
+   ================================================== */
+@media (max-width: 768px) {
+    /* İlerleme çubuğu yazılarının üst üste binmesini engelle */
+    .pm-prog-labels {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Ortadaki uzun yazıyı tam satır yapıp üst kısma alıyoruz */
+    .pm-prog-labels .xp-text-friendly {
+        width: 100%;
+        order: -1; /* Elementi en başa taşır */
+        text-align: center;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* Seviye yazılarının boyutunu mobilde biraz optimize et */
+    .pm-prog-labels .lvl-current,
+    .pm-prog-labels .lvl-next {
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    /* Üstteki 3'lü istatistik kutusunu mobilde daha ferah yap */
+    .pm-stats-row {
+        gap: 8px;
+    }
+    .pm-stat-box {
+        padding: 12px 5px;
+    }
+    .pm-stat-box h3 {
+        font-size: 1.25rem;
+        margin-bottom: 3px;
+    }
+    .pm-stat-box p {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+}
