@@ -439,47 +439,61 @@ textarea { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius:
 }
 
 /* ==================================================
-   MOBİL PROFİL EKRANI DÜZELTMELERİ
+   MOBİL PROFİL EKRANI KUSURSUZ HİZALAMA
    ================================================== */
 @media (max-width: 768px) {
-    /* İlerleme çubuğu yazılarının üst üste binmesini engelle */
-    .pm-prog-labels {
+    .pm-progress-area {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        align-items: center;
+        padding: 20px 15px;
     }
     
-    /* Ortadaki uzun yazıyı tam satır yapıp üst kısma alıyoruz */
-    .pm-prog-labels .xp-text-friendly {
-        width: 100%;
-        order: -1; /* Elementi en başa taşır */
-        text-align: center;
-        margin-bottom: 12px;
-        font-size: 0.9rem;
-        line-height: 1.4;
+    /* İçindeki yazıları serbest bırakıp sıralamalarını (order) değiştiriyoruz */
+    .pm-prog-labels {
+        display: contents; 
     }
-
-    /* Seviye yazılarının boyutunu mobilde biraz optimize et */
-    .pm-prog-labels .lvl-current,
+    
+    /* 1. Sırada: Seviye 1 */
+    .pm-prog-labels .lvl-current {
+        order: 1;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--secondary-color);
+    }
+    
+    /* 2. Sırada: Seviye 2 */
     .pm-prog-labels .lvl-next {
-        font-size: 0.95rem;
-        font-weight: 700;
+        order: 2;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--secondary-color);
+    }
+    
+    /* 3. Sırada: İlerleme Çubuğunun Kendisi */
+    .pm-prog-bg {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+    
+    /* 4. Sırada (En Altta): Kalan XP Yazısı */
+    .pm-prog-labels .xp-text-friendly {
+        order: 4;
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        background: var(--primary-light);
+        padding: 6px;
+        border-radius: 10px;
+        margin-bottom: 0;
     }
 
     /* Üstteki 3'lü istatistik kutusunu mobilde daha ferah yap */
-    .pm-stats-row {
-        gap: 8px;
-    }
-    .pm-stat-box {
-        padding: 12px 5px;
-    }
-    .pm-stat-box h3 {
-        font-size: 1.25rem;
-        margin-bottom: 3px;
-    }
-    .pm-stat-box p {
-        font-size: 0.75rem;
-        line-height: 1.2;
-    }
+    .pm-stats-row { gap: 8px; margin-bottom: 25px; }
+    .pm-stat-box { padding: 12px 5px; }
+    .pm-stat-box h3 { font-size: 1.35rem; margin-bottom: 3px; }
+    .pm-stat-box p { font-size: 0.75rem; }
 }
