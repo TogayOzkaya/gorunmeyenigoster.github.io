@@ -3,20 +3,49 @@
    ================================================== */
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 
+/* DİNAMİK İSİM VE KALICI PUAN GÜNCELLEME SİSTEMİ */
 window.updateUserInfo = function() {
     const userNameEl = document.getElementById('sidebar-user-name');
     const userDescEl = document.getElementById('sidebar-user-desc');
     const userImgEl = document.getElementById('sidebar-user-img');
     const modalUserName = document.getElementById('modal-username'); 
     
+    // Puan ve İstatistik Elementleri
+    const statPoints = document.getElementById('stat-points');
+    const statReports = document.getElementById('stat-reports');
+    const statBadges = document.getElementById('stat-badges'); 
+    const xpText = document.getElementById('xp-text');
+    const xpBar = document.getElementById('xp-bar');
+    const currentLevelTxt = document.getElementById('current-level-txt');
+    const modalLevelBadge = document.getElementById('modal-level');
+    
     if (window.isUserLoggedIn) {
-        let storedName = localStorage.getItem('visi_user_name');
-        if (!storedName) storedName = "Kullanıcı";
+        let storedName = localStorage.getItem('visi_user_name') || "Kullanıcı";
+        // Veritabanından gelen veriyi localStorage'dan çek
+        let userData = JSON.parse(localStorage.getItem('visi_user_data') || '{}');
+        
+        let points = userData.points || 0;
+        let reports = userData.reportsCount || 0;
+        let verifies = userData.verificationsCount || 0;
+        
+        // Her 100 puanda 1 Seviye atlama formülü
+        let level = Math.floor(points / 100) + 1;
+        let xpInLevel = points % 100;
         
         if(userNameEl) userNameEl.innerText = storedName;
-        if(userDescEl) userDescEl.innerText = "Seviye 1";
+        if(userDescEl) userDescEl.innerText = "Seviye " + level;
         if(userImgEl) userImgEl.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         if(modalUserName) modalUserName.innerHTML = `Merhaba, ${storedName}! 👋`;
+
+        // Profil istatistiklerini canlı olarak güncelle
+        if(statPoints) statPoints.innerText = points;
+        if(statReports) statReports.innerText = reports;
+        if(statBadges) statBadges.innerText = verifies;
+        if(currentLevelTxt) currentLevelTxt.innerText = level;
+        if(modalLevelBadge) modalLevelBadge.innerText = level;
+        if(xpText) xpText.innerText = `Sonraki seviyeye ${100 - xpInLevel} XP kaldı 🚀`;
+        if(xpBar) xpBar.style.width = xpInLevel + "%";
+        
     } else {
         if(userNameEl) userNameEl.innerText = "Misafir";
         if(userDescEl) userDescEl.innerText = "Giriş Yap";
@@ -56,6 +85,7 @@ window.closeVerifyModal = window.closeModals;
 window.resetData = function() {
     localStorage.setItem('visi_logged_in', 'false');
     localStorage.removeItem('visi_user_name');
+    localStorage.removeItem('visi_user_data'); // Çıkışta puan verilerini de temizle
     window.isUserLoggedIn = false;
     window.updateUserInfo();
     window.closeModals();
@@ -389,7 +419,7 @@ window.addEventListener('load', function() {
     };
 
     /* ==========================================
-       BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ (İSİM KAYITLI)
+       BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ (İSİM VE PUAN KAYITLI)
        ========================================== */
     try {
         const reportForm = document.getElementById('reportForm');
@@ -437,7 +467,6 @@ window.addEventListener('load', function() {
                 
                 alert(`✅ Harika! '${window.selectedZoneName}' için bildirimin topluluğa iletildi ve puan kazandın! 🚀`);
                 
-                // YENİ: Bildiren kişinin adını al
                 let currentUserName = localStorage.getItem('visi_user_name') || "Yol Arkadaşımız";
 
                 // === VERİTABANI GÜNCELLEMESİ (BİLDİRİM) ===
@@ -445,8 +474,13 @@ window.addEventListener('load', function() {
                     window.dbUpdateStation(window.currentReportingStation, {
                         status: "pending",
                         verifyCount: 1,
-                        lastReporter: currentUserName // Veritabanına ismi de kaydediyoruz!
+                        lastReporter: currentUserName 
                     });
+                }
+
+                // === YENİ: PUAN EKLEME (BİLDİRİM YAPAN KİŞİYE 15 PUAN) ===
+                if(window.dbUpdateUserPoints) {
+                    window.dbUpdateUserPoints(15, 'report');
                 }
                 
                 window.closeReportModal();
@@ -487,7 +521,6 @@ window.addEventListener('load', function() {
             const stationIndex = window.metroStations.findIndex(s => s.name === window.currentVerifyingStation);
             const station = window.metroStations[stationIndex];
             
-            // YENİ: Doğrulayan kişinin adını al
             let currentUserName = localStorage.getItem('visi_user_name') || "Yol Arkadaşımız";
 
             // === VERİTABANI GÜNCELLEMESİ (DOĞRULAMA) ===
@@ -497,8 +530,12 @@ window.addEventListener('load', function() {
                     window.dbUpdateStation(window.currentVerifyingStation, {
                         status: "ok",
                         verifyCount: 0,
-                        lastReporter: currentUserName // Düzelten kişinin adını da kaydediyoruz!
+                        lastReporter: currentUserName 
                     });
+                }
+                // === YENİ: PUAN EKLEME (DOĞRULAYAN KİŞİYE 30 PUAN) ===
+                if(window.dbUpdateUserPoints) {
+                    window.dbUpdateUserPoints(30, 'verify');
                 }
             } else {
                 alert("✅ Teşekkürler! Arızanın devam ettiğini doğruladın ve +15 Puan kazandın! 🚧");
@@ -508,8 +545,12 @@ window.addEventListener('load', function() {
                     window.dbUpdateStation(window.currentVerifyingStation, {
                         status: newStatus,
                         verifyCount: newCount,
-                        lastReporter: currentUserName // Doğrulayan kişinin adını kaydediyoruz!
+                        lastReporter: currentUserName 
                     });
+                }
+                // === YENİ: PUAN EKLEME (DOĞRULAYAN KİŞİYE 15 PUAN) ===
+                if(window.dbUpdateUserPoints) {
+                    window.dbUpdateUserPoints(15, 'verify');
                 }
             }
             
