@@ -3,7 +3,6 @@
    ================================================== */
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 
-// DİNAMİK İSİM GÜNCELLEME SİSTEMİ
 window.updateUserInfo = function() {
     const userNameEl = document.getElementById('sidebar-user-name');
     const userDescEl = document.getElementById('sidebar-user-desc');
@@ -11,7 +10,6 @@ window.updateUserInfo = function() {
     const modalUserName = document.getElementById('modal-username'); 
     
     if (window.isUserLoggedIn) {
-        // Hafızadan kullanıcının formda yazdığı gerçek adını çek
         let storedName = localStorage.getItem('visi_user_name');
         if (!storedName) storedName = "Kullanıcı";
         
@@ -38,13 +36,9 @@ window.handleProfileClick = function() {
     } else {
         document.getElementById('loginModal').style.display = 'flex';
     }
-
-    // YENİ EKLENEN KISIM: Mobilde tıklanınca yan menüyü otomatik kapat
     if (window.innerWidth <= 768) {
         const sb = document.getElementById('sidebar');
-        if(sb && !sb.classList.contains('closed')) {
-            sb.classList.add('closed');
-        }
+        if(sb && !sb.classList.contains('closed')) sb.classList.add('closed');
     }
 };
 
@@ -61,66 +55,46 @@ window.closeVerifyModal = window.closeModals;
 
 window.resetData = function() {
     localStorage.setItem('visi_logged_in', 'false');
-    localStorage.removeItem('visi_user_name'); // Çıkışta ismi de hafızadan tamamen sil
+    localStorage.removeItem('visi_user_name');
     window.isUserLoggedIn = false;
     window.updateUserInfo();
     window.closeModals();
     alert("Hesabınızdan başarıyla çıkış yapıldı.");
 };
 
-// GİRİŞ VE KAYIT İŞLEMLERİ (DİNAMİK İSİM YAKALAYICI)
 window.performLogin = function(e, loginType) {
     if(e) e.preventDefault();
-    
     const tabSignup = document.getElementById('tab-signup');
     const isSignup = tabSignup && tabSignup.classList.contains('active');
-    
     let userName = "Kullanıcı";
 
     if (loginType === 'google') {
-        // Google butonu için demo isim girişi
         let googleName = prompt("Google hesabı ile bağlanıyorsunuz. Lütfen isminizi girin:", "Ali Yılmaz");
-        if (!googleName) return; // İptal ederse işlemi durdur
+        if (!googleName) return; 
         userName = googleName;
     } else if (isSignup) {
-        // Kayıt formundan Ad-Soyad çek
         const terms = document.getElementById('terms-check');
-        if(terms && !terms.checked) {
-            alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz.");
-            return;
-        }
+        if(terms && !terms.checked) { alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz."); return; }
         const nameInput = document.querySelector('#form-signup-content input[type="text"]');
-        if(nameInput && nameInput.value.trim() !== "") {
-            userName = nameInput.value.trim();
-        } else {
-            alert("Lütfen adınızı ve soyadınızı giriniz.");
-            return;
-        }
+        if(nameInput && nameInput.value.trim() !== "") userName = nameInput.value.trim();
+        else { alert("Lütfen adınızı ve soyadınızı giriniz."); return; }
     } else {
-        // Normal Giriş Yap formundan ismi veya maili çek
         const savedName = localStorage.getItem('visi_user_name');
-        if (savedName) {
-            userName = savedName; 
-        } else {
+        if (savedName) { userName = savedName; } 
+        else {
             const emailInput = document.querySelector('#form-login-content input[type="email"]');
             if(emailInput && emailInput.value.trim() !== "") {
                 let mailStr = emailInput.value.split('@')[0];
                 userName = mailStr.charAt(0).toUpperCase() + mailStr.slice(1);
-            } else {
-                alert("Lütfen e-posta adresinizi giriniz.");
-                return;
-            }
+            } else { alert("Lütfen e-posta adresinizi giriniz."); return; }
         }
     }
 
-    // Sisteme özel ismini kaydet!
     localStorage.setItem('visi_logged_in', 'true');
     localStorage.setItem('visi_user_name', userName);
     window.isUserLoggedIn = true;
-    
-    window.updateUserInfo(); // Arayüzü anında yeni isimle yenile
+    window.updateUserInfo(); 
     window.closeModals();
-    
     alert(isSignup ? `Kayıt Başarılı! Visi topluluğuna hoş geldin ${userName}. 🚀` : `Giriş Başarılı! Tekrar hoş geldin ${userName}. 👋`);
 };
 
@@ -146,18 +120,13 @@ window.switchAuthTab = function(tab) {
     }
 };
 
-/* ==================================================
-   SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ANA SİSTEM
-   ================================================== */
 window.addEventListener('load', function() {
-    
     window.updateUserInfo();
 
     if(window.innerWidth <= 768 && document.getElementById('sidebar')) {
         document.getElementById('sidebar').classList.add('closed');
     }
 
-    /* GÖZ ANİMASYONLARI (GÜNCELLENDİ) */
     try {
         const loginModal = document.getElementById('loginModal');
         const blobContainer = document.getElementById('blob-container');
@@ -188,33 +157,31 @@ window.addEventListener('load', function() {
         }
     } catch(err) {}
 
-    /* ==========================================
-       DETAYLI İSTASYON VE ASANSÖR (ZONE) VERİTABANI
-       ========================================== */
+    /* VERİTABANINA AKTARILACAK İLK TEMEL VERİLER */
     window.metroStations = [
         { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş Asansörü", offset: [0, 0]}] },
         { name: "Ege Üniversitesi", lat: 38.4615, lng: 27.2210, status: "ok", verifyCount: 0, zones: [{name: "Kampüs Girişi", offset: [0, 0]}] },
         { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok", verifyCount: 0, zones: [{name: "Meydan Çıkışı", offset: [0, 0]}, {name: "Hastane Tarafı", offset: [0.0002, 0.0002]}] },
         { name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok", verifyCount: 0, zones: [{name: "Kuzey-Batı Girişi (Fes Spa)", offset: [0.0008, -0.0010]}, {name: "Güney-Batı Girişi (Yaya Yolu)", offset: [-0.0005, -0.0008]}, {name: "Kuzey-Doğu Peron", offset: [0.0003, 0.0008]}, {name: "Güney-Doğu Üni. Cad.", offset: [-0.0002, 0.0003]}] },
         { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
-        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error", verifyCount: 5, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
+        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
         { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok", verifyCount: 0, zones: [{name: "Otobüs Aktarma", offset: [0, 0]}, {name: "Tramvay Tarafı", offset: [0.0002, 0.0002]}] },
         { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok", verifyCount: 0, zones: [{name: "İZBAN Aktarma", offset: [0, 0]}] },
         { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok", verifyCount: 0, zones: [{name: "Gar Girişi", offset: [0, 0]}, {name: "Fuar Kapısı", offset: [-0.0002, 0]}] },
         { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok", verifyCount: 0, zones: [{name: "Hilton Tarafı", offset: [0, 0]}, {name: "Bit Pazarı", offset: [-0.0002, 0.0002]}] },
-        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending", verifyCount: 2, zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
+        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "ok", verifyCount: 0, zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
         { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok", verifyCount: 0, zones: [{name: "Betonyol Çıkışı", offset: [0.0002, 0]}, {name: "Park Girişi", offset: [-0.0002, 0]}] },
         { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok", verifyCount: 0, zones: [{name: "Devlet Hastanesi", offset: [0,0]}] },
-        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error", verifyCount: 5, zones: [{name: "Renkli Durağı", offset: [0,0]}] },
+        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "ok", verifyCount: 0, zones: [{name: "Renkli Durağı", offset: [0,0]}] },
         { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok", verifyCount: 0, zones: [{name: "Sahil Tarafı", offset: [0,0]}, {name: "Cadde Tarafı", offset: [0.0002, 0.0002]}] },
         { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok", verifyCount: 0, zones: [{name: "Denizciler Parkı", offset: [0.0002, -0.0002]}] },
         { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok", verifyCount: 0, zones: [{name: "AVM Girişi", offset: [0.0003, -0.0003]}, {name: "Pazar Yeri", offset: [-0.0003, 0.0003]}] },
         { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok", verifyCount: 0, zones: [{name: "Teleferik Yönü", offset: [0,0]}] },
         { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok", verifyCount: 0, zones: [{name: "Cadde Girişi", offset: [0,0]}] },
-        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error", verifyCount: 5, zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
+        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "ok", verifyCount: 0, zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
         { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok", verifyCount: 0, zones: [{name: "Fakülte Kapısı", offset: [0,0]}] },
         { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok", verifyCount: 0, zones: [{name: "İtfaiye Girişi", offset: [0,0]}] },
-        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending", verifyCount: 4, zones: [{name: "Park Tarafı", offset: [0,0]}] },
+        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "ok", verifyCount: 0, zones: [{name: "Park Tarafı", offset: [0,0]}] },
         { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok", verifyCount: 0, zones: [{name: "Kaymakamlık Asansörü", offset: [0, -0.0008]}] }
     ];
 
@@ -326,7 +293,7 @@ window.addEventListener('load', function() {
                 });
             }
         }
-    } catch(err) { console.error("Harita Hatası:", err); }
+    } catch(err) {}
 
     window.focusStation = function(lat, lng) {
         if(window.mainMap) window.mainMap.setView([lat, lng], 16, { animate: true, duration: 1 });
@@ -336,9 +303,6 @@ window.addEventListener('load', function() {
         }
     };
 
-    /* ==========================================
-       BİLDİRİM (REPORT) EKRANI VE MİNİ HARİTA
-       ========================================== */
     window.selectedZoneName = null; 
     let zoneMarkersGroup = null; 
 
@@ -413,9 +377,6 @@ window.addEventListener('load', function() {
         }
     };
 
-    /* ==========================================
-       DOĞRULAMA (VERIFY) EKRANINI AÇMA
-       ========================================== */
     window.openVerifyModal = function(stationName) {
         if(!window.isUserLoggedIn) {
             alert("Doğrulama yapabilmek için lütfen önce giriş yapın.");
@@ -427,9 +388,6 @@ window.addEventListener('load', function() {
         document.getElementById('verifyModal').style.display = 'flex';
     };
 
-    /* ==========================================
-       BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ
-       ========================================== */
     try {
         const reportForm = document.getElementById('reportForm');
         const fileInput = document.getElementById('file-input');
@@ -476,13 +434,14 @@ window.addEventListener('load', function() {
                 
                 alert(`✅ Harika! '${window.selectedZoneName}' için bildirimin topluluğa iletildi ve puan kazandın! 🚀`);
                 
-                const stationIndex = window.metroStations.findIndex(s => s.name === window.currentReportingStation);
-                if(stationIndex !== -1) {
-                    window.metroStations[stationIndex].status = "pending";
-                    window.metroStations[stationIndex].verifyCount = 1;
+                // === YENİ: VERİTABANI GÜNCELLEMESİ (BİLDİRİM) ===
+                if(window.dbUpdateStation) {
+                    window.dbUpdateStation(window.currentReportingStation, {
+                        status: "pending",
+                        verifyCount: 1
+                    });
                 }
                 
-                window.renderStations(); 
                 window.closeReportModal();
                 reportForm.reset();
             });
@@ -519,26 +478,30 @@ window.addEventListener('load', function() {
             }
 
             const stationIndex = window.metroStations.findIndex(s => s.name === window.currentVerifyingStation);
+            const station = window.metroStations[stationIndex];
             
+            // === YENİ: VERİTABANI GÜNCELLEMESİ (DOĞRULAMA) ===
             if (isFixed) {
                 alert("✅ Harika! Düzeldiğini doğruladın ve +30 Puan kazandın! 🎉");
-                if(stationIndex !== -1) {
-                    window.metroStations[stationIndex].status = "ok";
-                    window.metroStations[stationIndex].verifyCount = 0;
+                if(window.dbUpdateStation) {
+                    window.dbUpdateStation(window.currentVerifyingStation, {
+                        status: "ok",
+                        verifyCount: 0
+                    });
                 }
             } else {
                 alert("✅ Teşekkürler! Arızanın devam ettiğini doğruladın ve +15 Puan kazandın! 🚧");
-                if(stationIndex !== -1) {
-                    window.metroStations[stationIndex].verifyCount += 1; 
-                    if(window.metroStations[stationIndex].verifyCount >= 5) {
-                        window.metroStations[stationIndex].status = "error";
-                    }
+                if(window.dbUpdateStation) {
+                    let newCount = station.verifyCount + 1;
+                    let newStatus = newCount >= 5 ? "error" : "pending";
+                    window.dbUpdateStation(window.currentVerifyingStation, {
+                        status: newStatus,
+                        verifyCount: newCount
+                    });
                 }
             }
             
-            window.renderStations(); 
             window.closeVerifyModal();
-
             verifyFileInput.value = "";
             document.getElementById('verify-file-label').innerText = "Kanıt Fotoğrafı Çek 📸";
             document.getElementById('verify-file-label').style.color = "var(--secondary-color)";
